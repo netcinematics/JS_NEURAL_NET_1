@@ -242,259 +242,415 @@
             </span>
         </aside>
     </div>
-    <section id="INFO_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+<section id="INFO_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px cyan;"/> 
+
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>INFO</span>
+        </span>
+    </header>
+    <hr/>
+    <article id="TKR_RENDER_FRAME"></article>
+    <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
+        <span style="font-size:1em;">INFO:</span><br>
+        <span style="font-size:0.888em;">Add details about this AI TOOL.</span><br>
+    </aside>
+    <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
+        <button id="addTickBtn1" class="blackBTN" onclick="add_TKRZ_Click()">add🎇</button>
+        <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
+    </menu>
+</section><!-- END INFO VIEW-->
+<section id="VIZ_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px #00ffa5;"/> 
+
+    <article class="mainTitle expanderROW">
+        <span class="boxTitle" style="width:100%;">
+            <span><span style="font-size:0.777em; color:cyan">~</span>
+            VIZ</span>
+        </span>
+        <button class="expanderBTN" style="padding:0;font-size:0.777em;line-height: 1.444em;" 
+            onclick="expander_BANKZ_Click(event)">✧</button>
+    </article>
+    <hr> 
+    <article id="MARGINZ_RENDER_FRAME">
+        TODO: 3D scatter plot visualization of neural networks.
+    </article>
+    <hr> 
+    <button id="detailsBtn1" class="blackBTN" onclick="setMarginDetailsClick(event)">details💎</button> 
+</section><!-- END VIEW -->
+<!-- *********************************BOOKZ_-VIEW********************************-->
+<section id="TEST_VIEW" style="border: solid 1px steelblue;justify-content: center; 
     flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
     padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
-    box-shadow: inset 1px 1px 11px 0px cyan;"/> 
+    box-shadow:inset 1px 3px 13px 0px steelblue;"/>
 
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>AI Training</span>
+        </span>
+    </header>
+    <hr> 
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
         <header class="mainTitle expanderROW">
-            <span class="boxTitle">
-                <span style="font-size:0.777em; color:cyan">~</span>
-                <span>INFO</span>
-            </span>
+            <span>TRAIN 1 (minimal):</span>
+            <span id="expanderBTN1" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click(event)">✧</span> -->
         </header>
-        <hr/>
-        <article id="TKR_RENDER_FRAME"></article>
-        <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
-            <span style="font-size:1em;">INFO:</span><br>
-            <span style="font-size:0.888em;">Add details about this AI TOOL.</span><br>
+        <aside style="margin:1em;"><h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
         </aside>
-        <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
-            <button id="addTickBtn1" class="blackBTN" onclick="add_TKRZ_Click()">add🎇</button>
-            <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
-        </menu>
-    </section><!-- END INFO VIEW-->
-    <section id="VIZ_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
-    flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
-    padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
-    box-shadow: inset 1px 1px 11px 0px #00ffa5;"/> 
-
-        <article class="mainTitle expanderROW">
-            <span class="boxTitle" style="width:100%;">
-                <span><span style="font-size:0.777em; color:cyan">~</span>
-                VIZ</span>
-            </span>
-            <button class="expanderBTN" style="padding:0;font-size:0.777em;line-height: 1.444em;" 
-                onclick="expander_BANKZ_Click(event)">✧</button>
-        </article>
-        <hr> 
-        <article id="MARGINZ_RENDER_FRAME">
-            TODO: 3D scatter plot visualization of neural networks.
-        </article>
-        <hr> 
-        <button id="detailsBtn1" class="blackBTN" onclick="setMarginDetailsClick(event)">details💎</button> 
-    </section><!-- END BANKZ VIEW -->
-    <!-- *********************************BOOKZ_-VIEW********************************-->
-    <section id="TEST_VIEW" style="border: solid 1px steelblue;justify-content: center; 
-        flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
-        padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
-        box-shadow:inset 1px 3px 13px 0px steelblue;"/>
-
-<header class="mainTitle expanderROW" style="">
-    <span class="boxTitle">
-        <span style="font-size:0.777em; color:cyan">~</span>
-        <span>Training</span>
-    </span>
-</header>
-        <hr> 
-        <section id="BOOKFRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
-            <header class="mainTitle expanderROW">
-                <span>TRAIN 1:</span>
-                <span class="expanderBTN" style="font-size:0.777em;" 
-                onclick="expander_BOOKZ_Click(event)">✧</span>
+        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
+            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
+        </article-->
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN2" class="expanderBTN" 
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
             </header>
-            <aside style="margin:1em;"><h3>DESCRIPTION:</h3>
-                Derived from Claude code generation...
-                Using Gemini inference.
-                Shows a small neural network, detecting custom words.
-                Yes % , No %.
-            </aside>
-            <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
-                display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
-            </article-->
-            <hr class="mainDIVIDER"><br>
-            <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
-                border-radius: 13px;margin: 0.444em 0;display: flex;border: solid 1px teal; height: 14em;">
-                <header class="expanderROW">
-                    <span class="expanderTITLE">NEOLOGISM (vocab):</span>
-                    <span class="expanderBTN" onclick="MINMAX(event.target)">✧</span>
-                </header>
-                <menu id="NNTXT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
-                    border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
-                    box-shadow: -1px -1px 7px 0px darkorchid;">
-                    <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
-                    <section id="NNTXT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;"></section>
-                </menu>
-            </section>
-            <menu id="INPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
-            border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
-            box-shadow: 1px -1px 6px 0px lime;">
-            <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+            <menu id="NNTXT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_1_ELEM" class="scrollBarV" 
+                style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
 
-            <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
-            border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
-            margin:1%;">
-                TEST TOKEN PRESENCE:<input id="txtINPUT"  type="text" placeholder="query..." 
-                style="margin-left: 1em; background:black;    color: aqua;
-                height: 2em;
-                padding-left: 1em;
-                border-radius: 10px 0px 0px 10px;"></input>
-                <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
-                border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
-                onclick="queryNeuralNetwork(event);">TEST</button>
-            </section>  
-
-            <section id="INPUT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
-
-            </section>
-        </menu>            
-            <menu id="OUTPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
-                <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
-                <section id="OUTPUT_1_ELEM" class="scrollBarV"  style="display: flex;justify-content: center;height: 20em;    margin-left: 10%;"></section>
             </menu>
-            <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
-                margin-top: 0;padding: 0.222em 0px; align-self: center;">
-                <span>
-                    <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                    margin-right: 0.5em;"></div>
-                    <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
-                </span>
-                <span>
-                    <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                    margin-right: 0.5em;"></div>
-                    <span style="font-size:0.444em;">cccc</span>
-                </span>
-            </menu>
+            <br>
         </section>
+        <menu id="INPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+        <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+
+        <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+            TEST TOKEN PRESENCE:<input id="txtINPUT"  type="text" placeholder="query..." 
+            style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+            <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
+            onclick="queryNeuralNetwork_1(event);">TEST</button>
+        </section>  
+
+        <section id="INPUT_1_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+
+        </section>
+    </menu>            
+        <menu id="OUTPUT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_1_ELEM" class="scrollBarV" 
+            style="display: flex;justify-content: center;max-height:10em;
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
     </section>
-        <section id="DATA_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
-        flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
-        padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
-        box-shadow: inset 1px 1px 11px 0px cyan;"/> 
-    
-            <header class="mainTitle expanderROW">
-                <span class="boxTitle">
-                    <span style="font-size:0.777em; color:cyan">~</span>
-                    <span>DATA</span>
-                </span>
+    <hr> 
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 2:</span>
+            <span id="expanderBTN3" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click(event)">✧</span> -->
+        </header>
+        <aside style="margin:1em;"><h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
+            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
+        </article-->
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN4" class="expanderBTN" 
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
             </header>
-            <hr/>
-            <article id="DATA_RENDER_FRAME"></article>
-            <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
-                <span style="font-size:1em;">INFO:</span><br>
-                <span style="font-size:0.888em;">Add data to train AI.</span><br>
-            </aside>
-            <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
-                <button id="addTickBtn1" class="blackBTN" onclick="add_TKRZ_Click()">add🎇</button>
-                <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
+            <menu id="NNTXT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_2_ELEM" class="scrollBarV" 
+                style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
             </menu>
-        </section><!-- END INFO VIEW-->                    
-    <script  > //*********************MAIN_APP**************************
-        // ******DATES *********************DATES*****************************
-        // const dateTXTStr = document.getElementById('dateTXTStamp');
-        // dateTXTStam.innerHTML = new Date().getFullYear();
-        const isPHONE = window.innerWidth <= 600;
-        const currentDate = new Date();
-        const yearNUM = currentDate.getFullYear();
-        const monthNUM = (currentDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
-        const dayNUM = currentDate.getDate().toString();//.padStart(2, '0');
-        const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
-        // **** END DATES *****************ENDDATES*********************************
-        const screenHeight = window.innerHeight;
-        // console.log("Screen Height:", screenHeight, "px");
-        // **** END HEIGHT *****************ENDHEIGHT*********************************
-        // **** VIEWS ********************************VIEWS***********************
-        const INFO_VIEW = document.getElementById("INFO_VIEW");
-        const VIZ_VIEW = document.getElementById("VIZ_VIEW");
-        const TEST_VIEW = document.getElementById("TEST_VIEW");
-        const DATA_VIEW = document.getElementById("DATA_VIEW");
-        const INFO_VIEW_BTN = document.getElementById("INFO_VIEW_BTN");
-        const VIZ_VIEW_BTN = document.getElementById("VIZ_VIEW_BTN");
-        const TEST_VIEW_BTN = document.getElementById("TEST_VIEW_BTN");
-        const DATA_VIEW_BTN = document.getElementById("DATA_VIEW_BTN");
-        const GALLERY_VIEW_BTN = document.getElementById("GALLERY_VIEW_BTN");
-        const IMPORT_VIEW_BTN = document.getElementById("IMPORT_VIEW_BTN");
-        const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
-        const DATA_TICKR_FRAME = document.getElementById("DATA_TICKR_FRAME");
-        const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
-        const DATA_MOMZ_FRAME = document.getElementById("DATA_MOMZ_FRAME");
-        const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
-        const render_TICKR_GALLERY = document.getElementById("render_TICKR_GALLERY");
-        const render_EDIT_TICKR_Frame = document.getElementById("render_EDIT_TICKR_Frame");
-        const render_EDIT_TRADE_Frame = document.getElementById("render_EDIT_TRADE_Frame");
-        const render_EDIT_MOMZ_Frame = document.getElementById("render_EDIT_MOMZ_Frame");
-        const tickr_SELECTOR_YMT = document.getElementById("tickr_SELECTOR_YMT");
-        const trade_SELECTOR_YMT = document.getElementById("trade_SELECTOR_YMT");
-        INFO_VIEW.classList.add('hiddenTab')     //TAB SWITCH
-        VIZ_VIEW.classList.add('hiddenTab')     //TAB SWITCH
-        // DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
-        TEST_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
-        TEST_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
-        // DATA_GALLERY_FRAME.classList.remove('hiddenTab')     //TAB DEFAULT
-        // load_GALLERY_FRAME_DATA();
-        // DATA_TICKR_FRAME.classList.add('hiddenTab')     //TAB SWITCH
-        // DATA_TRADE_FRAME.classList.add('hiddenTab')     //TAB SWITCH
-        // DATA_MOMZ_FRAME.classList.add('hiddenTab')     //TAB SWITCH
-        // DATA_IMPORT_FRAME.classList.add('hiddenTab')     //TAB SWITCH
-        // let EDIT_YMT_RECORD_ID = ''; //persist record editing between views.
-        // let CHART_SELECTIONS = []; //persist chart selections between views. 
-        // let DATA_GALLERY_LIST = `hi there`; 
-        // ******************************************VIEW METHODS**********
-        function go_TICKR_VIEW(){ //TAB SWITCH
-            remove_VIEW_SELECTED();
-            INFO_VIEW.classList.remove('hiddenTab');     
-            INFO_VIEW_BTN.classList.add('selectedMAINBTN');
-            VIZ_VIEW.classList.add('hiddenTab');
-            TEST_VIEW.classList.add('hiddenTab');
-            DATA_VIEW.classList.add('hiddenTab');
-            // init_TKRZ_TABZ()
+            <br>
+        </section>
+        <menu id="INPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+        <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+
+        <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+            TEST TOKEN PRESENCE:<input id="txtINPUT"  type="text" placeholder="query..." 
+            style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+            <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
+            onclick="queryNeuralNetwork_1(event);">TEST</button>
+        </section>  
+
+        <section id="INPUT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+
+        </section>
+    </menu>            
+        <menu id="OUTPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_2_ELEM" class="scrollBarV" 
+            style="display: flex;justify-content: center;max-height: 20em;    
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section>    
+</section>
+<section id="DATA_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
+flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
+padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
+box-shadow: inset 1px 1px 11px 0px cyan;"/> 
+
+    <header class="mainTitle expanderROW">
+        <span class="boxTitle">
+            <span style="font-size:0.777em; color:cyan">~</span>
+            <span>DATA</span>
+        </span>
+    </header>
+    <hr/>
+    <article id="DATA_RENDER_FRAME"></article>
+    <aside style="display: flex;padding: 0.666em 0 0.222em 2em;align-items: flex-end;">
+        <span style="font-size:1em;">INFO:</span><br>
+        <span style="font-size:0.888em;">Add data to train AI.</span><br>
+    </aside>
+    <menu style="display: flex;justify-content: flex-end; padding-right: 2%;margin-top:0.222em;">
+        <button id="addTickBtn1" class="blackBTN" onclick="add_TKRZ_Click()">add🎇</button>
+        <!-- <button id="saveTickBtn1" class="blackBTN" style="margin-left:1em;" onclick="saveTickerClick()">save🌟</button> -->
+    </menu>
+</section><!-- END INFO VIEW-->                    
+<script  > //*********************MAIN_APP**************************
+// ******DATES *********************DATES*****************************
+// const dateTXTStr = document.getElementById('dateTXTStamp');
+// dateTXTStam.innerHTML = new Date().getFullYear();
+const isPHONE = window.innerWidth <= 600;
+const currentDate = new Date();
+const yearNUM = currentDate.getFullYear();
+const monthNUM = (currentDate.getMonth() + 1).toString();//.padStart(2, '0'); // Adding 1 because months are zero-indexed
+const dayNUM = currentDate.getDate().toString();//.padStart(2, '0');
+const current_ymd = `YMD_${yearNUM}_${monthNUM}_${dayNUM}`;
+// **** END DATES *****************ENDDATES*********************************
+const screenHeight = window.innerHeight;
+// console.log("Screen Height:", screenHeight, "px");
+// **** END HEIGHT *****************ENDHEIGHT*********************************
+// **** VIEWS ********************************VIEWS***********************
+const INFO_VIEW = document.getElementById("INFO_VIEW");
+const VIZ_VIEW = document.getElementById("VIZ_VIEW");
+const TEST_VIEW = document.getElementById("TEST_VIEW");
+const DATA_VIEW = document.getElementById("DATA_VIEW");
+const INFO_VIEW_BTN = document.getElementById("INFO_VIEW_BTN");
+const VIZ_VIEW_BTN = document.getElementById("VIZ_VIEW_BTN");
+const TEST_VIEW_BTN = document.getElementById("TEST_VIEW_BTN");
+const DATA_VIEW_BTN = document.getElementById("DATA_VIEW_BTN");
+const GALLERY_VIEW_BTN = document.getElementById("GALLERY_VIEW_BTN");
+const IMPORT_VIEW_BTN = document.getElementById("IMPORT_VIEW_BTN");
+const DATA_GALLERY_FRAME = document.getElementById("DATA_GALLERY_FRAME");
+const DATA_TICKR_FRAME = document.getElementById("DATA_TICKR_FRAME");
+const DATA_TRADE_FRAME = document.getElementById("DATA_TRADE_FRAME");
+const DATA_MOMZ_FRAME = document.getElementById("DATA_MOMZ_FRAME");
+const DATA_IMPORT_FRAME = document.getElementById("DATA_IMPORT_FRAME");
+const render_TICKR_GALLERY = document.getElementById("render_TICKR_GALLERY");
+const render_EDIT_TICKR_Frame = document.getElementById("render_EDIT_TICKR_Frame");
+const render_EDIT_TRADE_Frame = document.getElementById("render_EDIT_TRADE_Frame");
+const render_EDIT_MOMZ_Frame = document.getElementById("render_EDIT_MOMZ_Frame");
+const tickr_SELECTOR_YMT = document.getElementById("tickr_SELECTOR_YMT");
+const trade_SELECTOR_YMT = document.getElementById("trade_SELECTOR_YMT");
+INFO_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+VIZ_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+// DATA_VIEW.classList.add('hiddenTab')     //TAB SWITCH
+TEST_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
+TEST_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
+
+// ******************************************VIEW METHODS**********
+function go_TICKR_VIEW(){ //TAB SWITCH
+    remove_VIEW_SELECTED();
+    INFO_VIEW.classList.remove('hiddenTab');     
+    INFO_VIEW_BTN.classList.add('selectedMAINBTN');
+    VIZ_VIEW.classList.add('hiddenTab');
+    TEST_VIEW.classList.add('hiddenTab');
+    DATA_VIEW.classList.add('hiddenTab');
+    // init_TKRZ_TABZ()
+}
+function go_VIZ_VIEW(){
+    remove_VIEW_SELECTED();
+    INFO_VIEW.classList.add('hiddenTab');     
+    VIZ_VIEW.classList.remove('hiddenTab');
+    VIZ_VIEW_BTN.classList.add('selectedMAINBTN');
+    TEST_VIEW.classList.add('hiddenTab');
+    DATA_VIEW.classList.add('hiddenTab');  
+    // init_BANKZ_TABZ() 
+}
+function go_TEST_VIEW(){
+    remove_VIEW_SELECTED();
+    INFO_VIEW.classList.add('hiddenTab');     
+    VIZ_VIEW.classList.add('hiddenTab');
+    TEST_VIEW.classList.remove('hiddenTab');
+    TEST_VIEW_BTN.classList.add('selectedMAINBTN');
+    DATA_VIEW.classList.add('hiddenTab'); 
+    // init_BOOKZ_TABZ();  
+}
+function go_DATA_VIEW(){
+    remove_VIEW_SELECTED();
+    INFO_VIEW.classList.add('hiddenTab');     
+    VIZ_VIEW.classList.add('hiddenTab');
+    TEST_VIEW.classList.add('hiddenTab');
+    DATA_VIEW.classList.remove('hiddenTab');
+    DATA_VIEW_BTN.classList.add('selectedMAINBTN');
+    // showDataGalleryView('gallery')
+}
+function remove_VIEW_SELECTED(){
+    INFO_VIEW_BTN.classList.remove('selectedMAINBTN');     
+    VIZ_VIEW_BTN.classList.remove('selectedMAINBTN');
+    TEST_VIEW_BTN.classList.remove('selectedMAINBTN');
+    DATA_VIEW_BTN.classList.remove('selectedMAINBTN');  
+}
+//---------------------AI_VIEWZ: Local Storage----------------        
+/************************************************\
+ * - ai_viewz_MATRIX
+ *  - ability to save quarterly NOTES in localstorage
+\************************************************/
+let ai_viewz = {
+    expanderBTN1:true,
+    expanderBTN2:false,
+}; //btn id : view state.
+function init_ai_viewz(){ //READ from LOCAL STORAGE
+    ai_viewz = (localStorage.ai_viewz)?
+        JSON.parse( localStorage.ai_viewz ):{};
+    const allViewKeys = Object.keys(ai_viewz);
+    allViewKeys.forEach((key)=>{
+        EXPANDER_Set_OUTERFRAME(key)
+    });
+
+}; init_ai_viewz();
+//---------------------TOGGLE VIEW BUTTONS---------------------        
+function EXPANDER_Click_OUTERFRAME(event) {
+    // Get the double parent of the button
+    const parent = event.target.parentElement.parentElement;
+    // Get all siblings after the 0
+    const siblings = Array.from(parent.children);
+    //     .slice(Array.from(parent.children).indexOf(event.target) + 1)
+    //     .filter((_, index) => index !== 0);
+    const siblingSet = siblings.slice(1,siblings.length);//trim top row
+    // Toggle visibility for each following sibling
+    siblingSet.forEach(sibling => {
+        if (sibling.style.display === 'none') {
+            sibling.style.display = ''; // Show
+            if(ai_viewz){ai_viewz[event.target.id] = true;}
+        } else {
+            sibling.style.display = 'none'; // Hide
+            if(ai_viewz){ai_viewz[event.target.id] = false;}
         }
-        function go_VIZ_VIEW(){
-            remove_VIEW_SELECTED();
-            INFO_VIEW.classList.add('hiddenTab');     
-            VIZ_VIEW.classList.remove('hiddenTab');
-            VIZ_VIEW_BTN.classList.add('selectedMAINBTN');
-            TEST_VIEW.classList.add('hiddenTab');
-            DATA_VIEW.classList.add('hiddenTab');  
-            // init_BANKZ_TABZ() 
+    });
+    //save state in LOCAL STORAGE
+    localStorage.ai_viewz = JSON.stringify(ai_viewz); //SAVE to LOCAL STORAGE 
+}
+function EXPANDER_Set_OUTERFRAME(btnid) {
+    if(!ai_viewz || !ai_viewz[btnid]===undefined){
+        console.log('error: could not find button'); return;
+    }
+    const btnElem = document.getElementById(btnid);
+
+    // Get the double parent of the button
+    const parent = btnElem.parentElement.parentElement;
+    
+    // Get all siblings after the 0
+    const siblings = Array.from(parent.children);
+    //     .slice(Array.from(parent.children).indexOf(event.target) + 1)
+    //     .filter((_, index) => index !== 0);
+    const siblingSet = siblings.slice(1,siblings.length);//trim top row
+
+
+    // Toggle visibility for each following sibling
+    siblingSet.forEach(sibling => {
+        // if (sibling.style.display === 'none') {
+        if (ai_viewz[btnid]===true ) {
+            sibling.style.display = ''; // Show
+        } else {
+            sibling.style.display = 'none'; // Hide
         }
-        function go_TEST_VIEW(){
-            remove_VIEW_SELECTED();
-            INFO_VIEW.classList.add('hiddenTab');     
-            VIZ_VIEW.classList.add('hiddenTab');
-            TEST_VIEW.classList.remove('hiddenTab');
-            TEST_VIEW_BTN.classList.add('selectedMAINBTN');
-            DATA_VIEW.classList.add('hiddenTab'); 
-            // init_BOOKZ_TABZ();  
-        }
-        function go_DATA_VIEW(){
-            remove_VIEW_SELECTED();
-            INFO_VIEW.classList.add('hiddenTab');     
-            VIZ_VIEW.classList.add('hiddenTab');
-            TEST_VIEW.classList.add('hiddenTab');
-            DATA_VIEW.classList.remove('hiddenTab');
-            DATA_VIEW_BTN.classList.add('selectedMAINBTN');
-            // showDataGalleryView('gallery')
-        }
-        function remove_VIEW_SELECTED(){
-            INFO_VIEW_BTN.classList.remove('selectedMAINBTN');     
-            VIZ_VIEW_BTN.classList.remove('selectedMAINBTN');
-            TEST_VIEW_BTN.classList.remove('selectedMAINBTN');
-            DATA_VIEW_BTN.classList.remove('selectedMAINBTN');  
-        }
-</script>
-<script>
+    });
+}
+//---------------------END EXPANDER TOGGLE VIEW BUTTONS---------------------        
+
+
+</script><!------------MINIMAL EXAMPLE-->
+<!-- <script src="./script_minimal_1.js"></script> -->
+<!-- <script src="./script_similar_word_cosine_1.js"></script> -->
+<!-- <script src="./script_viz_1.js"></script> -->
+<!-- <script src="./script_letter_predictor_1.js"></script> -->
+<!-- <script src="./script_minimal_2.js"></script> -->
+<script src="./script_neologism_1.js"></script>
+<!--script>
 // ************* AI - NEOLOGISM EXPERIMENT ****************
 // MINIMAL Neural Network example, for wordcrafting study.
-//   - generated by Claude, revised by Gemini.Array
+//   - generated by Claude, revised by Gemini.
+//   - trains an NN then AFFIRMS presence in nn.
 //------------------------------------------------------
 //----------------------UI-VARIABLES--------------
 const NNTXT_1_ELEM = document.getElementById("NNTXT_1_ELEM");
 const INPUT_1_ELEM = document.getElementById("INPUT_1_ELEM");
 const OUTPUT_1_ELEM = document.getElementById("OUTPUT_1_ELEM");
 //-----------------------------------------------
-class NeuralNetwork {
+class NeuralNetwork_1 {
     constructor(inputSize, hiddenSize, outputSize) {
         // Initialize weights with random values between -1 and 1
         this.weightsIH = Array(inputSize).fill().map(() => 
@@ -596,16 +752,15 @@ class NeuralNetwork {
         }
     }
 } //END NEURAL NETWORK class
-function queryNeuralNetwork(e){
+function queryNeuralNetwork_1(e){
     const txtINPUT = document.getElementById('txtINPUT')
     const val = txtINPUT.value;
     if(!val){console.log('needs input'); return;}
     tokens = val.split(' ')
     OUTPUT_1_ELEM.innerHTML = ''; //clear out put
-    debugger;
     tokens.forEach(token => {
-        const input = nn.tokenToInput(token);
-        const output = nn.forward(input);
+        const input = nn_1.tokenToInput(token);
+        const output = nn_1.forward(input);
         console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
         // debugger;
         const txtPCTS = output.map( (v) => { 
@@ -627,7 +782,7 @@ function queryNeuralNetwork(e){
 // Example usage:
 let tokens = ["aa", "ab", "abc", "aaa", "bb", "ba", "ab", "abb", "bbb"];
 // debugger;
-const nn = new NeuralNetwork(52, 10, 2); // 52 inputs (26 letters * 2 positions), 10 hidden neurons, 2 outputs
+const nn_1 = new NeuralNetwork_1(52, 10, 2); // 52 inputs (26 letters * 2 positions), 10 hidden neurons, 2 outputs
 
 NNTXT_1_ELEM.innerHTML = tokens; //set tokens in UI.
 // INPUT_1_ELEM.innerHTML = tokens; //set tokens in UI.
@@ -636,12 +791,12 @@ NNTXT_1_ELEM.innerHTML = tokens; //set tokens in UI.
 function trainExample() {
     // Example: Train to recognize if a token contains double letters
     tokens.forEach(token => {
-        const input = nn.tokenToInput(token);
+        const input = nn_1.tokenToInput(token);
         const target = [
             token[0] === token[1] ? 1 : 0,  // First output: has double letters
             token.includes('b') ? 1 : 0      // Second output: contains 'a'
         ];
-        nn.train(input, target);
+        nn_1.train(input, target);
     });
 }
 
@@ -657,8 +812,8 @@ for (let i = 0; i < epoch_num; i++) {
 OUTPUT_1_ELEM.innerHTML = ''; //clear out put
 // Test the network //optimize this TODO: move vars out to runFN() pattern.
 tokens.forEach(token => {
-    const input = nn.tokenToInput(token);
-    const output = nn.forward(input);
+    const input = nn_1.tokenToInput(token);
+    const output = nn_1.forward(input);
     console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
     // debugger;
     const txtPCTS = output.map( (v) => { 
@@ -676,7 +831,9 @@ tokens.forEach(token => {
     // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
 });
 
-</script>
+</script--><!----------------END MINIMAL EXAMPLE-->
+
+
 <!--***************************** END XMPL CHART MODULES******************-->
 <legal style="color:darkslategray;font-size: 0.444em;margin: 3.333em 10% 0 10%;
 background-color: rgb(9, 0, 18);border-radius: 13px;padding: 1.444em;">
