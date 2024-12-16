@@ -123,7 +123,7 @@ class NeuralNetwork { //from cosinesimilarity
     }
 
     // Embed a string into a vector representation
-    embedString(string, maxLength) {
+    embedString(string, maxLength) { //GetOneHot(); forward hidden layer
         const oneHot = this.stringToOneHot(string, maxLength);
         return this.forward(oneHot).hiddenLayer;
     }
@@ -349,7 +349,7 @@ debugger;
     console.log("\n📖 Enriching Neologism 📖");
     const enrichedNeologism = neologismLearner.enrichNeologism(
         "aDistructopuss",
-        "In the ancient scrolls, the aDistructopuss was said to guard the boundaries between reality and imagination.",
+        "In the ancient scrolls, the aDistructopuss was said to guard an invisible boundary, between a projection of illuzion and actual reality.",
         ["legend", "folklore", "imagination"]
     );
 
