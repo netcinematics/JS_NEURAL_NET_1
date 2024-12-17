@@ -296,11 +296,12 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
             <span>AI Training</span>
         </span>
     </header>
+
     <hr> 
     <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
         <header class="mainTitle expanderROW">
-            <span>TRAIN 1 (minimal):</span>
-            <span id="expanderBTN1" class="expanderBTN" style="font-size:0.777em;" 
+            <span>TRAIN 3:</span>
+            <span id="expanderBTN3a" class="expanderBTN" style="font-size:0.777em;" 
             onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
             <!-- <span class="expanderBTN" style="font-size:0.777em;" 
             onclick="EXPANDER_Click(event)">✧</span> -->
@@ -319,7 +320,166 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
             border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
             <header class="expanderROW" style="margin-top:1em;">
                 <span class="expanderTITLE">NEOLOGISM (vocab):</span>
-                <span id="expanderBTN2" class="expanderBTN" 
+                <span id="expanderBTN3b" class="expanderBTN" 
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_3_ELEM" class="scrollBarV" 
+                style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+        <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+
+        <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+            TEST TOKEN PRESENCE:<input id="txtINPUT"  type="text" placeholder="query..." 
+            style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+            <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
+            onclick="queryNeuralNetwork_1(event);">TEST</button>
+        </section>  
+
+        <section id="INPUT_3_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+
+        </section>
+    </menu>            
+        <menu id="OUTPUT_3_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_3_ELEM" class="scrollBarV" 
+            style="display: flex;justify-content: center;max-height: 20em;    
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUB SECTION 3-->
+
+    <hr> 
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 2:</span>
+            <span id="expanderBTN2a" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click(event)">✧</span> -->
+        </header>
+        <aside style="margin:1em;"><h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
+            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
+        </article-->
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN2b" class="expanderBTN" 
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <menu id="NNTXT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
+                box-shadow: -1px -1px 7px 0px darkorchid;">
+                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
+                <section id="NNTXT_2_ELEM" class="scrollBarV" 
+                style="display: flex;justify-content: center;
+                margin-bottom:1em;padding-bottom:1em;"></section>
+            </menu>
+            <br>
+        </section>
+        <menu id="INPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
+        box-shadow: 1px -1px 6px 0px lime;">
+        <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+
+        <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
+        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
+        margin:1%;">
+            TEST TOKEN PRESENCE:<input id="txtINPUT"  type="text" placeholder="query..." 
+            style="margin-left: 1em; background:black;    color: aqua;
+            height: 2em;
+            padding-left: 1em;
+            border-radius: 10px 0px 0px 10px;"></input>
+            <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
+            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
+            onclick="queryNeuralNetwork_1(event);">TEST</button>
+        </section>  
+
+        <section id="INPUT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
+
+        </section>
+    </menu>            
+        <menu id="OUTPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
+            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
+            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
+            <section id="OUTPUT_2_ELEM" class="scrollBarV" 
+            style="display: flex;justify-content: center;max-height: 20em;    
+            margin-left: 10%;"></section>
+        </menu>
+        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
+            margin-top: 0;padding: 0.222em 0px; align-self: center;">
+            <span>
+                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
+            </span>
+            <span>
+                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
+                margin-right: 0.5em;"></div>
+                <span style="font-size:0.444em;">cccc</span>
+            </span>
+        </menu>
+    </section><!--END SUB SECTION 2-->
+    <hr> 
+    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>TRAIN 1 (minimal):</span>
+            <span id="expanderBTN1a" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click(event)">✧</span> -->
+        </header>
+        <aside style="margin:1em;"><h3>DESCRIPTION:</h3>
+            Derived from Claude code generation...
+            Using Gemini inference.
+            Shows a small neural network, detecting custom words.
+            Yes % , No %.
+        </aside>
+        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
+            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
+        </article-->
+        <hr class="mainDIVIDER"><br>
+        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
+            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
+            <header class="expanderROW" style="margin-top:1em;">
+                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
+                <span id="expanderBTN1b" class="expanderBTN" 
                 onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
             </header>
             <menu id="NNTXT_1_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
@@ -375,86 +535,8 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
                 <span style="font-size:0.444em;">cccc</span>
             </span>
         </menu>
-    </section>
-    <hr> 
-    <section id="Collapsable_FRAME_XMPL" class="EXPANDER_Item MOBILE_Box_Sizer">
-        <header class="mainTitle expanderROW">
-            <span>TRAIN 2:</span>
-            <span id="expanderBTN3" class="expanderBTN" style="font-size:0.777em;" 
-            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
-            <!-- <span class="expanderBTN" style="font-size:0.777em;" 
-            onclick="EXPANDER_Click(event)">✧</span> -->
-        </header>
-        <aside style="margin:1em;"><h3>DESCRIPTION:</h3>
-            Derived from Claude code generation...
-            Using Gemini inference.
-            Shows a small neural network, detecting custom words.
-            Yes % , No %.
-        </aside>
-        <!--article id="candelstickFRAME_XMPL" style="justify-content:center;
-            display:flex;border:solid 1px steelblue;border-radius:22.222px;margin: 0.222em 0;">
-        </article-->
-        <hr class="mainDIVIDER"><br>
-        <section style="justify-content: center;flex-direction: column;padding: 0 2% 0 2%;
-            border-radius: 13px;margin: 0.444em 0 2em 0;display: flex;border: solid 1px teal;">
-            <header class="expanderROW" style="margin-top:1em;">
-                <span class="expanderTITLE">NEOLOGISM (vocab):</span>
-                <span id="expanderBTN4" class="expanderBTN" 
-                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
-            </header>
-            <menu id="NNTXT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
-                border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;max-height:6em; 
-                box-shadow: -1px -1px 7px 0px darkorchid;">
-                <header class="expanderTITLE" style="margin:1em;">NEURAL NET:</header>
-                <section id="NNTXT_2_ELEM" class="scrollBarV" 
-                style="display: flex;justify-content: center;
-                margin-bottom:1em;padding-bottom:1em;"></section>
-            </menu>
-            <br>
-        </section>
-        <menu id="INPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
-        border-radius: 13px; flex:1; display:flex;margin: 0.444em 1em;height:8em; 
-        box-shadow: 1px -1px 6px 0px lime;">
-        <header class="expanderTITLE" style="margin:1em;">INPUT:</header>
+    </section><!--END SUBSECTION-->
 
-        <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
-        border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
-        margin:1%;">
-            TEST TOKEN PRESENCE:<input id="txtINPUT"  type="text" placeholder="query..." 
-            style="margin-left: 1em; background:black;    color: aqua;
-            height: 2em;
-            padding-left: 1em;
-            border-radius: 10px 0px 0px 10px;"></input>
-            <button style="margin-right: 1em; background:#03cbcb;cursor:pointer;
-            border-radius: 0px 10px 10px 0px;font-size: 1em; padding: 4px; height: 2em;"
-            onclick="queryNeuralNetwork_1(event);">TEST</button>
-        </section>  
-
-        <section id="INPUT_2_ELEM" class="scrollBarV" style="display: flex;justify-content: center;height: 20em;">
-
-        </section>
-    </menu>            
-        <menu id="OUTPUT_2_FRAME" class="FRAME" style="justify-content: center;flex-direction: column;
-            border-radius: 13px; flex:1; display:flex;margin: 0.888em;height:14em;box-shadow: 0px 2px 5px 4px aqua;">
-            <header class="expanderTITLE" style="margin:1em 1em 0.222em 1em;">OUTPUT:</header>
-            <section id="OUTPUT_2_ELEM" class="scrollBarV" 
-            style="display: flex;justify-content: center;max-height: 20em;    
-            margin-left: 10%;"></section>
-        </menu>
-        <menu style="justify-content: space-evenly; border-radius: 13px; flex: 1 1 0%; display: flex; 
-            margin-top: 0;padding: 0.222em 0px; align-self: center;">
-            <span>
-                <div style="background:#26a69a;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                margin-right: 0.5em;"></div>
-                <span style="font-size:0.444em;padding-left: 0.555em;">dddd</span>
-            </span>
-            <span>
-                <div style="background:#2962ff;border-radius:100%;border:solid 1px steelblue;height:0.5em;width:0.5em;display: inline-block;
-                margin-right: 0.5em;"></div>
-                <span style="font-size:0.444em;">cccc</span>
-            </span>
-        </menu>
-    </section>    
 </section>
 <section id="DATA_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
 flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
@@ -569,8 +651,8 @@ function remove_VIEW_SELECTED(){
  *  - ability to save quarterly NOTES in localstorage
 \************************************************/
 let ai_viewz = {
-    expanderBTN1:true,
-    expanderBTN2:false,
+    expanderBTN1a:true,
+    expanderBTN1b:false,
 }; //btn id : view state.
 function init_ai_viewz(){ //READ from LOCAL STORAGE
     ai_viewz = (localStorage.ai_viewz)?
@@ -637,8 +719,9 @@ function EXPANDER_Set_OUTERFRAME(btnid) {
 <!-- <script src="./script_similar_word_cosine_1.js"></script> -->
 <!-- <script src="./script_viz_1.js"></script> -->
 <!-- <script src="./script_letter_predictor_1.js"></script> -->
-<!-- <script src="./script_minimal_2.js"></script> -->
-<script src="./script_neologism_1.js"></script>
+<script src="./script_minimal_2.js"></script>
+<!-- <script src="./script_neologism_1.js"></script> -->
+<!-- <script src="./script_cluster_1.js"></script> -->
 <!--script>
 // ************* AI - NEOLOGISM EXPERIMENT ****************
 // MINIMAL Neural Network example, for wordcrafting study.

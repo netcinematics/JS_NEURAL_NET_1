@@ -1,5 +1,168 @@
 // Advanced Semantic Clustering for Neural Network
 
+class NeuralNetwork { //from cosinesimilarity
+    constructor(inputSize, hiddenSize, outputSize) {
+        // Network architecture parameters
+        this.inputSize = inputSize;
+        this.hiddenSize = hiddenSize;
+        this.outputSize = outputSize;
+
+        // 1. Initialize input-to-hidden layer weights randomly
+        this.inputHiddenWeights = this.initializeWeights(inputSize, hiddenSize);
+        
+        // 2. Initialize hidden-to-output layer weights randomly
+        this.hiddenOutputWeights = this.initializeWeights(hiddenSize, outputSize);
+    }
+
+    // Utility method to initialize weights with small random values
+    initializeWeights(rows, cols) {
+        return Array.from({ length: rows }, () => 
+            Array.from({ length: cols }, () => Math.random() * 2 - 1)
+        );
+    }
+
+    // Convert string to one-hot encoded vector
+    stringToOneHot(string, maxLength) {
+        // Create a zero-filled array of fixed length
+        const oneHot = new Array(maxLength).fill(0);
+        
+        // Fill one-hot vector with character encodings
+        for (let i = 0; i < Math.min(string.length, maxLength); i++) {
+            // Simple encoding: use character code
+            oneHot[i] = string.charCodeAt(i) / 255;
+        }
+        
+        return oneHot;
+    }
+
+    // Activation function: Sigmoid for non-linearity
+    // sigmoid(x) {
+    //     return 1 / (1 + Math.exp(-x));
+    // }
+    // Sigmoid activation function
+    sigmoid(x) {
+        let sigma =  1 / (1 + Math.exp(-x));
+        if(isNaN(sigma)){ //true for any non number including NaN
+          // debugger;
+          sigma = 0; /// TODO: ZERO NaNs?
+        }
+        return sigma;
+        // return 1 / (1 + Math.exp(-x)); //FIX if NaN return 0
+      }    
+
+    // Derivative of sigmoid for backpropagation
+    sigmoidDerivative(x) {
+        return x * (1 - x);
+    }
+
+    // Forward propagation
+    forward(input) {
+        // 3. Compute hidden layer activations
+        // debugger;
+        const hiddenLayer = this.inputHiddenWeights.map(row => {
+            const sigma = row.reduce((sum, weight, j) => {
+                // console.log('x',sum,weight,input[j])
+                return sum + weight * input[j]
+            } , 0);
+            const sigmo = this.sigmoid(sigma);
+            if(sigmo===undefined){
+                // console.log('xxx')
+                return sum + weight * 0.5; //TODO training 
+            }
+            return sigmo;
+            // this.sigmoid(row.reduce((sum, weight, j) => sum + weight * input[j], 0))
+        });
+// debugger;
+        // 4. Compute output layer activations 8 X 9
+        const outputLayer = this.hiddenOutputWeights.map(row => {
+            const sigma = row.reduce((sum, weight, j) => {
+                // console.log('x',sum,weight,hiddenLayer[j])
+                if(isNaN(hiddenLayer[j])){debugger;}
+                if(hiddenLayer[j]===undefined){
+                    debugger;
+                    return 0;//sum + weight * 0.5;
+                }
+                return sum + weight * hiddenLayer[j]
+            }, 0);
+            return this.sigmoid(sigma)
+            // this.sigmoid(row.reduce((sum, weight, j) => sum + weight * hiddenLayer[j], 0))
+        });
+// debugger;
+        return { hiddenLayer, outputLayer };
+    }
+
+    // Training method using backpropagation
+    train(input, target, learningRate = 0.1) {
+        // 5. Forward propagation
+        const { hiddenLayer, outputLayer } = this.forward(input);
+
+        // 6. Compute output layer error
+        const outputError = outputLayer.map((output, i) => target[i] - output);
+        const outputDelta = outputError.map((error, i) => 
+            error * this.sigmoidDerivative(outputLayer[i])
+        );
+
+        // 7. Compute hidden layer error
+        const hiddenError = this.hiddenOutputWeights.map((_, j) => 
+            outputDelta.reduce((sum, delta, k) => sum + delta * this.hiddenOutputWeights[k][j], 0)
+        );
+        const hiddenDelta = hiddenError.map((error, i) => 
+            error * this.sigmoidDerivative(hiddenLayer[i])
+        );
+
+        // 8. Update weights
+        // Update hidden to output weights
+        for (let k = 0; k < this.outputSize; k++) {
+            for (let j = 0; j < this.hiddenSize; j++) {
+                this.hiddenOutputWeights[k][j] += learningRate * outputDelta[k] * hiddenLayer[j];
+            }
+        }
+// debugger;
+        // Update input to hidden weights
+        for (let j = 0; j < this.hiddenSize; j++) {
+            for (let i = 0; i < this.inputSize; i++) {
+                this.inputHiddenWeights[j][i] += learningRate * hiddenDelta[j] * input[i];
+            }
+        }
+    }
+
+    // Embed a string into a vector representation
+    embedString(string, maxLength) { //GetOneHot(); forward hidden layer
+        const oneHot = this.stringToOneHot(string, maxLength);
+        return this.forward(oneHot).hiddenLayer;
+    }
+
+    // New method to find most similar token
+    findMostSimilar(inputToken, tokens, maxLength) {
+        const inputEmbedding = this.embedString(inputToken, maxLength);
+        
+        // Compute cosine similarity
+        const similarities = tokens.map(token => {
+            const tokenEmbedding = this.embedString(token, maxLength);
+            return this.cosineSimilarity(inputEmbedding, tokenEmbedding);
+        });
+
+        // Find index of most similar token
+        const mostSimilarIndex = similarities.reduce(
+            (maxIndex, current, index, arr) => 
+                current > arr[maxIndex] ? index : maxIndex, 0
+        );
+
+        return {
+            token: tokens[mostSimilarIndex],
+            similarity: similarities[mostSimilarIndex]
+        };
+    }
+
+    // Compute cosine similarity between two vectors
+    cosineSimilarity(vec1, vec2) {
+        const dotProduct = vec1.reduce((sum, val, i) => sum + val * vec2[i], 0);
+        const magnitude1 = Math.sqrt(vec1.reduce((sum, val) => sum + val * val, 0));
+        const magnitude2 = Math.sqrt(vec2.reduce((sum, val) => sum + val * val, 0));
+        return dotProduct / (magnitude1 * magnitude2);
+    }
+} //END NEURAL_NETWORK
+
 class SemanticAnalyzer {
     constructor(neuralNet, tokens, maxLength) {
         this.neuralNet = neuralNet;
@@ -58,13 +221,19 @@ class SemanticAnalyzer {
         // Compute cluster characteristics
         const clusterAnalysis = clusters.map((cluster, index) => {
             // Representative embedding (average of cluster embeddings)
-            const representativeEmbedding = this.embeddings
-                .filter(e => cluster.includes(e.token))
-                .reduce((acc, curr) => 
-                    acc.map((val, i) => val + curr.embedding[i]), 
-                    new Array(curr.embedding.length).fill(0)
-                )
-                .map(val => val / cluster.length);
+            // const representativeEmbedding = this.embeddings
+            //     .filter(e => cluster.includes(e.token))
+            //     .reduce((acc, curr) => 
+            //         acc.map((val, i) => val + curr.embedding[i]), 
+            //         new Array(curr.embedding.length).fill(0)
+            //     )
+            //     .map(val => val / cluster.length);
+            const representativeEmbedding = cluster
+                .reduce((acc, tokenIndex) => {
+                    const embedding = this.embeddings.find(e => e.token === tokenIndex).embedding;
+                    return acc.map((val, i) => val + embedding[i]);
+                }, new Array(this.embeddings[0].embedding.length).fill(0))
+                .map(val => val / cluster.length);            
 
             // Find most representative token
             const mostRepresentativeToken = cluster.reduce((mostRep, token) => {
@@ -115,10 +284,10 @@ function demonstrateSemanticClustering() {
     // Diverse set of tokens with semantic relationships
     const tokens = [
         // Programming-related tokens
-        "code", "coding", "programmer", "develop", "software",
+        // "code", "coding", "programmer", "develop", "software",
         
         // Language-related tokens
-        "hello", "hi", "hey", "greet", "welcome",
+        "hello", "hi", //"hey", "greet", "welcome",
         
         // World-related tokens
         "world", "planet", "earth", "globe", "universe",
@@ -126,7 +295,8 @@ function demonstrateSemanticClustering() {
         // Abstract thinking tokens
         "think", "thought", "idea", "concept", "mind"
     ];
-    const maxLength = 10;  // Maximum token length
+    const maxLength = 12;  // Maximum token length
+    //TODO 10 error in init random?
 
     // Create neural network
     const nn = new NeuralNetwork(
@@ -163,6 +333,6 @@ function demonstrateSemanticClustering() {
 
     return semanticAnalysis;
 }
-
+debugger;
 // Run the semantic clustering demonstration
 const result = demonstrateSemanticClustering();
