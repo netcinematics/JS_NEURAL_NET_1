@@ -7,7 +7,11 @@
 const NNTXT_ELEM = document.getElementById("NNTXT_2_ELEM");
 const INPUT_ELEM = document.getElementById("INPUT_2_ELEM");
 const OUTPUT_ELEM = document.getElementById("OUTPUT_2_ELEM");
-//-----------------------------------------------
+const TEST_BTN_2_ = document.getElementById("TEST_BTN_2_");
+const TXT_INPUT_2_ = document.getElementById("TXT_INPUT_2_");
+// onclick="queryNeuralNetwork_2_(event);">TES"testBTN_2_"T
+import { neologizms } from './aWORDZa_1.js';
+  //-----------------------------------------------
 class NeuralNetwork_1 {
     constructor(inputSize, hiddenSize, outputSize) {
         // Initialize weights with random values between -1 and 1
@@ -110,9 +114,10 @@ class NeuralNetwork_1 {
         }
     }
 } //END NEURAL NETWORK class
-function queryNeuralNetwork_1(e){
-    const txtINPUT = document.getElementById('txtINPUT')
-    const val = txtINPUT.value;
+// function queryNeuralNetwork_1(e){
+TEST_BTN_2_.onclick = (e) => {
+    if(!TXT_INPUT_2_){console.log('err: missing input'); return}
+    const val = TXT_INPUT_2_.value;
     if(!val){console.log('needs input'); return;}
     tokens = val.split(' ')
     OUTPUT_ELEM.innerHTML = ''; //clear out put
@@ -138,11 +143,11 @@ function queryNeuralNetwork_1(e){
 }
 
 // Example usage:
-let tokens = ["aa", "ab", "abc", "aaa", "bb", "ba", "ab", "abb", "bbb"];
-// debugger;
+let tokens = ["aa", "ab", "abc", "aaaa", "bb", "ba", "ab", "abb", "bbbb"];
+// let tokens = neologizms.taxonomy;
 const nn_1 = new NeuralNetwork_1(52, 10, 2); // 52 inputs (26 letters * 2 positions), 10 hidden neurons, 2 outputs
-
-NNTXT_ELEM.innerHTML = tokens; //set tokens in UI.
+NNTXT_ELEM.innerHTML = tokens.join(' '); //set tokens in UI.
+NNTXT_ELEM.innerHTML += tokens.join(' '); //set tokens in UI.
 // INPUT_ELEM.innerHTML = tokens; //set tokens in UI.
 
 // Training example
@@ -158,33 +163,37 @@ function trainExample() {
     });
 }
 
-// Train the network
-// debugger;
-let epoch_num = 1000;
-for (let i = 0; i < epoch_num; i++) {
-// for (let i = 0; i < 1000; i++) {
-// for (let i = 0; i < 10; i++) {
-    trainExample();
-}
-
-OUTPUT_ELEM.innerHTML = ''; //clear out put
-// Test the network //optimize this TODO: move vars out to runFN() pattern.
-tokens.forEach(token => {
-    const input = nn_1.tokenToInput(token);
-    const output = nn_1.forward(input);
-    console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
+function RUN_NETWORK(){
+    // Train the network
     // debugger;
-    const txtPCTS = output.map( (v) => { 
-        // return v.toFixed(3); 
-        return v.toFixed(2)*100;
-        // let decimal = v.toFixed(2)*100;
-        // return decimal.toFixed(0)+'%'; //human readable %
-    });
-    // const txtPCTS = txtTOKENS.split(',')
-    if(txtPCTS[0]<txtPCTS[1]){//YES
-        OUTPUT_ELEM.innerHTML += `${token} || YES: ${txtPCTS[1]} || No: ${txtPCTS[0]}<br>`;
-    } else { //NO
-        OUTPUT_ELEM.innerHTML += `${token} || no: ${txtPCTS[0]} || Yes: ${txtPCTS[1]}<br>`;
+    let epoch_num = 1000;                      //TODO EPOCH NUM
+    for (let i = 0; i < epoch_num; i++) {
+    // for (let i = 0; i < 1000; i++) {
+    // for (let i = 0; i < 10; i++) {
+        trainExample();
     }
-    // OUTPUT_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
-});
+
+    OUTPUT_ELEM.innerHTML = ''; //clear out put
+    // Test the network 
+    tokens.forEach(token => {
+
+        const input = nn_1.tokenToInput(token);
+        const output = nn_1.forward(input);
+
+        console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
+        // debugger;
+        const txtPCTS = output.map( (v) => { 
+            // return v.toFixed(3); 
+            return v.toFixed(2)*100;
+            // let decimal = v.toFixed(2)*100;
+            // return decimal.toFixed(0)+'%'; //human readable %
+        });
+        // const txtPCTS = txtTOKENS.split(',')
+        if(txtPCTS[0]<txtPCTS[1]){//YES
+            OUTPUT_ELEM.innerHTML += `${token} || YES: ${txtPCTS[1]} || No: ${txtPCTS[0]}<br>`;
+        } else { //NO
+            OUTPUT_ELEM.innerHTML += `${token} || no: ${txtPCTS[0]} || Yes: ${txtPCTS[1]}<br>`;
+        }
+        // OUTPUT_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
+    });
+}; RUN_NETWORK();

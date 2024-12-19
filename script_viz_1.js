@@ -35,7 +35,13 @@ class NeuralNetwork {
 
     // Activation function: Sigmoid for non-linearity
     sigmoid(x) {
-        return 1 / (1 + Math.exp(-x));
+        let sigma =  1 / (1 + Math.exp(-x));
+        if(isNaN(sigma)){ //true for any non number including NaN
+          // debugger;
+          sigma = 0; /// TODO: ZERO NaNs?
+        }
+        return sigma;
+        // return 1 / (1 + Math.exp(-x));
     }
 
     // Derivative of sigmoid for backpropagation
@@ -46,7 +52,6 @@ class NeuralNetwork {
     // Forward propagation
     forward(input) {
         // 3. Compute hidden layer activations
-        debugger;
         const hiddenLayer = this.inputHiddenWeights.map(row => {
             const sigma = row.reduce((sum, weight, j) => {
                 // console.log('x',sum,weight,input[j])
@@ -54,20 +59,20 @@ class NeuralNetwork {
             } , 0);
             const sigmo = this.sigmoid(sigma);
             if(sigmo===undefined){
-                console.log('xxx')
+                // console.log('xxx')
                 return sum + weight * 0.5;
             }
             return sigmo;
             // this.sigmoid(row.reduce((sum, weight, j) => sum + weight * input[j], 0))
         });
-debugger;
+// debugger;
         // 4. Compute output layer activations 8 X 9
         const outputLayer = this.hiddenOutputWeights.map(row => {
-            console.log('row',row)
+            // console.log('row',row)
             const sigma = row.reduce((sum, weight, j) => {
-                console.log('x',sum,weight,hiddenLayer[j])
+                // console.log('x',sum,weight,hiddenLayer[j])
                 if(hiddenLayer[j]===undefined){
-                    console.log('xxx')
+                    // console.log('xxx')
                     return 0;//sum + weight * 0.5;
                 }
                 return sum + weight * hiddenLayer[j]
@@ -153,7 +158,9 @@ debugger;
 
 
 // Neural Network Visualization Techniques
-
+// Understand network internals
+// Debug learning process
+// Gain insights into weight transformations
 
 
 class NeuralNetVisualizer {
@@ -173,6 +180,7 @@ class NeuralNetVisualizer {
         );
 
         console.log("\nHidden to Output Layer Weights:");
+        // debugger;
         this.printHeatmap(this.neuralNet.hiddenOutputWeights, 
             "Hidden-Output", 
             (val) => this.colorMap(val, -1, 1)
@@ -183,8 +191,11 @@ class NeuralNetVisualizer {
     colorMap(value, min, max) {
         // Map value to color intensity
         const normalized = (value - min) / (max - min);
-        const r = Math.floor(255 * (1 - normalized));
-        const b = Math.floor(255 * normalized);
+        let r = Math.floor(255 * (1 - normalized));
+        let b = Math.floor(255 * normalized);
+        //TODO: cannot be negative?
+        r = (r<0)?0:r;
+        b = (b<0)?0:b;
         return `\x1b[48;2;${r};0;${b}m  \x1b[0m`;
     }
 
@@ -260,6 +271,7 @@ class NeuralNetVisualizer {
         this.summarizeWeightChanges(weightTrajectory.inputHidden);
         
         console.log("\nHidden-Output Layer Initial vs Final Weights Range:");
+        // debugger;
         this.summarizeWeightChanges(weightTrajectory.hiddenOutput);
     }
 
@@ -295,13 +307,13 @@ class NeuralNetVisualizer {
 // Demonstration Function
 function demonstrateNeuralNetVisualization() {
     // Tokens for demonstration
-    const tokens = ["hello", "help", "world", "code", "coding"];
+    const tokens = ["hello", "help", "world", "code", "coding","aaa"];
     const maxLength = 6;
 
     // Create neural network
     const nn = new NeuralNetwork(
         maxLength,    // input size
-        8,            // hidden layer size
+        6,            // hidden layer size
         tokens.length // output layer size
     );
 
@@ -309,7 +321,7 @@ function demonstrateNeuralNetVisualization() {
     const visualizer = new NeuralNetVisualizer(nn);
 
     // 1. Initial Weight Visualization (Before Training)
-    console.log("🔬 Initial Neural Network State Visualization 🔬");
+    console.log("🔬 VIZ: Neural Network State 🔬");
     visualizer.visualizeWeights();
 
     // 2. Training and Visualization
@@ -325,16 +337,18 @@ function demonstrateNeuralNetVisualization() {
     });
 
     // 3. Visualization after Training
-    console.log("\n🚀 Neural Network State After Training 🚀");
+    console.log("\n🦾 VIZ:WEIGHTS 🦾");
     visualizer.visualizeWeights();
 
     // 4. Activation Visualization
+    console.log("\n⚡ VIZ:ACTIVIATION ⚡");
     const sampleInput = nn.stringToOneHot("hello", maxLength);
     visualizer.visualizeActivations(sampleInput);
 
     // 5. Learning Trajectory
+    console.log("\n🚀 VIZ:TRAJECTORY 🚀");
     visualizer.visualizeLearningTrajectory(tokens, maxLength);
 }
-debugger;
+// debugger;
 // Run the visualization demonstration
 demonstrateNeuralNetVisualization();

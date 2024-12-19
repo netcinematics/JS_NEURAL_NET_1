@@ -47,7 +47,10 @@ class NeuralNetwork { //from cosinesimilarity
         return sigma;
         // return 1 / (1 + Math.exp(-x)); //FIX if NaN return 0
       }    
-
+    //sigmoid Derivative : ACTIVATION SENSITIVITY
+//     Gradient Calculation: In backpropagation, we need to know how much each neuron contributes to the error
+// Learning Rate: The derivative helps determine how much to adjust weights
+// Avoiding Vanishing Gradient: This derivative helps mitigate some issues with very deep networks
     // Derivative of sigmoid for backpropagation
     sigmoidDerivative(x) {
         return x * (1 - x);
