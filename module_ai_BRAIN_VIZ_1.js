@@ -6,8 +6,9 @@ export class AI_BRAIN_VIZ_1 {
         if(!canvasElem){console.log('err: no canvas')}
         this.canvas = canvasElem;//document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
-        
-        this.canvas.width = 500; //default width
+        // debugger;
+        // this.canvas.width = 500; //default width
+        this.canvas.width = canvasElem.parentElement.clientWidth * 0.8;
         this.canvas.height = 200; //default height
 
     }
@@ -68,9 +69,14 @@ export class AI_BRAIN_VIZ_1 {
         // }
         // this.neuralNet.weightsIH 10x2
         // this.neuralNet.weightsHO 52x10
-        let frame=[],vector=[],colorVal='';
+        let frame=[],vector=[],scalar=0;
         let rows=0,cols=0,spacing=4;
-        let startX=0,startY=25;
+        let startX=0,startY=25,colorVal='';;
+
+        this.ctx.fillStyle = 'steelblue';
+        this.ctx.font = "0.8em Arial italic bold "; //TITLE
+        this.ctx.fillText("Input Weights", 20, 15);
+
         rows = this.neuralNet.weightsIH.length;
         for (let frameIDX = 0; frameIDX < this.neuralNet.weightsIH.length; frameIDX++) {
             frame = this.neuralNet.weightsIH[frameIDX];
@@ -80,9 +86,9 @@ export class AI_BRAIN_VIZ_1 {
                 vector = frame[vectorIDX];
                 // startX += vectorIDX * spacing;
                 startY = 25 + (vectorIDX * spacing) + CURSOR_POS.y;
-                colorVal = this.setColor_Weights(vector,-1,1)
+                colorVal = this.getColor_MAP_1(vector,-1,1)
                  // this.DRAW_POINT( startX + i * spacing, startY   );
-                console.log('point',startX,startY)
+                // console.log('point',startX,startY)
                 this.ctx.beginPath();
 
                 this.ctx.fillStyle = colorVal;
@@ -92,12 +98,13 @@ export class AI_BRAIN_VIZ_1 {
             }
         }
 
-        this.ctx.fillStyle = 'steelblue';
-        this.ctx.font = "0.8em Arial italic bold "; //TITLE
-        this.ctx.fillText("Input Weights", 20, 15);
         // let padding = this.canvas.width * 0.1;
 
-        CURSOR_POS = {x:0,y:CURSOR_POS.y + 80}
+        this.ctx.fillStyle = 'steelblue';
+        this.ctx.font = "0.8em Arial italic bold "; //TITLE
+        this.ctx.fillText("Output Weights", 20, 85);
+
+        CURSOR_POS = {x:0,y:CURSOR_POS.y + 75}
         rows = this.neuralNet.weightsHO.length;
         for (let frameIDX = 0; frameIDX < this.neuralNet.weightsHO.length; frameIDX++) {
             frame = this.neuralNet.weightsHO[frameIDX];
@@ -107,9 +114,9 @@ export class AI_BRAIN_VIZ_1 {
                 vector = frame[vectorIDX];
                 // startX += vectorIDX * spacing;
                 startY = 25 + (vectorIDX * spacing) +CURSOR_POS.y;
-                colorVal = this.setColor_Weights(vector,-1,1)
+                colorVal = this.getColor_MAP_1(vector,-1,1)
                  // this.DRAW_POINT( startX + i * spacing, startY   );
-                console.log('point',startX,startY)
+                // console.log('point',startX,startY)
                 this.ctx.beginPath();
 
                 this.ctx.fillStyle = colorVal;
@@ -119,22 +126,56 @@ export class AI_BRAIN_VIZ_1 {
             }
         }        
 
+        // debugger;
         this.ctx.fillStyle = 'steelblue';
         this.ctx.font = "0.8em Arial italic bold "; //TITLE
-        this.ctx.fillText("Output Weights", 20, 85);
+        this.ctx.fillText("Bias Hidden", 20, 130);
+
+        CURSOR_POS = {x:0,y:CURSOR_POS.y + 40}
+        rows = 1;
+        for (let vectorIDX = 0; vectorIDX < this.neuralNet.biasH.length; vectorIDX++) {
+            scalar = this.neuralNet.biasH[vectorIDX];
+            startX = 25+ vectorIDX * spacing;
+            startY = 25+ CURSOR_POS.y;
+            colorVal = this.getColor_MAP_1(scalar,-1,1)
+            this.ctx.beginPath();
+            this.ctx.fillStyle = colorVal;
+            // console.log('point',startX,startY)
+            this.ctx.arc(startX, startY, 1, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+
+        this.ctx.fillStyle = 'steelblue';
+        this.ctx.font = "0.8em Arial italic bold "; //TITLE
+        this.ctx.fillText("Output", 20, 165);
+
+
+        CURSOR_POS = {x:0,y:CURSOR_POS.y + 40}
+        rows = 1;
+        for (let vectorIDX = 0; vectorIDX < this.neuralNet.output.length; vectorIDX++) {
+            scalar = this.neuralNet.output[vectorIDX];
+            startX = 25+ (vectorIDX * 40);
+            startY = 25+ CURSOR_POS.y;
+            colorVal = this.getColor_MAP_1(scalar,-1,1)
+            this.ctx.fillStyle = colorVal;
+            this.ctx.font = "0.6em Arial italic bold "; //TITLE
+            this.ctx.fillText(scalar.toFixed(2), startX, startY);            
+        }
+
 
         // this.DRAW_GRID({rows : 14, cols : 14, startX : 30, startY : 30, spacing : 4} )
-        CURSOR_POS = {x:30,y:30 + 100};
-        this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
-        CURSOR_POS = {x:30+100,y:30 + 100};
-        this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
-        CURSOR_POS = {x:30+200,y:30 + 100};
-        this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
-        CURSOR_POS = {x:30+300,y:30 + 100};
-        this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
+        // CURSOR_POS = {x:30,y:30 + 100};
+        // this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
+        // CURSOR_POS = {x:30+100,y:30 + 100};
+        // this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
+        // CURSOR_POS = {x:30+200,y:30 + 100};
+        // this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
+        // CURSOR_POS = {x:30+300,y:30 + 100};
+        // this.DRAW_GRID({rows:14, cols:14, startX:CURSOR_POS.x, startY:CURSOR_POS.y, spacing:4} )
 
         
-        this.render_BASELINE(['a','b','c','d'])
+        // this.render_BASELINE(['a','b','c','d'])
         // 1. Weight Heatmap Visualization
         // console.log("\n🔍 Weight Visualization 🔍");
         
@@ -159,7 +200,9 @@ export class AI_BRAIN_VIZ_1 {
 
     }
 
-    setColor_Weights (value, min, max){ // Map value to color intensity
+    getColor_MAP_1 (value, min, max){ // Map value to color intensity
+        // if(value<min){console.log('warning: color less than min',min,value)}
+        // if(value>max){console.log('warning: color more than max',max,value)}
         const normalized = (value - min) / (max - min);
         let r = Math.floor(255 * (1 - normalized));
         let b = Math.floor(255 * normalized);
