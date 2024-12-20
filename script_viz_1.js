@@ -319,7 +319,7 @@ function demonstrateNeuralNetVisualization() {
 
     // Create visualizer
     const visualizer = new NeuralNetVisualizer(nn);
-
+// debugger;
     // 1. Initial Weight Visualization (Before Training)
     console.log("🔬 VIZ: Neural Network State 🔬");
     visualizer.visualizeWeights();
@@ -342,7 +342,12 @@ function demonstrateNeuralNetVisualization() {
 
     // 4. Activation Visualization
     console.log("\n⚡ VIZ:ACTIVIATION ⚡");
-    const sampleInput = nn.stringToOneHot("hello", maxLength);
+    // const sampleInput = nn.stringToOneHot("hello", maxLength);
+    // const sampleInput = nn.stringToOneHot("aaa", maxLength);
+    // const sampleInput = nn.stringToOneHot("xxx", maxLength);
+    // const sampleInput = nn.stringToOneHot("abc", maxLength);
+    // const sampleInput = nn.stringToOneHot("def", maxLength);
+    const sampleInput = nn.stringToOneHot("world", maxLength);
     visualizer.visualizeActivations(sampleInput);
 
     // 5. Learning Trajectory

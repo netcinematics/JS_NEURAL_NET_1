@@ -60,6 +60,9 @@ export class AI_BRAIN_VIZ_1 {
 
         let CURSOR_POS = {x:30,y:0};
 
+        let PAD_TOP = 30;
+        let PAD_LEFT = 30;
+
         // for(var i=0; i< aiEpochz.length;i++){
         //     this.DRAW_GRID({
         //         rows : 20, cols : 20, 
@@ -71,11 +74,11 @@ export class AI_BRAIN_VIZ_1 {
         // this.neuralNet.weightsHO 52x10
         let frame=[],vector=[],scalar=0;
         let rows=0,cols=0,spacing=4;
-        let startX=0,startY=25,colorVal='';;
+        let startX=0,startY=PAD_LEFT,colorVal='';;
 
         this.ctx.fillStyle = 'steelblue';
         this.ctx.font = "0.8em Arial italic bold "; //TITLE
-        this.ctx.fillText("Input Weights", 20, 15);
+        this.ctx.fillText("WEIGHTS IH", PAD_LEFT, PAD_TOP);
 
         rows = this.neuralNet.weightsIH.length;
         for (let frameIDX = 0; frameIDX < this.neuralNet.weightsIH.length; frameIDX++) {
@@ -102,18 +105,18 @@ export class AI_BRAIN_VIZ_1 {
 
         this.ctx.fillStyle = 'steelblue';
         this.ctx.font = "0.8em Arial italic bold "; //TITLE
-        this.ctx.fillText("Output Weights", 20, 85);
+        this.ctx.fillText("Weights HO", 20, 85);
 
         CURSOR_POS = {x:0,y:CURSOR_POS.y + 75}
         rows = this.neuralNet.weightsHO.length;
         for (let frameIDX = 0; frameIDX < this.neuralNet.weightsHO.length; frameIDX++) {
             frame = this.neuralNet.weightsHO[frameIDX];
             cols = frame.length;
-            startX = 25 + (frameIDX*spacing);// + CURSOR_POS.x; 
+            startX = PAD_LEFT + (frameIDX*spacing);// + CURSOR_POS.x; 
             for (let vectorIDX = 0; vectorIDX < frame.length; vectorIDX++) {
                 vector = frame[vectorIDX];
                 // startX += vectorIDX * spacing;
-                startY = 25 + (vectorIDX * spacing) +CURSOR_POS.y;
+                startY = PAD_TOP + (vectorIDX * spacing) +CURSOR_POS.y;
                 colorVal = this.getColor_MAP_1(vector,-1,1)
                  // this.DRAW_POINT( startX + i * spacing, startY   );
                 // console.log('point',startX,startY)
@@ -129,14 +132,14 @@ export class AI_BRAIN_VIZ_1 {
         // debugger;
         this.ctx.fillStyle = 'steelblue';
         this.ctx.font = "0.8em Arial italic bold "; //TITLE
-        this.ctx.fillText("Bias Hidden", 20, 130);
+        this.ctx.fillText("BiasH (hidden)", PAD_LEFT, 130);
 
         CURSOR_POS = {x:0,y:CURSOR_POS.y + 40}
         rows = 1;
         for (let vectorIDX = 0; vectorIDX < this.neuralNet.biasH.length; vectorIDX++) {
             scalar = this.neuralNet.biasH[vectorIDX];
-            startX = 25+ vectorIDX * spacing;
-            startY = 25+ CURSOR_POS.y;
+            startX = PAD_LEFT+ vectorIDX * spacing;
+            startY =PAD_TOP+ CURSOR_POS.y;
             colorVal = this.getColor_MAP_1(scalar,-1,1)
             this.ctx.beginPath();
             this.ctx.fillStyle = colorVal;
@@ -148,19 +151,19 @@ export class AI_BRAIN_VIZ_1 {
 
         this.ctx.fillStyle = 'steelblue';
         this.ctx.font = "0.8em Arial italic bold "; //TITLE
-        this.ctx.fillText("Output", 20, 165);
+        this.ctx.fillText("Output", PAD_LEFT, 165);
 
 
         CURSOR_POS = {x:0,y:CURSOR_POS.y + 40}
         rows = 1;
         for (let vectorIDX = 0; vectorIDX < this.neuralNet.output.length; vectorIDX++) {
             scalar = this.neuralNet.output[vectorIDX];
-            startX = 25+ (vectorIDX * 40);
-            startY = 25+ CURSOR_POS.y;
+            startX = PAD_LEFT+ (vectorIDX * 40);
+            startY = PAD_TOP+ CURSOR_POS.y;
             colorVal = this.getColor_MAP_1(scalar,-1,1)
             this.ctx.fillStyle = colorVal;
             this.ctx.font = "0.6em Arial italic bold "; //TITLE
-            this.ctx.fillText(scalar.toFixed(2), startX, startY);            
+            this.ctx.fillText(scalar.toFixed(2), startX, startY);
         }
 
 

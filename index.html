@@ -285,20 +285,36 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
     </article>
     <hr> 
     <article id="MARGINZ_RENDER_FRAME">
-        <h2>AI_BRAIN:</h2>
+        <h2>AI_BRAIN_VIZ:</h2>
         <section class="scrollBarH"
-        style="width:100%; border-radius:13px;border:solid 1px darkorchid;">
+        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
             <canvas id="CANVAS_BRAIN_VIZ_1" 
                 style="background:black;border-radius:13px;border:solid 1px steelblue;
-                margin: 2em;"></canvas>
+                margin: 2em;flex:1;"></canvas>
         </section>
         <hr>
         <h2>AI_TIMELINE:</h2>
         <section class="scrollBarH"
-        style="width:100%; border-radius:13px;border:solid 1px darkorchid;">
+        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
             <canvas id="CANVAS_ELEM_1" 
                 style="background:black;border-radius:13px;border:solid 1px steelblue;
-                margin: 2em;"></canvas>
+                margin: 2em; flex: 1;"></canvas>
+        </section>
+        <hr>
+        <h2>AI_MOVIE_PROJECTOR:</h2>
+        <section class="scrollBarH"
+        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
+            <canvas id="CANVAS_BRAIN_MOVIE_1" 
+                style="background:black;border-radius:13px;border:solid 1px steelblue;
+                margin: 2em;flex: 1;"></canvas>
+        </section>
+        <hr>
+        <h2>AI_3D_PROJECTOR:</h2>
+        <section class="scrollBarH"
+        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
+            <canvas id="CANVAS_BRAIN_MOVIE_1" 
+                style="background:black;border-radius:13px;border:solid 1px steelblue;
+                margin: 2em;flex: 1;"></canvas>
         </section>
         TODO: 3D scatter plot visualization of neural networks.
     </article>
@@ -364,7 +380,7 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
         <section id="INPUT_BOX_1" style="display:flex;border: solid 1px steelblue;
         border-radius: 13px;padding: 2px 6px;color: aqua;align-items: center;
         margin:1%;">
-            TEST TOKEN PRESENCE:<input id="TXT_INPUT_1_"  type="text" placeholder="query..." 
+            TEST TOKEN 'dbl-letter start' and 'contains b':<input id="TXT_INPUT_1_"  type="text" placeholder="query..." 
             style="margin-left: 1em; background:black;    color: aqua;
             height: 2em;
             padding-left: 1em;
@@ -940,7 +956,8 @@ tokens.forEach(token => {
 <!-- <script src="./script_ai_TIMELINE_1.js" type="module"></script> -->
 <!-- <script src="./script_similar_word_cosine_1.js"></script> -->
 <!-- <script src="./script_viz_1.js"></script> -->
-<script src="./script_AI_BRAIN_FRAME_1.js"  type="module"></script>
+<script src="./script_txt_a_upper_1.js"  type="module"></script>
+<!-- <script src="./script_AI_BRAIN_STEM_2.js"  type="module"></script> -->
 <!-- <script src="./script_letter_predictor_1.js"></script> -->
 <!-- <script src="./script_neologism_1.js"></script> -->
 <!-- <script src="./script_cluster_1.js"></script> -->

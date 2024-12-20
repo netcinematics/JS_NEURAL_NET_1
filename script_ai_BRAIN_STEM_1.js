@@ -23,7 +23,7 @@ class NeuralNetwork_1 {
         this.weightsHO = Array(hiddenSize).fill().map(() => 
             Array(outputSize).fill().map(() => Math.random() * 2 - 1)
         );
-        
+        //console.log('--🎲 RANDOM BIAS/LR/WEIGHTS ⚖️')
         // Initialize biases
         this.biasH = Array(hiddenSize).fill().map(() => Math.random() * 2 - 1);
         this.biasO = Array(outputSize).fill().map(() => Math.random() * 2 - 1);
@@ -39,6 +39,7 @@ class NeuralNetwork_1 {
     // Convert letter sequence to input vector
     // Each position represents presence (1) or absence (0) of a letter
     tokenToInput(token) {
+        
         const input = Array(26 * 2).fill(0); // Space for 2 letters
         for (let i = 0; i < Math.min(token.length, 2); i++) {
             const charCode = token.charCodeAt(i) - 97; // 'a' starts at 97
@@ -46,20 +47,25 @@ class NeuralNetwork_1 {
                 input[i * 26 + charCode] = 1;
             }
         }
+        //console.log('-🤖 TOKEN_VECTOR 🤖',token)
+            //TODO VECTOR DETECTOR
+            // //console.log("\n--🔬 VIZ: VECTOR _DETECTOR 🔬");
+            //AI_VIZ_BRAIN.VECTOR_DETECTOR(input,token)
+
         return input;
     }
 
     // Forward pass through the network
-    forward(input) {  // Hidden layer
+    forward(input) {  // Hidden layer : sum of vector across weights, with bias
         this.hidden = this.weightsIH[0].map((_, j) => {
             let sum = this.biasH[j];
             for (let i = 0; i < input.length; i++) {
                 sum += input[i] * this.weightsIH[i][j];
             }
             return this.sigmoid(sum); //activation fn, also //TODO: ReLU
-        });
-
-        // Output layer
+        }); //hidden sigmoids.
+        //console.log('-⚡ HL:ActiveFn/Weights/Bias/sigma ⚡')
+        // Output layer: sum of hidden * weight
         this.output = this.weightsHO[0].map((_, j) => {
             let sum = this.biasO[j];
             for (let i = 0; i < this.hidden.length; i++) {
@@ -72,12 +78,15 @@ class NeuralNetwork_1 {
     }
 
     // Train the network using backpropagation
-    train(input, target) {
+    train(input, target) { //target array of target types.
         // Forward pass
-        this.forward(input);
+        //console.log('--🏈 FORWARD_PASS 🏈')
+        this.forward(input); //this.output
 
         // Output layer error
         const outputErrors = target.map((t, i) => (t - this.output[i]));
+        //console.log('--HL: OUTPUT ERROR')
+        //console.log('--OL: ERROR')
         
         // Hidden layer error
         const hiddenErrors = this.hidden.map((_, i) => {
@@ -89,6 +98,7 @@ class NeuralNetwork_1 {
         });
 
         // Update weights and biases
+        //console.log('-Update WEIGHT/BIAS/Learn',this.learningRate)
         // Output layer
         for (let i = 0; i < this.hidden.length; i++) {
             for (let j = 0; j < this.output.length; j++) {
@@ -117,15 +127,17 @@ class NeuralNetwork_1 {
     }
 } //END NEURAL NETWORK class
 function queryNeuralNetwork_1_(e){
-    if(!TXT_INPUT_1_ELEM){console.log('err: missing input'); return}
+    if(!TXT_INPUT_1_ELEM){//console.log('err: missing input'); 
+        return}
     const val = TXT_INPUT_1_ELEM.value;
-    if(!val){console.log('needs input'); return;}
+    if(!val){//console.log('needs input'); 
+        return;}
     tokens = val.split(' ')
     OUTPUT_1_ELEM.innerHTML = ''; //clear out put
     tokens.forEach(token => {
         const input = nn_1.tokenToInput(token);
         const output = nn_1.forward(input);
-        console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
+        //console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
         // debugger;
         const txtPCTS = output.map( (v) => { 
             // return v.toFixed(3); 
@@ -144,39 +156,48 @@ function queryNeuralNetwork_1_(e){
 }
 TEST_BTN_1_ELEM.onclick = queryNeuralNetwork_1_;
 let nn_1;
+// TOKENS STRONGER UP FRONT with MORE EPOCH, less with less epoch.
 let tokens = ["aa", "ab", "abc", "aaa", "bb", "ba", "ab", "abb", "bbb"];
+// let tokens = ["ape", "tree", "abc", "aaa", "bb", "ba", "ab", "abb", "bbb"];
 function START_BRAIN(){
-    // Example usage:
-    // debugger;
+    //console.log("----🧠 NN:INIT 🧠");
     nn_1 = new NeuralNetwork_1(52, 10, 2); // 52 inputs (26 letters * 2 positions), 10 hidden neurons, 2 outputs
 
     NNTXT_1_ELEM.innerHTML = tokens; //set tokens in UI.
     // INPUT_1_ELEM.innerHTML = tokens; //set tokens in UI.
 
-    // Training example
+    //console.log("----🦾 NN:TRAIN_FRAME 🦾");
     function trainExample() {
+        //console.log("\n---💫 NN:TOKEN_LOOP 💫");
         // Example: Train to recognize if a token contains double letters
         tokens.forEach(token => {
-            const input = nn_1.tokenToInput(token);
+            //console.log("---🗃️ INPUT_VECTORS 🗃️");
+            const input = nn_1.tokenToInput(token);//contains: VECTOR_DETECTOR.
+            //console.log("---🎯 TARGET_CASE 🎯");
             const target = [
-                token[0] === token[1] ? 1 : 0,  // First output: has double letters
-                token.includes('b') ? 1 : 0      // Second output: contains 'a'
+                token[0] === token[1] ? 1 : 0,  // First NUM: has double letters
+                token.includes('b') ? 1 : 0      // Second NUM: contains 'a'
             ];
+            //console.log("---🌪️ TRAIN_Fn 🌪️");
             nn_1.train(input, target);
+            //console.log("---🚧 END_TRAIN 🚧",token);
         });
     }
 
     // Train the network
     // debugger;
     let epoch_num = 1000;
+    //console.log('-----🌌 EPOCH_LOOP 🌌',epoch_num)
     for (let i = 0; i < epoch_num; i++) {
-    // for (let i = 0; i < 1000; i++) {
-    // for (let i = 0; i < 10; i++) {
         trainExample();
+        if(i%(epoch_num*0.1)===0){ //ten epoch counters
+            //console.log('-----🧭 EPOCH 🧭',i)
+        }
     }
 
     OUTPUT_1_ELEM.innerHTML = ''; //clear out put
     // Test the network //optimize this TODO: move vars out to runFN() pattern.
+    console.log('TOKEN_INTELLIGENCE:[','double letter,','contains(b)')
     tokens.forEach(token => {
         const input = nn_1.tokenToInput(token);
         const output = nn_1.forward(input);
@@ -196,6 +217,7 @@ function START_BRAIN(){
         }
         // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
     });
+    console.log('TOKEN_TEST:','EVAL: double letter and','contains(b)')
 }; START_BRAIN();
 
 function RENDER_BRAIN_VIZ(){
@@ -203,7 +225,7 @@ function RENDER_BRAIN_VIZ(){
     const AI_BRAIN_VIZ = new AI_BRAIN_VIZ_1(nn_1,CANVAS_1_ELEM);
     
     // 1. Initial Weight Visualization (Before Training)
-    console.log("🔬 VIZ: AI_BRAIN 🔬");
+    //console.log("---🔬 VIZ: AI_BRAIN 🔬");
     AI_BRAIN_VIZ.render_NEURON_WEIGHTS(); //visualizeWeights
     // AI_BRAIN_VIZ.render_BASELINE([{title:'a',title:'b'}])
     // AI_BRAIN_VIZ.render_BASELINE([{title:'a',title:'b'}])
@@ -215,6 +237,7 @@ function RENDER_BRAIN_VIZ(){
 function demonstrateNeuralNetVisualization() {
     // Tokens for demonstration
     const tokens = ["hello", "help", "world", "code", "coding","aaa"];
+
     const maxLength = 6;
 
     // Create neural network
@@ -228,7 +251,7 @@ function demonstrateNeuralNetVisualization() {
     const AI_BRAIN_VIZ = new NeuralNetVisualizer(nn);
 
     // 1. Initial Weight Visualization (Before Training)
-    console.log("🔬 VIZ: Neural Network State 🔬");
+    //console.log("---🔬 VIZ: Neural Network State 🔬");
     AI_BRAIN_VIZ.visualizeWeights();
 
     // 2. Training and Visualization
@@ -244,18 +267,28 @@ function demonstrateNeuralNetVisualization() {
     });
 
     // 3. Visualization after Training
-    console.log("\n🦾 VIZ:WEIGHTS 🦾");
+    //console.log("\n---🦾 VIZ:WEIGHTS 🦾");
     AI_BRAIN_VIZ.visualizeWeights();
 
     // 4. Activation Visualization
-    console.log("\n⚡ VIZ:ACTIVIATION ⚡");
+    //console.log("\n⚡ VIZ:ACTIVIATION ⚡");
     const sampleInput = nn.stringToOneHot("hello", maxLength);
     AI_BRAIN_VIZ.visualizeActivations(sampleInput);
 
     // 5. Learning Trajectory
-    console.log("\n🚀 VIZ:TRAJECTORY 🚀");
+    //console.log("\n---🚀 VIZ:TRAJECTORY 🚀");
     AI_BRAIN_VIZ.visualizeLearningTrajectory(tokens, maxLength);
 }
 // debugger;
 // Run the visualization demonstration
 // demonstrateNeuralNetVisualization();
+
+// Token: aa, Output: 0.955,0.030
+// Token: ab, Output: 0.027,0.982
+// Token: abc, Output: 0.027,0.982
+// Token: aaa, Output: 0.955,0.030
+// Token: bb, Output: 0.936,0.999
+// Token: ba, Output: 0.101,0.951
+// Token: ab, Output: 0.027,0.982
+// Token: abb, Output: 0.027,0.982
+// Token: bbb, Output: 0.936,0.999
