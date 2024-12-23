@@ -283,8 +283,6 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
             <span><span style="font-size:0.777em; color:cyan">~</span>
             VIZ</span>
         </span>
-        <!--button class="expanderBTN" style="padding:0;font-size:0.777em;line-height: 1.444em;" 
-            onclick="expander_BANKZ_Click(event)">✧</button--><!--TODO-->
     </article>
     <hr> 
 
@@ -332,15 +330,22 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
             <span id="expander_PLAYBACK" class="expanderBTN" style="font-size:0.777em;" 
             onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
         </header>
-        <article class="scrollBarH"
-            style="border-radius:13px;
-            border:solid 1px darkorchid; 
-            display:flex !important;
-            justify-content: center;">
-            <canvas id="CANVAS_PLAYBACK_1" 
-            style="background:black;border-radius:13px;border:solid 1px steelblue;
-            margin: 2em;flex: 1;"></canvas>
-        </article>
+        <main style="width: 100%; padding:0; margin:0">
+            <article style="display:flex; border-radius:13px;
+                border:solid 1px darkorchid; width:100%; flex-direction: row;">
+                <canvas id="CANVAS_PLAYBACK_1" 
+                style="background:black;border-radius:13px;border:solid 1px steelblue;
+                margin: 2em; width:50%;"></canvas>
+                <aside style="width: 50%; display: flex; align-items: center;">
+                    <button id="playback_BTN_1_" class="blackBTN" style="padding:1em;font-size:0.888em;
+                    line-height: 1.444em;    border-radius: 25px;" 
+                    ">▶️PLAY</button>
+                    <footer style="display:flex; text-align: center;width: 100%; 
+                    justify-content: center;">
+                    <span id="playback_idx_1_">0</span>&nbsp;of&nbsp;<span id="playback_total_1_">0</span> </footer>
+                </aside>
+            </article>
+        </main>
     </section>
 
     <hr>
@@ -878,7 +883,6 @@ function EXPANDER_Set_OUTERFRAME(btnid) {
     });
 }
 //---------------------END EXPANDER TOGGLE VIEW BUTTONS---------------------        
-
 
 </script>
 <!------------MINIMAL EXAMPLE-->

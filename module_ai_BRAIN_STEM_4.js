@@ -18,7 +18,7 @@
 const NNTXT_1_ELEM = document.getElementById("NNTXT_1_ELEM");
 const OUTPUT_1_ELEM = document.getElementById("OUTPUT_1_ELEM");
 const TXT_INPUT_1_ELEM = document.getElementById('TXT_INPUT_1_')
-const TEST_BTN_1_ELEM = document.getElementById('TEST_BTN_1_')
+// const TEST_BTN_1_ELEM = document.getElementById('TEST_BTN_1_')
 //-----------------------------------------------
 //------------------------VISUALIZATION-----------
 import { AI_VIZ_LOG } from './module_AI_VIZ_LOG_1.js'; //todo
@@ -296,8 +296,7 @@ class NeuralNetwork_aZ_1 {
     // }
 } //END NEURAL NETWORK class
 
-//------------------------------------UI--------
-function queryNeuralNetwork_1_(e){
+// function queryNeuralNetwork_1_(e){
     // if(!TXT_INPUT_1_ELEM){console.log('err: missing input'); return}
     // const val = TXT_INPUT_1_ELEM.value;
     // if(!val){console.log('needs input'); return;}
@@ -322,8 +321,8 @@ function queryNeuralNetwork_1_(e){
     //     }
     //     // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
     // });
-}
-TEST_BTN_1_ELEM.onclick = queryNeuralNetwork_1_;
+// }
+// TEST_BTN_1_ELEM.onclick = queryNeuralNetwork_1_;
 //-----------END UI-----------------------------
 //-----------AI RUNNER-----------------------------
 // Test the neural network
@@ -463,26 +462,18 @@ export class AI_BRAIN_VIZ_2 {
     // }
 
     render_NEURON_TIMELINE(){ //AI_TIMELINE VIZ.
+        // if(nn.IH_SLICE[0][0][0]===nn.IH_SLICE[1][0][0]){ //similar check
+        //     // debugger;
+        //     console.log('same',nn.IH_SLICE[0][0][0])
+        //     console.log('same',nn.IH_SLICE[1][0][0])
+        // }else{
+            //     console.log('not same')
+            // }
+            // }
+            
         if(!nn.IH_SLICE){console.log('ERROR: cannot find slice!');return;}
-        // debugger;
-
-        // for(var z=0; z<nn.IH_SLICE.length;z++){
-        //     let slices = nn.IH_SLICE[z];
-            if(nn.IH_SLICE[0][0][0]===nn.IH_SLICE[1][0][0]){
-                // debugger;
-                console.log('same',nn.IH_SLICE[0][0][0])
-                console.log('same',nn.IH_SLICE[1][0][0])
-            }else{
-                console.log('not same')
-                // console.log('second',slices[1][0])
-
-            }
-        // }
-
         this.ctx_TIMELINE.clearRect(0, 0, this.CANVAS_TIMELINE_1.width, this.CANVAS_TIMELINE_1.height);  // Clear the canvas
         this.CANVAS_TIMELINE_1.width = (nn.IH_SLICE.length)?nn.IH_SLICE.length*100:this.CANVAS_TIMELINE_1.width;
-
-
         let frame=[],vector=[],colorTGT=0;
         let row=0,cols=0;
         let SIZE_SML=2,SIZE_MED=3,SIZE_BIG=4,SPACING_SML=6,SPACING_MED=7,SPACING_BIG=8;
@@ -491,26 +482,19 @@ export class AI_BRAIN_VIZ_2 {
         let PAD_TOP = 25;
         let PAD_LEFT = 20;
         let PAD_COL = 100;
-        let CURSOR_POS = {x:PAD_LEFT,y:PAD_TOP}; //USE like a ink printer.
 
+        let CURSOR_POS = {x:PAD_LEFT,y:PAD_TOP}; //USE like a ink printer.
         this.ctx_TIMELINE.fillStyle = 'steelblue';
         this.ctx_TIMELINE.font = "0.8em Arial italic bold "; //TITLE
         this.ctx_TIMELINE.fillText("HIDDEN NEURONS:", CURSOR_POS.x, CURSOR_POS.y);
 
         CURSOR_POS = {x:PAD_LEFT,y:40}; //NEXT POSITION.
-
-
         let slice, colorGrid;
         for(let i=0;i<nn.IH_SLICE.length;i++){
             slice = nn.IH_SLICE[i];
-            // console.log('SLICE',i,slice)
-    // debugger;
-
             colorGrid = this.matrixToColorsNormalized(slice);
-            // debugger;
 
             CURSOR_POS = {x:(PAD_COL*i)+PAD_LEFT, y:CURSOR_POS.y}; //NEXT POSITION.
-
             for (let rowIDX = 0; rowIDX < colorGrid.length; rowIDX++) {
                 row = colorGrid[rowIDX];
                 // frame = this.neuralNet.weightsIH[rowIDX];
@@ -529,26 +513,6 @@ export class AI_BRAIN_VIZ_2 {
                     this.ctx_TIMELINE.fill();
                 }
             }
-
-            // rows = this.neuralNet.weightsIH.length;
-            // for (let frameIDX = 0; frameIDX < this.neuralNet.weightsIH.length; frameIDX++) {
-            //     frame = this.neuralNet.weightsIH[frameIDX];
-            //     cols = frame.length;
-            //     startX = CURSOR_POS.x + (frameIDX*SPACING_MED); 
-            //     for (let vectorIDX = 0; vectorIDX < frame.length; vectorIDX++) {
-            //         vector = frame[vectorIDX];
-            //         startY = CURSOR_POS.y + (vectorIDX * SPACING_MED);
-            //         // colorVal = this.numbersToColorsNormalized(vector)
-            //         // colorVal = this.numberToColor(vector);
-            //         // colorVal = this.getColor_MAP_1(vector,-1,1)
-            //         this.ctx_TIMELINE.beginPath();
-            //         this.ctx_TIMELINE.fillStyle = colorVal;
-            //         this.ctx_TIMELINE.arc(startX,startY,SIZE_MED, 0, Math.PI * 2);
-            //         this.ctx_TIMELINE.fill();
-            //     }
-            // }
-
-
         }
     }
     render_NEURON_WEIGHTS(){ //NEURON_WEIGHT VIZ.
@@ -800,14 +764,72 @@ export class AI_BRAIN_VIZ_2 {
     //     // this.ctx.textAlign = 'center';
     //     this.ctx.fillText(emoji, x, y);
     // }
-}
+    // render_TIMELINE_SLICE(canvas, txt){
+    render_TIMELINE_SLICE(canvas, idx){ //MOVIE PLAYBACK
+        // debugger;
+        let ctx_PLAYBACK = canvas.getContext('2d');
+        ctx_PLAYBACK.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
+        // ctx_PLAYBACK.font = '12px Arial';
+        // ctx_PLAYBACK.fillStyle = 'white'; // Ensure visibility on black background
+        // // ctx_PLAYBACK.textAlign = 'center';
+        // ctx_PLAYBACK.fillText(idx, 44, 44);
+        // // ctx_PLAYBACK.fillText(txt, 44, 44);
+        // let dataframe = AI_BRAIN_VIZ.IH_SLICE[idx];
+        let dataframe = AI_BRAIN_VIZ.neuralNet.IH_SLICE[idx];
+        if(!dataframe){console.log('ERROR: no dataframe');return;}
+        // if(!nn.IH_SLICE){console.log('ERROR: cannot find slice!');return;}
+        // this.ctx_TIMELINE.clearRect(0, 0, this.CANVAS_TIMELINE_1.width, this.CANVAS_TIMELINE_1.height);  // Clear the canvas
+        // this.CANVAS_TIMELINE_1.width = (nn.IH_SLICE.length)?nn.IH_SLICE.length*100:this.CANVAS_TIMELINE_1.width;
+        // let frame=[],vector=[],
+        let colorTGT=0;
+        let row=0;//,cols=0;
+        let SIZE_SML=2,SIZE_MED=3,SIZE_BIG=4,SPACING_SML=6,SPACING_MED=7,SPACING_BIG=8;
+        let startX=0,startY=0,colorVal='';;
+
+        let PAD_TOP = 25;
+        let PAD_LEFT = 20;
+        // let PAD_COL = 100;
+
+        let CURSOR_POS = {x:PAD_LEFT,y:PAD_TOP}; //USE like a ink printer.
+        ctx_PLAYBACK.fillStyle = 'steelblue';
+        ctx_PLAYBACK.font = "0.8em Arial italic bold "; //TITLE
+        ctx_PLAYBACK.fillText("TRAIN NEURONS:", CURSOR_POS.x, CURSOR_POS.y);
+
+        // CURSOR_POS = {x:PAD_LEFT,y:40}; //NEXT POSITION.
+        // let slice, colorGrid;
+        // for(let i=0;i<nn.IH_SLICE.length;i++){
+        //     slice = nn.IH_SLICE[i];
+            // colorGrid = this.matrixToColorsNormalized(slice);
+        let colorGrid = this.matrixToColorsNormalized(dataframe);
+
+        CURSOR_POS = {x:PAD_LEFT+44, y:44}; //NEXT POSITION.
+        for (let rowIDX = 0; rowIDX < colorGrid.length; rowIDX++) {
+            row = colorGrid[rowIDX];
+            // frame = this.neuralNet.weightsIH[rowIDX];
+            // cols = row.length;
+            startX = CURSOR_POS.x + (rowIDX*SPACING_BIG); 
+            for (let colIDX = 0; colIDX < row.length; colIDX++) {
+                colorTGT = row[colIDX];
+                startY = CURSOR_POS.y + (colIDX * SPACING_BIG);
+                // colorVal = this.numbersToColorsNormalized(vector)
+                // colorVal = this.numberToColor(vector);
+                // colorVal = this.getColor_MAP_1(vector,-1,1)
+                ctx_PLAYBACK.beginPath();
+                ctx_PLAYBACK.fillStyle = colorTGT;
+                // this.ctx_TIMELINE.fillStyle = colorVal;
+                ctx_PLAYBACK.arc(startX,startY,SIZE_BIG, 0, Math.PI * 2);
+                ctx_PLAYBACK.fill();
+            }
+        }//end loop
+    }//end playback
+
+} //END AI_BRAIN_VIZ class
 //-----------------------------LOCAL MODULE: 
 //- add vis features here, then export to module.
-
+let AI_BRAIN_VIZ;
 function RENDER_BRAIN_VIZ(){ //VIZ MODULE-RUNNER
     // if(!nn || !CANVAS_BRAIN_VIZ_1){ console.log('ERROR: no neural net for viz');return}
-    const AI_BRAIN_VIZ = 
-    new AI_BRAIN_VIZ_2(nn);
+    AI_BRAIN_VIZ = new AI_BRAIN_VIZ_2(nn);
     // new AI_BRAIN_VIZ_2(nn,CANVAS_BRAIN_VIZ_1);
     
     // 1. Initial Weight Visualization (Before Training)
@@ -819,6 +841,55 @@ function RENDER_BRAIN_VIZ(){ //VIZ MODULE-RUNNER
 
 }; RENDER_BRAIN_VIZ();
 //-----------END AI VIZ-----------------------------
+//-----------------------DYNAMIC-UI--------(zero footprint in html)
+const playback_BTN_1_ = document.getElementById('playback_BTN_1_');
+const playback_idx_1_ = document.getElementById('playback_idx_1_');
+const playback_total_1_ = document.getElementById('playback_total_1_');
+playback_BTN_1_.onclick = (e) => { //toggle button
+    const CANVAS_PLAYBACK_1 = document.getElementById('CANVAS_PLAYBACK_1');
+    if(playback_BTN_1_.innerText.indexOf('PLAY')>-1){
+        playback_BTN_1_.innerText = '⏸PAUSE';
+        start_CANVAS_PLAYBACK(CANVAS_PLAYBACK_1);
+    } else {
+        playback_BTN_1_.innerText = '▶️PLAY';
+        stop_CANVAS_PLAYBACK(CANVAS_PLAYBACK_1);
+    } 
+}
+
+//-----------------------PLAYBACK-LOGIC------------------------
+let intervalId;
+let currentIndex = 0;
+function start_CANVAS_PLAYBACK(canvas){
+    // debugger;
+    if(!AI_BRAIN_VIZ.neuralNet){console.log('ERROR: no neural net'); return;}
+    if(!AI_BRAIN_VIZ.neuralNet.IH_SLICE.length){console.log('ERROR: no neural net'); return;}
+    // let letters = ['a', 'b', 'c', 'd'];
+    let loopCount = 0;
+    const maxLoops = 10; // Number of loops before stopping
+    intervalId = setInterval(() => {
+        // console.log(currentIndex);
+        AI_BRAIN_VIZ.render_TIMELINE_SLICE(canvas, currentIndex);
+        // console.log(letters[currentIndex]);
+        // AI_BRAIN_VIZ.render_TIMELINE_SLICE(canvas, letters[currentIndex]);
+        // currentIndex = (currentIndex + 1) % letters.length; // Cycle through the array
+        currentIndex = (currentIndex + 1) % AI_BRAIN_VIZ.neuralNet.IH_SLICE.length; // Cycle through the array
+        playback_idx_1_.innerText = currentIndex;
+        playback_total_1_.innerText = AI_BRAIN_VIZ.neuralNet.IH_SLICE.length;
+        loopCount++;
+        if (loopCount >= maxLoops+1) {
+            playback_BTN_1_.innerText = '▶️PLAY';
+            clearInterval(intervalId); // Stop the interval
+            console.log("Playback stopped at limit.");
+        }
+    }, 1000); // 1000 milliseconds = 1 second
+}
+function stop_CANVAS_PLAYBACK(canvas){
+    console.log("Stopped Playback.");
+    clearInterval(intervalId); // Stop the interval
+}
+//-----------END VIZ UI-----------------------------
+
+
 
 // let nn_1;
 // // TOKENS STRONGER UP FRONT with MORE EPOCH, less with less epoch.
