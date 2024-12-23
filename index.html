@@ -222,6 +222,9 @@
             margin-left:4px !important; margin-right:4px !important;
             padding-left:4px !important;padding-right:4px !important;
         }
+        .DisplayCANVAS{
+            margin:1em !important;
+        }
     }
 </style>
 </head>
@@ -229,7 +232,7 @@
     <header style="position:absolute;top:0.555em;align-self:center;display:flex;">
         AXI_AI<span style="font-size:0.444em">&#8482;</span></header>
     <menu class="MAIN_MENU">
-        <button id="INFO_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_TICKR_VIEW()">INFO</button>
+        <button id="INFO_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_INFO_VIEW()">INFO</button>
         <button id="VIZ_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_VIZ_VIEW()">VIZ</button>
         <button id="TEST_VIEW_BTN" class="BTN" style="margin:0 0em 0 0em;" onclick="go_TEST_VIEW()">TRAIN</button>
         <button id="DATA_VIEW_BTN" class="BTN" style="margin:0 1em 0 1em;" onclick="go_DATA_VIEW()">DATA</button>
@@ -280,31 +283,90 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
             <span><span style="font-size:0.777em; color:cyan">~</span>
             VIZ</span>
         </span>
-        <button class="expanderBTN" style="padding:0;font-size:0.777em;line-height: 1.444em;" 
-            onclick="expander_BANKZ_Click(event)">✧</button>
+        <!--button class="expanderBTN" style="padding:0;font-size:0.777em;line-height: 1.444em;" 
+            onclick="expander_BANKZ_Click(event)">✧</button--><!--TODO-->
     </article>
     <hr> 
-    <article id="MARGINZ_RENDER_FRAME">
-        <h2>AI_BRAIN_VIZ:</h2>
+
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_BRAIN_VIZ:</span>
+            <!-- SUB ITEMS require (a) ID on BUTTON for state-->
+            <span id="expander_BRAIN_VIZ" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article id="BRAIN_VIZ_expander" style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <canvas id="CANVAS_BRAIN_VIZ_1" class="DisplayCANVAS"
+            style="background:black;border-radius:13px;
+            border:solid 1px steelblue;width: 88%;
+            margin: 2em;"></canvas>
+        </article>
+    </section>  
+
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_TIMELINE:</span>
+            <span id="expander_TIMELINE" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article class="scrollBarH"
+            style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <canvas id="CANVAS_TIMELINE_1" class="DisplayCANVAS"
+            style="background:black;border-radius:13px;
+            border:solid 1px steelblue;
+            margin: 2em;"></canvas>
+        </article>
+    </section>
+
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_PLAYBACK:</span>
+            <span id="expander_PLAYBACK" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article class="scrollBarH"
+            style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <canvas id="CANVAS_PLAYBACK_1" 
+            style="background:black;border-radius:13px;border:solid 1px steelblue;
+            margin: 2em;flex: 1;"></canvas>
+        </article>
+    </section>
+
+    <hr>
+    <section class="EXPANDER_Item MOBILE_Box_Sizer">
+        <header class="mainTitle expanderROW">
+            <span>AI_3D_MATRIX:</span>
+            <span id="expander_3D_MATRIX" class="expanderBTN" style="font-size:0.777em;" 
+            onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+        </header>
+        <article class="scrollBarH"
+            style="border-radius:13px;
+            border:solid 1px darkorchid; 
+            display:flex !important;
+            justify-content: center;">
+            <canvas id="CANVAS_3D_MATRIX_1" 
+            style="background:black;border-radius:13px;border:solid 1px steelblue;
+            margin: 2em;flex: 1;"></canvas>
+        </article>
+    </section>
+
+    <hr>
+        <!--hr>
+        <h2>AI_PLAYBACK_MOVIE:</h2>
         <section class="scrollBarH"
         style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
-            <canvas id="CANVAS_BRAIN_VIZ_1" 
-                style="background:black;border-radius:13px;border:solid 1px steelblue;
-                margin: 2em;flex:1;"></canvas>
-        </section>
-        <hr>
-        <h2>AI_TIMELINE:</h2>
-        <section class="scrollBarH"
-        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
-            <canvas id="CANVAS_ELEM_1" 
-                style="background:black;border-radius:13px;border:solid 1px steelblue;
-                margin: 2em; flex: 1;"></canvas>
-        </section>
-        <hr>
-        <h2>AI_MOVIE_PROJECTOR:</h2>
-        <section class="scrollBarH"
-        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
-            <canvas id="CANVAS_BRAIN_MOVIE_1" 
+            <canvas id="CANVAS_MOVIE_PLAYBACK_1" 
                 style="background:black;border-radius:13px;border:solid 1px steelblue;
                 margin: 2em;flex: 1;"></canvas>
         </section>
@@ -312,11 +374,36 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
         <h2>AI_3D_PROJECTOR:</h2>
         <section class="scrollBarH"
         style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
-            <canvas id="CANVAS_BRAIN_MOVIE_1" 
+            <canvas id="CANVAS_3D_PROJECTOR_1" 
                 style="background:black;border-radius:13px;border:solid 1px steelblue;
                 margin: 2em;flex: 1;"></canvas>
         </section>
-        TODO: 3D scatter plot visualization of neural networks.
+        <hr-->
+
+        <section id="VIZ_LOG_FRAME" class="EXPANDER_Item MOBILE_Box_Sizer">
+            <header class="mainTitle expanderROW">
+                <span>AI_VIZ_LOG:</span>
+                <span id="expander_VIZ_LOG" class="expanderBTN" style="font-size:0.777em;" 
+                onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
+            </header>
+            <article class="scrollBarH"
+            style="display:flex;width:100%; border-radius:13px;
+                border:solid 1px darkorchid;padding-bottom:2em;">
+                    <textarea id="TXT_AI_VIZ_LOG_1" class="scrollBarV"
+                    style="width:80.888%;
+                    margin: 2.222em auto 0.111em auto;
+                    display:flex;flex:1; background:black;
+                    border-radius: 13px; border: solid 1px steelblue; box-shadow: 1px 1px 11px 0px cyan;
+                    padding: 4% 2% 4% 2%; color: cyan; line-height: 2.444em;" spellcheck="false"
+                    > Log out VIZ events...
+                </textarea>
+
+            </article>
+            
+        </section>  
+
+
+
     </article>
     <hr> 
     <button id="detailsBtn1" class="blackBTN" onclick="setMarginDetailsClick(event)">details💎</button> 
@@ -643,15 +730,51 @@ TEST_VIEW.classList.add('hiddenTab')     //TAB SWITCH
 VIZ_VIEW_BTN.classList.add('selectedMAINBTN') //TAB DEFAULT handle
 VIZ_VIEW.classList.remove('hiddenTab') //TAB DEFAULT handle
 
+//---------------------AI_VIEWZ: Local Storage----------------        
+/************************************************\
+ * - ai_viewz_MATRIX
+ *  - ability to save quarterly NOTES in localstorage
+\************************************************/
+let ai_viewz = {
+    expanderBTN1a:true,
+    expanderBTN1b:false,//dynamic...
+}; //btn id : view state.
+let main_viewz = {}; //btn id : view state.
+function init_ai_viewz(){ //READ from LOCAL STORAGE
+    ai_viewz = (localStorage.ai_viewz)?
+        JSON.parse( localStorage.ai_viewz ):{};
+        console.log('AI_VIEWZ:',ai_viewz);
+    const allViewKeys = Object.keys(ai_viewz);
+    allViewKeys.forEach((key)=>{
+        EXPANDER_Set_OUTERFRAME(key)
+    });
+
+}; init_ai_viewz();
+//---- AUTO_LOAD TAB_SELECTION -------------------
+function init_MAIN_VIEWZ(){
+    main_viewz = (localStorage.main_viewz)?
+        JSON.parse( localStorage.main_viewz ):{};
+        // debugger;
+    if(main_viewz['INFO_VIEW_BTN']){go_INFO_VIEW()}
+    else if(main_viewz['VIZ_VIEW_BTN']){go_VIZ_VIEW()}
+    else if(main_viewz['TEST_VIEW_BTN']){go_TEST_VIEW()}
+    else if(main_viewz['DATA_VIEW_BTN']){go_DATA_VIEW()}
+    else {go_VIZ_VIEW()} //default
+}; init_MAIN_VIEWZ();
 // ******************************************VIEW METHODS**********
-function go_TICKR_VIEW(){ //TAB SWITCH
+function go_INFO_VIEW(){ //TAB SWITCH
     remove_VIEW_SELECTED();
     INFO_VIEW.classList.remove('hiddenTab');     
     INFO_VIEW_BTN.classList.add('selectedMAINBTN');
     VIZ_VIEW.classList.add('hiddenTab');
     TEST_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.add('hiddenTab');
-    // init_TKRZ_TABZ()
+    //save state in LOCAL STORAGE
+    if(main_viewz){main_viewz['INFO_VIEW_BTN'] = true;}
+    if(main_viewz){main_viewz['VIZ_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['TEST_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['DATA_VIEW_BTN'] = false;}
+    localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
 }
 function go_VIZ_VIEW(){
     remove_VIEW_SELECTED();
@@ -660,7 +783,12 @@ function go_VIZ_VIEW(){
     VIZ_VIEW_BTN.classList.add('selectedMAINBTN');
     TEST_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.add('hiddenTab');  
-    // init_BANKZ_TABZ() 
+    //save state in LOCAL STORAGE
+    if(main_viewz){main_viewz['INFO_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['VIZ_VIEW_BTN'] = true;}
+    if(main_viewz){main_viewz['TEST_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['DATA_VIEW_BTN'] = false;}
+    localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
 }
 function go_TEST_VIEW(){
     remove_VIEW_SELECTED();
@@ -669,7 +797,12 @@ function go_TEST_VIEW(){
     TEST_VIEW.classList.remove('hiddenTab');
     TEST_VIEW_BTN.classList.add('selectedMAINBTN');
     DATA_VIEW.classList.add('hiddenTab'); 
-    // init_BOOKZ_TABZ();  
+    //save state in LOCAL STORAGE
+    if(main_viewz){main_viewz['INFO_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['VIZ_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['TEST_VIEW_BTN'] = true;}
+    if(main_viewz){main_viewz['DATA_VIEW_BTN'] = false;}
+    localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
 }
 function go_DATA_VIEW(){
     remove_VIEW_SELECTED();
@@ -678,36 +811,27 @@ function go_DATA_VIEW(){
     TEST_VIEW.classList.add('hiddenTab');
     DATA_VIEW.classList.remove('hiddenTab');
     DATA_VIEW_BTN.classList.add('selectedMAINBTN');
-    // showDataGalleryView('gallery')
+    //save state in LOCAL STORAGE
+    if(main_viewz){main_viewz['INFO_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['VIZ_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['TEST_VIEW_BTN'] = false;}
+    if(main_viewz){main_viewz['DATA_VIEW_BTN'] = true;}
+    localStorage.main_viewz = JSON.stringify(main_viewz); //SAVE to LOCAL STORAGE     
 }
 function remove_VIEW_SELECTED(){
-    INFO_VIEW_BTN.classList.remove('selectedMAINBTN');     
+    INFO_VIEW_BTN.classList.remove('selectedMAINBTN');
     VIZ_VIEW_BTN.classList.remove('selectedMAINBTN');
     TEST_VIEW_BTN.classList.remove('selectedMAINBTN');
-    DATA_VIEW_BTN.classList.remove('selectedMAINBTN');  
+    DATA_VIEW_BTN.classList.remove('selectedMAINBTN');
 }
-//---------------------AI_VIEWZ: Local Storage----------------        
-/************************************************\
- * - ai_viewz_MATRIX
- *  - ability to save quarterly NOTES in localstorage
-\************************************************/
-let ai_viewz = {
-    expanderBTN1a:true,
-    expanderBTN1b:false,
-}; //btn id : view state.
-function init_ai_viewz(){ //READ from LOCAL STORAGE
-    ai_viewz = (localStorage.ai_viewz)?
-        JSON.parse( localStorage.ai_viewz ):{};
-    const allViewKeys = Object.keys(ai_viewz);
-    allViewKeys.forEach((key)=>{
-        EXPANDER_Set_OUTERFRAME(key)
-    });
 
-}; init_ai_viewz();
 //---------------------TOGGLE VIEW BUTTONS---------------------        
 function EXPANDER_Click_OUTERFRAME(event) {
     // Get the double parent of the button
     const parent = event.target.parentElement.parentElement;
+    // const frameID = parent.id;
+    // if(!frameID){console.log('ERROR: couldnt find frame.'); return;}
+    // if(!ai_viewz[frameID]){ console.log('SAVE VIEW');}
     // Get all siblings after the 0
     const siblings = Array.from(parent.children);
     //     .slice(Array.from(parent.children).indexOf(event.target) + 1)
@@ -723,6 +847,7 @@ function EXPANDER_Click_OUTERFRAME(event) {
             if(ai_viewz){ai_viewz[event.target.id] = false;}
         }
     });
+    // debugger;
     //save state in LOCAL STORAGE
     localStorage.ai_viewz = JSON.stringify(ai_viewz); //SAVE to LOCAL STORAGE 
 }
@@ -956,8 +1081,10 @@ tokens.forEach(token => {
 <!-- <script src="./script_ai_TIMELINE_1.js" type="module"></script> -->
 <!-- <script src="./script_similar_word_cosine_1.js"></script> -->
 <!-- <script src="./script_viz_1.js"></script> -->
-<script src="./script_txt_a_upper_1.js"  type="module"></script>
+<!-- <script src="./script_txt_a_upper_1.js"  type="module"></script> -->
 <!-- <script src="./script_AI_BRAIN_STEM_2.js"  type="module"></script> -->
+<!-- <script src="./script_AI_BRAIN_STEM_3.js"  type="module"></script> -->
+<script src="./module_AI_BRAIN_STEM_4.js"  type="module"></script>
 <!-- <script src="./script_letter_predictor_1.js"></script> -->
 <!-- <script src="./script_neologism_1.js"></script> -->
 <!-- <script src="./script_cluster_1.js"></script> -->

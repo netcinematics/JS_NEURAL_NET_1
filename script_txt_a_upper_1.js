@@ -145,7 +145,7 @@ class NeuralNetwork {
 
 // Test the neural network
 function testNetwork() {
-    debugger;
+    // debugger;
     // Convert word to input vector (using ASCII values normalized)
     function wordToInput(word, size) {
         const input = new Array(size).fill(0);
