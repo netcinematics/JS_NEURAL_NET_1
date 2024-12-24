@@ -252,9 +252,9 @@
         </aside>
     </div>
 
-    <panel id="3D_MATRIX_PANEL" style="display:none;position:fixed;top:22%;left:4%;padding:1em;background:#000033;
+    <panel id="3D_MATRIX_PANEL" style="position:fixed;top:22%;left:-555px;padding:1em;background:#000033;
         border: 1px solid aqua;border-radius: 13px;display: flex;
-        flex-direction: column; align-items:center;">
+        flex-direction: column; align-items:center;" class="hidden">
         <header style="display: flex;width: 100%; align-items: center;
             justify-content: space-between;">
             <span style="font-weight: bold; font-size: 1.222em;
@@ -956,6 +956,7 @@ function hideShow_3D_Matrix_Click(e){
     if(panel.classList.contains('hidden')){ //show panel
         panel.classList.remove('hidden')
         panel.style.display = 'flex';
+        panel.style.left = '4%';
     }else { //hide panel
         panel.classList.add('hidden')
         panel.style.display = 'none';
