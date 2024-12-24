@@ -251,6 +251,24 @@
             </span>
         </aside>
     </div>
+
+    <panel id="3D_MATRIX_PANEL" style="display:none;position:fixed;top:22%;left:4%;padding:1em;background:#000033;
+        border: 1px solid aqua;border-radius: 13px;display: flex;
+        flex-direction: column; align-items:center;">
+        <header style="display: flex;width: 100%; align-items: center;
+            justify-content: space-between;">
+            <span style="font-weight: bold; font-size: 1.222em;
+            padding-bottom: 1em; padding-left: 0.333em;"
+            >AI_3D_MATRIX</span>
+            <span id="close3DMatrix_BTN" class="expanderBTN" style="
+                font-size:1.777em;margin-bottom:0.444em;" 
+            onclick="hideShow_3D_Matrix_Click(false);">✦</span>
+        </header>
+        <div id="3D_MATRIX_1" style="width: 500px; height: 500px; 
+        border:1px solid steelblue; border-radius:13px;
+        padding:0.222em" ></div>
+    </panel>
+
 <section id="INFO_VIEW" class=" hiddenTab" style="border: solid 1px steelblue;justify-content: center; 
 flex-direction: column;border-radius: 13px;flex: 1;height: 10em;display: flex;
 padding: 1em 3% 2% 3%;max-width: 50em;margin: 0 10%;align-self: center;width: 88.888%;
@@ -339,7 +357,7 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
                 <aside style="width: 50%; display: flex; align-items: center;">
                     <button id="playback_BTN_1_" class="blackBTN" style="padding:1em;font-size:0.888em;
                     line-height: 1.444em;    border-radius: 25px;" 
-                    ">▶️PLAY</button>
+                    ">▶️ PLAY</button>
                     <footer style="display:flex; text-align: center;width: 100%; 
                     justify-content: center;">
                     <span id="playback_idx_1_">0</span>&nbsp;of&nbsp;<span id="playback_total_1_">0</span> </footer>
@@ -355,35 +373,82 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
             <span id="expander_3D_MATRIX" class="expanderBTN" style="font-size:0.777em;" 
             onclick="EXPANDER_Click_OUTERFRAME(event);">✧</span>
         </header>
-        <article class="scrollBarH"
-            style="border-radius:13px;
-            border:solid 1px darkorchid; 
-            display:flex !important;
-            justify-content: center;">
-            <canvas id="CANVAS_3D_MATRIX_1" 
-            style="background:black;border-radius:13px;border:solid 1px steelblue;
-            margin: 2em;flex: 1;"></canvas>
-        </article>
+        <!-- <main style="width: 100%; padding:0; margin:0"></main> -->
+        
+        
+        <article class="scrollBarH scrollBarV"
+        style="border-radius:13px;
+        border:solid 1px darkorchid; 
+        display: flex; padding:2em;
+        justify-content: center;">
+
+<button id="show_3D_Matrix_1_" style="margin-right: 1em; background:#1a001a;cursor:pointer;
+            border-radius:13px;font-size: 1em; padding: 4px; height: 2em; 
+            color:steelblue;" onclick = "hideShow_3D_Matrix_Click(true)"
+            >🎱 GENERATE 🔮</button>
+
+        <!-- <div id="3D_MATRIX_1" style="width: 500px; height: 500px; border:1px solid steelblue; border-radius:13px;" ></div> -->
+        
+                <!-- <div id="CANVAS_3D_MATRIX_1" style="width: 100px;
+    height: 100px;" ></div> -->
+                <!-- <canvas id="CANVAS_3D_MATRIX_1" 
+                style="background:black;border-radius:13px;border:solid 1px steelblue;
+                margin: 2em;flex: 1;"></canvas> -->
+            </article>
+        <!-- </main> -->
+
+
+
+
+        <script type="text/javascript" src="./threeJS_81.js"></script>
+        <script type="text/javascript" src="./scatter3D.js"></script>
+        <script type="text/javascript">
+            // Define a function to initialise the plot:
+            function init_plot() {
+              // The object to hold all the information about the plot:
+              var params = {};
+              
+              // Change this to whatever the div is called:
+              params.div_id = "3D_MATRIX_1";
+            //   params.div_id = "CANVAS_3D_MATRIX_1";
+            //   params.div_id = "div_plot_area";
+              
+              // An array of objects, one per data point:
+              params.data = [
+                {"x": 0.49, "y": 60.30, "z": 1.39},
+                {"x": 0.20, "y": 42.42, "z": 3.40},
+                {"x": 0.35, "y": 43.89, "z": 2.09},
+                {"x": 0.19, "y": 84.96, "z": 3.92},
+                {"x": 0.30, "y": 77.37, "z": 3.75},
+                {"x": 0.41, "y": 21.91, "z": 1.27},
+                {"x": 0.02, "y": 72.37, "z": 0.58},
+                {"x": 0.68, "y": 69.11, "z": 3.10},
+                {"x": 0.19, "y":  0.75, "z": 2.06},
+                {"x": 0.87, "y": 56.15, "z": 1.98},
+                {"x": 0.84, "y": 68.93, "z": 3.39},
+                {"x": 0.07, "y": 33.94, "z": 0.31},
+                {"x": 0.40, "y": 13.79, "z": 3.02},
+                {"x": 0.51, "y": 50.63, "z": 2.17},
+                {"x": 0.48, "y": 37.98, "z": 2.46},
+                {"x": 0.61, "y": 14.89, "z": 3.52},
+                {"x": 0.03, "y": 82.20, "z": 3.05},
+                {"x": 0.81, "y": 72.28, "z": 1.33},
+                {"x": 0.63, "y": 54.21, "z": 3.84},
+                {"x": 0.99, "y": 93.96, "z": 0.36}
+              ];
+              
+              // Make the plot: THIS IS THE MAIN LOOP FN.
+            //   debugger;
+              three_d.make_scatter(params);
+            }
+            
+            // Call the initialisation function:
+            init_plot();
+        </script>
+
     </section>
 
     <hr>
-        <!--hr>
-        <h2>AI_PLAYBACK_MOVIE:</h2>
-        <section class="scrollBarH"
-        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
-            <canvas id="CANVAS_MOVIE_PLAYBACK_1" 
-                style="background:black;border-radius:13px;border:solid 1px steelblue;
-                margin: 2em;flex: 1;"></canvas>
-        </section>
-        <hr>
-        <h2>AI_3D_PROJECTOR:</h2>
-        <section class="scrollBarH"
-        style="display:flex;width:100%; border-radius:13px;border:solid 1px darkorchid;">
-            <canvas id="CANVAS_3D_PROJECTOR_1" 
-                style="background:black;border-radius:13px;border:solid 1px steelblue;
-                margin: 2em;flex: 1;"></canvas>
-        </section>
-        <hr-->
 
         <section id="VIZ_LOG_FRAME" class="EXPANDER_Item MOBILE_Box_Sizer">
             <header class="mainTitle expanderROW">
@@ -395,11 +460,11 @@ box-shadow: inset 1px 1px 11px 0px #00ffa5;"/>
             style="display:flex;width:100%; border-radius:13px;
                 border:solid 1px darkorchid;padding-bottom:2em;">
                     <textarea id="TXT_AI_VIZ_LOG_1" class="scrollBarV"
-                    style="width:80.888%;
-                    margin: 2.222em auto 0.111em auto;
+                    style="width:88.888%;font-size:1.666em;
+                    margin: 2.222em auto 0.111em auto;    height: 12em;
                     display:flex;flex:1; background:black;
                     border-radius: 13px; border: solid 1px steelblue; box-shadow: 1px 1px 11px 0px cyan;
-                    padding: 4% 2% 4% 2%; color: cyan; line-height: 2.444em;" spellcheck="false"
+                    padding: 4% 2% 4% 6%; color: cyan; line-height: 2.444em;" spellcheck="false"
                     > Log out VIZ events...
                 </textarea>
 
@@ -883,7 +948,19 @@ function EXPANDER_Set_OUTERFRAME(btnid) {
     });
 }
 //---------------------END EXPANDER TOGGLE VIEW BUTTONS---------------------        
-
+function hideShow_3D_Matrix_Click(e){
+    // debugger;
+    // let btn = e.target;
+    // let panel = btn.parentElement;
+    let panel = document.getElementById('3D_MATRIX_PANEL');
+    if(panel.classList.contains('hidden')){ //show panel
+        panel.classList.remove('hidden')
+        panel.style.display = 'flex';
+    }else { //hide panel
+        panel.classList.add('hidden')
+        panel.style.display = 'none';
+    }
+}
 </script>
 <!------------MINIMAL EXAMPLE-->
 <!--script>

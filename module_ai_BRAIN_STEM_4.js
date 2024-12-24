@@ -179,7 +179,7 @@ class NeuralNetwork_aZ_1 {
     // Training function, inputs: 15X10 - targets: 15X2 - 
     train(inputs, targets, epochs) {
         const errors = [];
-        console.log('-----🌌 EPOCH_LOOP 🌌',epochs);
+        AI_VIZ_LOG('>   🌌 EPOCH_LOOP 🌌',epochs);
         for (let epoch = 0; epoch < epochs; epoch++) {
             this.epochIDX = epoch; //used for epoch_rate timeline
             let epochError = 0;
@@ -351,28 +351,31 @@ function testNetwork() {
     const inputSize = 10;  // Fixed input size
     nn = new  NeuralNetwork_aZ_1(inputSize, learnRate, epoch_NUM);
 
-    // Prepare training data
-    const inputs = trainingWords.map(word => nn.wordToInput(word, inputSize));
-    const targets = trainingWords.map(word => [
-        word.startsWith('a') ? 1 : 0,
-        /[A-Z]/.test(word) ? 1 : 0
+    AI_VIZ_LOG("> _🧩 TOKEN_SET 🧩:",trainingWords);
+    const inputs = trainingWords.map(token => nn.wordToInput(token, inputSize));
+    const targets = trainingWords.map(token => [
+        token.startsWith('a') ? 1 : 0,
+        /[A-Z]/.test(token) ? 1 : 0
     ]); //TODO extend with count>3 and ends with little a.
-
-    // Train the network
-    console.log("Training network...");
+    AI_VIZ_LOG(">   🎯 SET 2 TARGETS 🎯:",'start_a','anyUpper');
+    AI_VIZ_LOG(">   🦾 NN:TRAIN_FRAME 🦾");
     const errors = nn.train(inputs, targets, epoch_NUM);
-
+    AI_VIZ_LOG(">   🚧 END_TRAIN 🚧");
     console.log("Final error:", errors[errors.length - 1]);
 
     // Test the network
     const testWords = ["amazing", "and", "zebra", "Apple", "test"];
-    console.log("\nTesting network:");
+    let msg = '';
+    AI_VIZ_LOG("> _🧩 TEST_TOKENS 🧩:",testWords);
     for (const word of testWords) {
         const input = nn.wordToInput(word, inputSize);
+        //TODO: backtrack...correct answer.
         const output = nn.forward(input);
-        console.log(`\nWord: ${word}`);
-        console.log(`Starts with 'a': ${output[0].toFixed(3)} (Expected: ${word.startsWith('a') ? 1 : 0})`);
-        console.log(`Contains uppercase: ${output[1].toFixed(3)} (Expected: ${/[A-Z]/.test(word) ? 1 : 0})`);
+        AI_VIZ_LOG("Word: ",word);
+        msg = `Starts with 'a': ${output[0].toFixed(3)} (Expected: ${word.startsWith('a') ? 1 : 0})`;
+        AI_VIZ_LOG(msg);
+        msg = `Contains uppercase: ${output[1].toFixed(3)} (Expected: ${/[A-Z]/.test(word) ? 1 : 0})`;
+        AI_VIZ_LOG(msg);
     }
 
     // Visualize the final state
@@ -386,6 +389,7 @@ testNetwork();
 export class AI_BRAIN_VIZ_2 {
     // constructor(neuralNet,canvasElem) {
     constructor(neuralNet) {
+        AI_VIZ_LOG(">  🧠 NN:INIT 🧠");
         // Select the canvas and get its 2D rendering context
         if(!neuralNet){console.log('err: no network')}
         this.neuralNet = neuralNet;
@@ -833,7 +837,7 @@ function RENDER_BRAIN_VIZ(){ //VIZ MODULE-RUNNER
     // new AI_BRAIN_VIZ_2(nn,CANVAS_BRAIN_VIZ_1);
     
     // 1. Initial Weight Visualization (Before Training)
-    AI_VIZ_LOG("---🔬 VIZ: AI_BRAIN 🔬");
+    AI_VIZ_LOG(">  🔬 VIZ_LOG: of AI_BRAINZ 🔬");
     AI_BRAIN_VIZ.render_NEURON_WEIGHTS(); //visualizeWeights
     // AI_BRAIN_VIZ.render_BASELINE([{title:'a',title:'b'}])
     AI_BRAIN_VIZ.render_NEURON_TIMELINE();
@@ -848,10 +852,10 @@ const playback_total_1_ = document.getElementById('playback_total_1_');
 playback_BTN_1_.onclick = (e) => { //toggle button
     const CANVAS_PLAYBACK_1 = document.getElementById('CANVAS_PLAYBACK_1');
     if(playback_BTN_1_.innerText.indexOf('PLAY')>-1){
-        playback_BTN_1_.innerText = '⏸PAUSE';
+        playback_BTN_1_.innerText = '⏸ PAUSE';
         start_CANVAS_PLAYBACK(CANVAS_PLAYBACK_1);
     } else {
-        playback_BTN_1_.innerText = '▶️PLAY';
+        playback_BTN_1_.innerText = '▶️ PLAY';
         stop_CANVAS_PLAYBACK(CANVAS_PLAYBACK_1);
     } 
 }
@@ -877,7 +881,7 @@ function start_CANVAS_PLAYBACK(canvas){
         playback_total_1_.innerText = AI_BRAIN_VIZ.neuralNet.IH_SLICE.length;
         loopCount++;
         if (loopCount >= maxLoops+1) {
-            playback_BTN_1_.innerText = '▶️PLAY';
+            playback_BTN_1_.innerText = '▶️ PLAY';
             clearInterval(intervalId); // Stop the interval
             console.log("Playback stopped at limit.");
         }
