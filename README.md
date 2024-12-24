@@ -10,3 +10,5 @@ Innovates a number of visualization:
 - VIZ_LOG
 
 LIVE PAGE: 
+
+https://netcinematics.github.io/JS_NEURAL_NET_1/
