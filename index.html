@@ -808,7 +808,7 @@ function init_ai_viewz(){ //READ from LOCAL STORAGE
     }
     ai_viewz = (localStorage.ai_viewz)?
         JSON.parse( localStorage.ai_viewz ):{};
-        console.log('AI_VIEWZ:',ai_viewz);
+        // console.log('AI_VIEWZ:',ai_viewz);
     const allViewKeys = Object.keys(ai_viewz);
     allViewKeys.forEach((key)=>{
         EXPANDER_Set_OUTERFRAME(key)
@@ -1163,10 +1163,13 @@ tokens.forEach(token => {
 <!-- <script src="./script_ai_TIMELINE_1.js" type="module"></script> -->
 <!-- <script src="./script_similar_word_cosine_1.js"></script> -->
 <!-- <script src="./script_viz_1.js"></script> -->
+<script src="./script_LSTM_2.js"></script>
+<!-- <script src="./script_LSTM_1.js"></script> -->
+<!-- <script src="./script_relu_1.js"></script> -->
+<!-- <script src="./module_ai_BRAIN_VIZ_2.js"  type="module"></script> -->
 <!-- <script src="./script_txt_a_upper_1.js"  type="module"></script> -->
 <!-- <script src="./script_AI_BRAIN_STEM_2.js"  type="module"></script> -->
 <!-- <script src="./script_AI_BRAIN_STEM_3.js"  type="module"></script> -->
-<script src="./module_ai_BRAIN_VIZ_2.js"  type="module"></script>
 <!-- <script src="./module_ai_BRAIN_STEM_4.js"  type="module"></script> -->
 <!-- <script src="./script_letter_predictor_1.js"></script> -->
 <!-- <script src="./script_neologism_1.js"></script> -->

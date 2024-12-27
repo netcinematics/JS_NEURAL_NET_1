@@ -204,12 +204,13 @@ class NeuralNetVisualizer {
         console.log("\n⚡ Activation Potential Visualization ⚡");
         
         // Perform forward propagation
+debugger;
         const { hiddenLayer, outputLayer } = this.neuralNet.forward(input);
 
         console.log("Input Vector:", 
             input.map(val => val.toFixed(4))
         );
-
+debugger;
         console.log("\nHidden Layer Activations:");
         hiddenLayer.forEach((activation, index) => {
             const barLength = Math.floor(activation * 20);

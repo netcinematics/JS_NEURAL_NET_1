@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neologism Neural Network</title>
+</head>
+<body style="background-color: #1a1a1a; color: aqua; font-family: monospace; margin: 20px;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h1 style="color: steelblue;">Neologism Neural Network Classifier</h1>
+        
+        <div style="margin: 20px 0;">
+            <h3 style="color: lime;">Network Controls</h3>
+            <div style="margin: 10px 0;">
+                <label style="color: aqua;">Learning Rate:</label>
+                <input type="range" min="0.01" max="0.5" step="0.01" value="0.1" id="learningRate">
+                <span id="learningRateValue" style="color: steelblue;">0.1</span>
+            </div>
+            <div style="margin: 10px 0;">
+                <label style="color: aqua;">Training Epochs:</label>
+                <input type="range" min="100" max="10000" step="100" value="1000" id="epochs">
+                <span id="epochsValue" style="color: steelblue;">1000</span>
+            </div>
+            <button onclick="trainNetwork()" style="background: steelblue; color: white; border: none; padding: 10px 20px; cursor: pointer;">Train Network</button>
+        </div>
+
+        <div id="output" style="background: #2a2a2a; padding: 20px; border-radius: 5px; margin: 20px 0;"></div>
+        
+        <div id="visualization" style="margin: 20px 0;"></div>
+    </div>
+
+    <script>
+    // Neural Network implementation with detailed comments
+    class NeurologismNetwork {
+        constructor(inputSize, hiddenSize, outputSize, learningRate = 0.1) {
+            // Initialize network parameters
+            this.inputSize = inputSize;
+            this.hiddenSize = hiddenSize;
+            this.outputSize = outputSize;
+            this.learningRate = learningRate;
+
+            // Initialize weights with random values between -1 and 1
+            // Weights between input and hidden layer
+            this.weightsIH = Array(inputSize).fill().map(() => 
+                Array(hiddenSize).fill().map(() => Math.random() * 2 - 1)
+            );
+            
+            // Weights between hidden and output layer
+            this.weightsHO = Array(hiddenSize).fill().map(() => 
+                Array(outputSize).fill().map(() => Math.random() * 2 - 1)
+            );
+
+            // Initialize biases
+            this.biasH = Array(hiddenSize).fill().map(() => Math.random() * 2 - 1);
+            this.biasO = Array(outputSize).fill().map(() => Math.random() * 2 - 1);
+            
+            // Store activation values for visualization
+            this.lastHiddenActivations = [];
+            this.lastOutputActivations = [];
+        }
+
+        // Sigmoid activation function
+        sigmoid(x) {
+            return 1 / (1 + Math.exp(-x));
+        }
+
+        // Forward propagation
+        forward(input) {
+            // Calculate hidden layer activations
+            this.lastHiddenActivations = Array(this.hiddenSize).fill(0);
+            for (let h = 0; h < this.hiddenSize; h++) {
+                let sum = this.biasH[h];
+                for (let i = 0; i < this.inputSize; i++) {
+                    sum += input[i] * this.weightsIH[i][h];
+                }
+                this.lastHiddenActivations[h] = this.sigmoid(sum);
+            }
+
+            // Calculate output layer activations
+            this.lastOutputActivations = Array(this.outputSize).fill(0);
+            for (let o = 0; o < this.outputSize; o++) {
+                let sum = this.biasO[o];
+                for (let h = 0; h < this.hiddenSize; h++) {
+                    sum += this.lastHiddenActivations[h] * this.weightsHO[h][o];
+                }
+                this.lastOutputActivations[o] = this.sigmoid(sum);
+            }
+
+            return this.lastOutputActivations;
+        }
+
+        // Training step
+        train(input, target) {
+            // Forward pass
+            const output = this.forward(input);
+            
+            // Calculate output layer errors
+            const outputErrors = Array(this.outputSize).fill(0);
+            for (let o = 0; o < this.outputSize; o++) {
+                outputErrors[o] = target[o] - output[o];
+            }
+
+            // Update weights and biases
+            // Output layer
+            for (let h = 0; h < this.hiddenSize; h++) {
+                for (let o = 0; o < this.outputSize; o++) {
+                    this.weightsHO[h][o] += this.learningRate * 
+                        outputErrors[o] * output[o] * (1 - output[o]) * 
+                        this.lastHiddenActivations[h];
+                }
+            }
+
+            // Hidden layer
+            for (let i = 0; i < this.inputSize; i++) {
+                for (let h = 0; h < this.hiddenSize; h++) {
+                    let error = 0;
+                    for (let o = 0; o < this.outputSize; o++) {
+                        error += outputErrors[o] * output[o] * (1 - output[o]) * 
+                            this.weightsHO[h][o];
+                    }
+                    this.weightsIH[i][h] += this.learningRate * error * 
+                        this.lastHiddenActivations[h] * (1 - this.lastHiddenActivations[h]) * 
+                        input[i];
+                }
+            }
+
+            // Update biases
+            for (let o = 0; o < this.outputSize; o++) {
+                this.biasO[o] += this.learningRate * outputErrors[o] * 
+                    output[o] * (1 - output[o]);
+            }
+
+            return outputErrors.reduce((a, b) => a + Math.abs(b), 0) / this.outputSize;
+        }
+    }
+
+    // Vocabulary and encoding utilities
+    const vocabulary = {
+        'distructopuss': 0,
+        'afalcora': 1,
+        'freebotz': 2,
+        'spirit': 3,
+        'growth': 4,
+        'household': 5,
+        'bots': 6,
+        'free': 7,
+        'retrofit': 8,
+        'override': 9
+    };
+
+    const categories = [
+        'mythical_creature',
+        'spiritual_entity',
+        'autonomous_system'
+    ];
+
+    // Training data with semantic relationships
+    const trainingData = [
+        {
+            input: encodePhrase('distructopuss'),
+            output: [1, 0, 0]  // mythical_creature
+        },
+        {
+            input: encodePhrase('afalcora spirit growth'),
+            output: [0, 1, 0]  // spiritual_entity
+        },
+        {
+            input: encodePhrase('freebotz household bots free'),
+            output: [0, 0, 1]  // autonomous_system
+        },
+        {
+            input: encodePhrase('retrofit override freebotz'),
+            output: [0, 0, 1]  // autonomous_system
+        }
+    ];
+
+    // Encode a phrase into binary vector
+    function encodePhrase(phrase) {
+        const words = phrase.toLowerCase().split(' ');
+        const encoding = Array(Object.keys(vocabulary).length).fill(0);
+        
+        words.forEach(word => {
+            if (vocabulary.hasOwnProperty(word)) {
+                encoding[vocabulary[word]] = 1;
+            }
+        });
+        
+        return encoding;
+    }
+
+    // Initialize network
+    const network = new NeurologismNetwork(
+        Object.keys(vocabulary).length,
+        Math.floor(Object.keys(vocabulary).length * 1.5),
+        categories.length
+    );
+debugger;
+    // Training function
+    function trainNetwork() {
+        const epochs = parseInt(document.getElementById('epochs').value);
+        const learningRate = parseFloat(document.getElementById('learningRate').value);
+        network.learningRate = learningRate;
+        
+        const output = document.getElementById('output');
+        output.innerHTML = '<h3 style="color: lime;">Training Progress:</h3>';
+        
+        let totalError = 0;
+        
+        // Train for specified epochs
+        for (let epoch = 0; epoch < epochs; epoch++) {
+            totalError = 0;
+            
+            // Train on each example
+            trainingData.forEach(example => {
+                totalError += network.train(example.input, example.output);
+            });
+            
+            // Log progress every 100 epochs
+            if (epoch % 100 === 0) {
+                output.innerHTML += `Epoch ${epoch}: Average Error = ${(totalError/trainingData.length).toFixed(4)}<br>`;
+            }
+        }
+        
+        // Test the network
+        output.innerHTML += '<h3 style="color: lime;">Testing Results:</h3>';
+        testNetwork();
+        
+        // Visualize network state
+        visualizeNetwork();
+    }
+
+    // Test network function
+    function testNetwork() {
+        const output = document.getElementById('output');
+        const testPhrases = [
+            'distructopuss',
+            'afalcora spirit growth',
+            'freebotz household',
+            'retrofit override freebotz'
+        ];
+        
+        testPhrases.forEach(phrase => {
+            const encoded = encodePhrase(phrase);
+            const prediction = network.forward(encoded);
+            const category = categories[prediction.indexOf(Math.max(...prediction))];
+            
+            output.innerHTML += `<div style="margin: 10px 0;">
+                <strong style="color: steelblue;">${phrase}</strong>: 
+                Classified as <span style="color: lime;">${category}</span><br>
+                Confidence: ${prediction.map(p => (p * 100).toFixed(1) + '%').join(', ')}
+            </div>`;
+        });
+    }
+
+    // Visualization function
+    function visualizeNetwork() {
+        const viz = document.getElementById('visualization');
+        viz.innerHTML = '<h3 style="color: lime;">Network State Visualization:</h3>';
+        
+        // Create network visualization
+        const container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.justifyContent = 'space-between';
+        container.style.margin = '20px 0';
+        
+        // Input layer
+        const inputLayer = document.createElement('div');
+        Object.keys(vocabulary).forEach((word, i) => {
+            const node = document.createElement('div');
+            node.style.margin = '5px';
+            node.style.padding = '5px';
+            node.style.border = '1px solid steelblue';
+            node.style.borderRadius = '3px';
+            node.innerHTML = `${word}: ${network.weightsIH[i].map(w => w.toFixed(2)).join(', ')}`;
+            inputLayer.appendChild(node);
+        });
+        container.appendChild(inputLayer);
+        
+        // Hidden layer
+        const hiddenLayer = document.createElement('div');
+        network.lastHiddenActivations.forEach((activation, i) => {
+            const node = document.createElement('div');
+            node.style.margin = '5px';
+            node.style.padding = '5px';
+            node.style.border = '1px solid lime';
+            node.style.borderRadius = '3px';
+            node.innerHTML = `H${i}: ${activation.toFixed(3)}`;
+            hiddenLayer.appendChild(node);
+        });
+        container.appendChild(hiddenLayer);
+        
+        // Output layer
+        const outputLayer = document.createElement('div');
+        categories.forEach((category, i) => {
+            const node = document.createElement('div');
+            node.style.margin = '5px';
+            node.style.padding = '5px';
+            node.style.border = '1px solid aqua';
+            node.style.borderRadius = '3px';
+            node.innerHTML = `${category}: ${network.lastOutputActivations[i].toFixed(3)}`;
+            outputLayer.appendChild(node);
+        });
+        container.appendChild(outputLayer);
+        
+        viz.appendChild(container);
+    }
+
+    // UI event listeners
+    document.getElementById('learningRate').addEventListener('input', function(e) {
+        document.getElementById('learningRateValue').textContent = e.target.value;
+    });
+    
+    document.getElementById('epochs').addEventListener('input', function(e) {
+        document.getElementById('epochsValue').textContent = e.target.value;
+    });
+    </script>
+</body>
+</html>

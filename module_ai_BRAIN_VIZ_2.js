@@ -10,10 +10,13 @@
 // - ADD: 10 FRAME TIMELINE - METADATA.
 // - USE: 10 FRAME DATA for AI_MOVIE.
 // TODO: -------------------------------
-// O - AI_HYPER_PARAMS
-// O - AI_BRAINZ (meta data)
-// O - AI_TIMELINE
-// O - AI_MOVIE
+// X - AI_HYPER_PARAMS
+// X - AI_BRAINZ (meta data)
+// X - AI_TIMELINE
+// X - AI_MOVIE
+// -------------------------
+// O - dimension analysis
+// O - backtrace answers (try to label tknz/tgtz)
 //----------------------UI-VARIABLES--------------
 const NNTXT_1_ELEM = document.getElementById("NNTXT_1_ELEM");
 const OUTPUT_1_ELEM = document.getElementById("OUTPUT_1_ELEM");
@@ -21,16 +24,16 @@ const TXT_INPUT_1_ELEM = document.getElementById('TXT_INPUT_1_')
 // const TEST_BTN_1_ELEM = document.getElementById('TEST_BTN_1_')
 //-----------------------------------------------
 //------------------------VISUALIZATION-----------
-import { AI_VIZ_LOG } from './module_AI_VIZ_LOG_1.js'; //todo
-// import { AI_BRAIN_VIZ_1 } from './module_ai_BRAIN_VIZ_1.js';
+import { AI_VIZ_LOG } from './module_AI_VIZ_LOG_1.js'; 
+// import { AI_BRAIN_VIZ_1 } from './module_ai_BRAIN_VIZ_1.js';//todo?
 
 //-----------------------------------------------
 class NeuralNetwork_aZ_1 {
     constructor(inputSize,learnRate,epochLIMIT) {
         // Making square matrices (equal dimensions)
-        this.inputSize = inputSize;
-        this.hiddenSize = inputSize;
-        this.outputSize = 2;  // Two outputs: starts with 'a' and contains uppercase
+        this.inputSize = inputSize; //DIMZ:
+        this.hiddenSize = inputSize; //DIMZ: 
+        this.outputSize = 2;  //DIMZ: 2 TGTZ - starts with 'a' and contains uppercase
 
         // Initialize weights with improved initial values for better convergence
         this.weightsIH = this.initializeWeights(this.inputSize, this.hiddenSize, 0.3);
@@ -51,9 +54,9 @@ class NeuralNetwork_aZ_1 {
     // Initialize weights with Xavier initialization
     initializeWeights(rows, cols, scale) {
         const weights = [];
-        for (let i = 0; i < rows; i++) {
+        for (let i = 0; i < rows; i++) { //DIMZ: 
             weights[i] = [];
-            for (let j = 0; j < cols; j++) {
+            for (let j = 0; j < cols; j++) { //DIMZ:
                 // Xavier initialization: variance of weights based on layer size
                 weights[i][j] = (Math.random() * 2 - 1) * Math.sqrt(scale / rows);
             }
@@ -79,32 +82,14 @@ class NeuralNetwork_aZ_1 {
         }
         return input;
     }
-    // Convert letter sequence to input vector
-    // Each position represents presence (1) or absence (0) of a letter
-    // tokenToInput(token) {
-        
-    //     const input = Array(26 * 2).fill(0); // Space for 2 letters
-    //     for (let i = 0; i < Math.min(token.length, 2); i++) {
-    //         const charCode = token.charCodeAt(i) - 97; // 'a' starts at 97
-    //         if (charCode >= 0 && charCode < 26) {
-    //             input[i * 26 + charCode] = 1;
-    //         }
-    //     }
-    //     AI_VIZ_LOG('-🤖 TOKEN_VECTOR 🤖',token)
-    //         //TODO VECTOR DETECTOR
-    //         // AI_VIZ_LOG("\n--🔬 VIZ: VECTOR _DETECTOR 🔬");
-    //         //AI_VIZ_BRAIN.VECTOR_DETECTOR(input,token)
-
-    //     return input;
-    // }
 
     // Forward pass through the network
     forward(input) {
         // Hidden layer computations
         this.hiddenLayer = new Array(this.hiddenSize).fill(0);
-        for (let i = 0; i < this.hiddenSize; i++) {
+        for (let i = 0; i < this.hiddenSize; i++) { //DIMZ:
             let sum = this.biasH[i];
-            for (let j = 0; j < this.inputSize; j++) {
+            for (let j = 0; j < this.inputSize; j++) { //DIMZ:
                 sum += input[j] * this.weightsIH[j][i];
             }
             this.hiddenLayer[i] = this.sigmoid(sum);
@@ -112,9 +97,9 @@ class NeuralNetwork_aZ_1 {
 
         // Output layer computations
         this.outputLayer = new Array(this.outputSize).fill(0);
-        for (let i = 0; i < this.outputSize; i++) {
+        for (let i = 0; i < this.outputSize; i++) { //DIMZ:
             let sum = this.biasO[i];
-            for (let j = 0; j < this.hiddenSize; j++) {
+            for (let j = 0; j < this.hiddenSize; j++) { //DIMZ:
                 sum += this.hiddenLayer[j] * this.weightsHO[j][i];
             }
             this.outputLayer[i] = this.sigmoid(sum);
@@ -125,13 +110,13 @@ class NeuralNetwork_aZ_1 {
 
     // Backward pass for training
     backward(input, target, output) {
-        // Output layer error: 2X2 -
+        // Output layer error: DIMZ: 2X2 -
         const outputErrors = new Array(this.outputSize);
         for (let i = 0; i < this.outputSize; i++) {
             outputErrors[i] = (target[i] - output[i]) * this.sigmoidDerivative(output[i]);
         }
 
-        // Hidden layer error: 10X1 - 
+        // Hidden layer error: DIMZ: 10X1 - 
         const hiddenErrors = new Array(this.hiddenSize).fill(0);
         for (let i = 0; i < this.hiddenSize; i++) {
             for (let j = 0; j < this.outputSize; j++) {
@@ -141,90 +126,60 @@ class NeuralNetwork_aZ_1 {
         }
 
         // Update weights and biases-------------------------------------
-        // HO: Hidden to output weights: 10X2 - 
+        // HO: Hidden to output weights: DIMZ: 10X2 - 
         for (let i = 0; i < this.hiddenSize; i++) {
             for (let j = 0; j < this.outputSize; j++) {
                 this.weightsHO[i][j] += this.learningRate * outputErrors[j] * this.hiddenLayer[i];
             }
         }
 
-        // IH: Input to hidden weights: 10X10 - 
+        // IH: Input to hidden weights: DIMZ: 10X10 - 
         for (let i = 0; i < this.inputSize; i++) {
             for (let j = 0; j < this.hiddenSize; j++) {
                 this.weightsIH[i][j] += this.learningRate * hiddenErrors[j] * input[i];
             }
         }
 
-        // if(this.epochIDX===0){
-        //     if(!this.IH_SLICE[0]){ //skip dupes same
-        //         this.IH_SLICE[0] = new Array(this.weightsIH); //for timeline
-        //         debugger;
-        //     }
-        // } else if ( this.epochIDX === this.epochLIMIT-1){
-        //     if(!this.IH_SLICE[1]){ //skip dupes
-        //         this.IH_SLICE[1] = new Array(this.weightsIH); //for timeline
-        //         debugger;
-        //     }
-        // }
-
-        // BIAS: Update biases Output & Hidden: 1X2 -
+        // BIAS: Update biases Output & Hidden:DIMZ: 1X2 -
         for (let i = 0; i < this.outputSize; i++) {
             this.biasO[i] += this.learningRate * outputErrors[i];
         }
-        for (let i = 0; i < this.hiddenSize; i++) { //1X10 -
+        for (let i = 0; i < this.hiddenSize; i++) { //DIMZ:1X10 -
             this.biasH[i] += this.learningRate * hiddenErrors[i];
         }
     }
 
-    // Training function, inputs: 15X10 - targets: 15X2 - 
+    // Training function, 
+    //DIMZ: inputs: 15X10 
+    //    - targets: 15X2 - 
     train(inputs, targets, epochs) {
         const errors = [];
         AI_VIZ_LOG('>   🌌 EPOCH_LOOP 🌌',epochs);
         for (let epoch = 0; epoch < epochs; epoch++) {
             this.epochIDX = epoch; //used for epoch_rate timeline
             let epochError = 0;
-            for (let i = 0; i < inputs.length; i++) {
+            for (let i = 0; i < inputs.length; i++) { //DIMZ:
                 const output = this.forward(inputs[i]);
                 this.backward(inputs[i], targets[i], output);
-
-                // if( this.epochIDX % (this.epochLIMIT * 0.1) === 0){ //ten EPOCH_SLICES.
-                //     if( i === inputs.length-1 ){ //last input.
-                //         console.log('snapshot: ', this.epochIDX);
-                //         //             AI_VIZ_LOG('-----🧭 EPOCH 🧭',i)
-                //         debugger;
-                //         this.IH_SLICE.push(this.weightsIH); //for timeline
-                //     } //END INPUT SNAPSHOT
-                // } //END EPOCH SNAPSHOT
-
-                
-                // Calculate mean squared error
-                for (let j = 0; j < this.outputSize; j++) {
+                for (let j = 0; j < this.outputSize; j++) { // Calculate mean squared error
                     epochError += Math.pow(targets[i][j] - output[j], 2);
                 }
             }
 
-        //------------- EPOCH_SNAPSHOT!------------------------------
-        // if( this.epochIDX % (this.epochLIMIT * 0.1) === 0){ //ten EPOCH_SLICES.
-        //     console.log('snapshot: ', this.epochIDX);
-        //     //             AI_VIZ_LOG('-----🧭 EPOCH 🧭',i)
-        //     this.IH_SLICE.push(this.weightsIH); //for timeline
-        // }
-        // if(this.epochIDX===0 || this.epochIDX === this.epochLIMIT-1){
-        if( this.epochIDX % (this.epochLIMIT * 0.1) === 0){ //ten EPOCH_SLICES.
-
-            // let originalArray = [[1, 2], [3, 4]];
-            // let copiedArray = JSON.parse(JSON.stringify(originalArray));
-            
-            // copiedArray[0][0] = 99; // Modifying the copy
-            
-            // console.log(originalArray); // Output: [[1, 2], [3, 4]] (original unchanged)
-            // console.log(copiedArray);  // Output: [[99, 2], [3, 4]] (copy modified)
-            // debugger;
-            let copySlice = JSON.parse(JSON.stringify(this.weightsIH)); //same
-            this.IH_SLICE.push(copySlice); //for timeline
-            // this.IH_SLICE.push(new Array(this.weightsIH)); //for timeline
-            // console.log('epoch',this.epochIDX)
-        }
+            //------------- EPOCH_SNAPSHOT!------------------------------
+            //AI_VIZ_LOG('-----🧭 EPOCH 🧭',i)
+            if( this.epochIDX % (this.epochLIMIT * 0.1) === 0){ //ten EPOCH_SLICES.
+                //TODO map map map?
+                // Capture initial weights
+                // weightTrajectory.inputHidden.push(
+                //     this.neuralNet.inputHiddenWeights.map(row => row.map(val => val))
+                // );
+                // weightTrajectory.hiddenOutput.push(
+                //     this.neuralNet.hiddenOutputWeights.map(row => row.map(val => val))
+                // );            
+                let copySlice = JSON.parse(JSON.stringify(this.weightsIH)); //same
+                this.IH_SLICE.push(copySlice); //for timeline
+            }
 
             epochError /= inputs.length;
             errors.push(epochError);
@@ -232,12 +187,10 @@ class NeuralNetwork_aZ_1 {
             // Early stopping if error is small enough
             if (epochError < 0.001) break;
         } //END EPOCH_LOOP
-        return errors; //TODO: visualize 1000 returns, to show TRAINING MOVIE.
-        //TODO: then use BACKTRACE to
+        return errors; 
     }
 
-    // Visualize network state
-    visualize() {
+    visualize() { // Visualize network state : improved to heatmap.
         console.log("\nNeural Network State:");
         console.log("Input -> Hidden Weights:");
         console.log(this.weightsIH.map(row => row.map(w => w.toFixed(3))));
@@ -246,54 +199,7 @@ class NeuralNetwork_aZ_1 {
         console.log("\nHidden Biases:", this.biasH.map(b => b.toFixed(3)));
         console.log("Output Biases:", this.biasO.map(b => b.toFixed(3)));
     }
-    // Train the network using backpropagation
-    // train(input, target) { //target array of target types.
-    //     // Forward pass
-    //     AI_VIZ_LOG('--🏈 FORWARD_PASS 🏈')
-    //     this.forward(input); //this.output
 
-    //     // Output layer error
-    //     const outputErrors = target.map((t, i) => (t - this.output[i]));
-    //     AI_VIZ_LOG('--HL: OUTPUT ERROR')
-    //     AI_VIZ_LOG('--OL: ERROR')
-        
-    //     // Hidden layer error
-    //     const hiddenErrors = this.hidden.map((_, i) => {
-    //         let error = 0;
-    //         for (let j = 0; j < outputErrors.length; j++) {
-    //             error += outputErrors[j] * this.weightsHO[i][j];
-    //         }
-    //         return error;
-    //     });
-
-    //     // Update weights and biases
-    //     AI_VIZ_LOG('-Update WEIGHT/BIAS/Learn',this.learningRate)
-    //     // Output layer
-    //     for (let i = 0; i < this.hidden.length; i++) {
-    //         for (let j = 0; j < this.output.length; j++) {
-    //             this.weightsHO[i][j] += this.learningRate * outputErrors[j] * 
-    //                 this.output[j] * (1 - this.output[j]) * this.hidden[i];
-    //         }
-    //     }
-
-    //     // Hidden layer
-    //     for (let i = 0; i < input.length; i++) {
-    //         for (let j = 0; j < this.hidden.length; j++) {
-    //             this.weightsIH[i][j] += this.learningRate * hiddenErrors[j] * 
-    //                 this.hidden[j] * (1 - this.hidden[j]) * input[i];
-    //         }
-    //     }
-
-    //     // Update biases
-    //     for (let i = 0; i < this.biasO.length; i++) {
-    //         this.biasO[i] += this.learningRate * outputErrors[i] * 
-    //             this.output[i] * (1 - this.output[i]);
-    //     }
-    //     for (let i = 0; i < this.biasH.length; i++) {
-    //         this.biasH[i] += this.learningRate * hiddenErrors[i] * 
-    //             this.hidden[i] * (1 - this.hidden[i]);
-    //     }
-    // }
 } //END NEURAL NETWORK class
 
 // function queryNeuralNetwork_1_(e){
@@ -306,7 +212,6 @@ class NeuralNetwork_aZ_1 {
     //     const input = nn_1.tokenToInput(token);
     //     const output = nn_1.forward(input);
     //     console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
-    //     // debugger;
     //     const txtPCTS = output.map( (v) => { 
     //         // return v.toFixed(3); 
     //         return v.toFixed(2)*100;
@@ -328,16 +233,6 @@ class NeuralNetwork_aZ_1 {
 // Test the neural network
 let nn;//connect to viz.
 function testNetwork() {
-    // debugger;
-    // // Convert word to input vector (using ASCII values normalized)
-    // function wordToInput(word, size) {
-    //     const input = new Array(size).fill(0);
-    //     for (let i = 0; i < Math.min(word.length, size); i++) {
-    //         input[i] = word.charCodeAt(i) / 255;  // Normalize ASCII values
-    //     }
-    //     return input;
-    // }
-
     // Create training data
     const trainingWords = [
         "apple", "Banana", "cat", "Dog", "elephant",
@@ -348,7 +243,8 @@ function testNetwork() {
     //----TUNABLE---HYPER_PARAMS:-----------------
     const learnRate = 0.1544;
     const epoch_NUM = 10000; 
-    const inputSize = 10;  // Fixed input size
+    const inputSize = 10;  // DIMZ: 10 - number of letters, to square matrix.
+    debugger;
     nn = new  NeuralNetwork_aZ_1(inputSize, learnRate, epoch_NUM);
 
     AI_VIZ_LOG("> _🧩 TOKEN_SET 🧩:",trainingWords);
@@ -363,13 +259,14 @@ function testNetwork() {
     AI_VIZ_LOG(">   🚧 END_TRAIN 🚧");
     console.log("Final error:", errors[errors.length - 1]);
 
+    //TODO: backtrack...correct answer, to decipher dimension alignments.
+    debugger;
     // Test the network
     const testWords = ["amazing", "and", "zebra", "Apple", "test"];
     let msg = '';
     AI_VIZ_LOG("> _🧩 TEST_TOKENS 🧩:",testWords);
     for (const word of testWords) {
         const input = nn.wordToInput(word, inputSize);
-        //TODO: backtrack...correct answer.
         const output = nn.forward(input);
         AI_VIZ_LOG("Word: ",word);
         msg = `Starts with 'a': ${output[0].toFixed(3)} (Expected: ${word.startsWith('a') ? 1 : 0})`;
@@ -379,18 +276,15 @@ function testNetwork() {
     }
 
     // Visualize the final state
-    // nn.visualize();
+    // nn.visualize(); //replaced.
 }
-
 // Run the test
 testNetwork();
 //-----------END AI RUNNER-----------------------------
 //----------- AI_BRAIN_VIZ-----------------------------
 export class AI_BRAIN_VIZ_2 {
-    // constructor(neuralNet,canvasElem) {
     constructor(neuralNet) {
         AI_VIZ_LOG(">  🧠 NN:INIT 🧠");
-        // Select the canvas and get its 2D rendering context
         if(!neuralNet){console.log('err: no network')}
         this.neuralNet = neuralNet;
 
@@ -400,7 +294,6 @@ export class AI_BRAIN_VIZ_2 {
         this.CANVAS_3D_MATRIX_1 = document.getElementById('CANVAS_3D_MATRIX_1');
         this.TXT_AI_VIZ_LOG_1 = document.getElementById('TXT_AI_VIZ_LOG_1');
 
-
         if(!CANVAS_BRAIN_VIZ_1){console.log('err: no CANVAS_BRAIN_VIZ_1')}
         this.CANVAS_BRAIN_VIZ_1 = CANVAS_BRAIN_VIZ_1;//document.getElementById(canvasId);
         this.ctx_BRAIN_VIZ = this.CANVAS_BRAIN_VIZ_1.getContext('2d');
@@ -408,20 +301,6 @@ export class AI_BRAIN_VIZ_2 {
         if(!CANVAS_TIMELINE_1){console.log('err: no CANVAS_TIMELINE_1')}
         this.CANVAS_TIMELINE_1 = CANVAS_TIMELINE_1;//document.getElementById(canvasId);
         this.ctx_TIMELINE = this.CANVAS_TIMELINE_1.getContext('2d');
-
-        // if(!canvasElem){console.log('err: no canvas')}
-        // this.canvas = canvasElem;//document.getElementById(canvasId);
-        // this.ctx = this.canvas.getContext('2d');
-
-        // debugger;
-        // this.canvas.width = 500; //default width
-        // debugger;
-    //epoch this.neuralNet.epoch_NUM
-        // this.canvas.width = canvasElem.width
-        // this.canvas.height = canvasElem.height
-        // this.canvas.width = canvasElem.parentElement.clientWidth * 0.8;
-        // this.canvas.height = 200; //default height
-
     }
     
     // render_BASELINE(epochz = []) { //TODO: timeline
@@ -457,23 +336,7 @@ export class AI_BRAIN_VIZ_2 {
     //     this.ctx.stroke();
     // }
 
-    // render_EPOCHZ(epochz) { 
-    //     epochz.forEach(epoch => {
-    //         // console.log('EPOCH',epoch.title)
-    //         // this.DRAW_VERTICAL_LINE(epoch.x);
-    //         this.DRAW_POINT(epoch.x, epoch.y, epoch.emoji);
-    //     });
-    // }
-
     render_NEURON_TIMELINE(){ //AI_TIMELINE VIZ.
-        // if(nn.IH_SLICE[0][0][0]===nn.IH_SLICE[1][0][0]){ //similar check
-        //     // debugger;
-        //     console.log('same',nn.IH_SLICE[0][0][0])
-        //     console.log('same',nn.IH_SLICE[1][0][0])
-        // }else{
-            //     console.log('not same')
-            // }
-            // }
             
         if(!nn.IH_SLICE){console.log('ERROR: cannot find slice!');return;}
         this.ctx_TIMELINE.clearRect(0, 0, this.CANVAS_TIMELINE_1.width, this.CANVAS_TIMELINE_1.height);  // Clear the canvas
@@ -501,18 +364,13 @@ export class AI_BRAIN_VIZ_2 {
             CURSOR_POS = {x:(PAD_COL*i)+PAD_LEFT, y:CURSOR_POS.y}; //NEXT POSITION.
             for (let rowIDX = 0; rowIDX < colorGrid.length; rowIDX++) {
                 row = colorGrid[rowIDX];
-                // frame = this.neuralNet.weightsIH[rowIDX];
                 cols = row.length;
                 startX = CURSOR_POS.x + (rowIDX*SPACING_MED); 
                 for (let colIDX = 0; colIDX < row.length; colIDX++) {
                     colorTGT = row[colIDX];
                     startY = CURSOR_POS.y + (colIDX * SPACING_MED);
-                    // colorVal = this.numbersToColorsNormalized(vector)
-                    // colorVal = this.numberToColor(vector);
-                    // colorVal = this.getColor_MAP_1(vector,-1,1)
                     this.ctx_TIMELINE.beginPath();
                     this.ctx_TIMELINE.fillStyle = colorTGT;
-                    // this.ctx_TIMELINE.fillStyle = colorVal;
                     this.ctx_TIMELINE.arc(startX,startY,SIZE_MED, 0, Math.PI * 2);
                     this.ctx_TIMELINE.fill();
                 }
@@ -520,10 +378,7 @@ export class AI_BRAIN_VIZ_2 {
         }
     }
     render_NEURON_WEIGHTS(){ //NEURON_WEIGHT VIZ.
-        // debugger;
-        // this.neuralNet;
         // NN_MIN1:biasH, biasO, hidden, learningRate, output, weightsHO, weightsIH
-
         let frame=[],vector=[],scalar=0;
         let rows=0,cols=0;
         let SIZE_SML=2,SIZE_BIG=4,SPACING_SML=6,SPACING_BIG=8;
@@ -547,10 +402,8 @@ export class AI_BRAIN_VIZ_2 {
             for (let vectorIDX = 0; vectorIDX < frame.length; vectorIDX++) {
                 vector = frame[vectorIDX];
                 startY = CURSOR_POS.y + (vectorIDX * SPACING_BIG);
-                // colorVal = this.numberToColor(vector);
                 colorVal = this.getColor_MAP_1(vector,-1,1)
                 this.ctx_BRAIN_VIZ.beginPath();
-
                 this.ctx_BRAIN_VIZ.fillStyle = colorVal;
                 this.ctx_BRAIN_VIZ.arc(startX, startY,SIZE_BIG, 0, Math.PI * 2);
                 this.ctx_BRAIN_VIZ.fill();
@@ -568,26 +421,19 @@ export class AI_BRAIN_VIZ_2 {
             startX = CURSOR_POS.x + (frameIDX*SPACING_SML);// + CURSOR_POS.x; 
             for (let vectorIDX = 0; vectorIDX < frame.length; vectorIDX++) {
                 vector = frame[vectorIDX];
-                // startX += vectorIDX * spacing;
                 startY = PAD_TOP + (vectorIDX * SPACING_SML) +CURSOR_POS.y;
                 colorVal = this.getColor_MAP_1(vector,-1,1)
-                 // this.DRAW_POINT( startX + i * spacing, startY   );
-                // console.log('point',startX,startY)
                 this.ctx_BRAIN_VIZ.beginPath();
-
                 this.ctx_BRAIN_VIZ.fillStyle = colorVal;
-                // this.ctx_BRAIN_VIZ.fillStyle = 'blue';
                 this.ctx_BRAIN_VIZ.arc(startX, startY,SIZE_SML, 0, Math.PI * 2);
                 this.ctx_BRAIN_VIZ.fill();
             }
         }        
-        // debugger;
         this.ctx_BRAIN_VIZ.fillStyle = 'steelblue';
         this.ctx_BRAIN_VIZ.font = "0.8em Arial italic bold "; //TITLE
         this.ctx_BRAIN_VIZ.fillText("BIAS(hidden):", PAD_LEFT, 120);
 
         CURSOR_POS = {x:166,y:120}; //NEXT POSITION.
-        // CURSOR_POS = {x:0,y:CURSOR_POS.y + 40}
         rows = 1;
         for (let vectorIDX = 0; vectorIDX < this.neuralNet.biasH.length; vectorIDX++) {
             scalar = this.neuralNet.biasH[vectorIDX];
@@ -596,38 +442,15 @@ export class AI_BRAIN_VIZ_2 {
             colorVal = this.getColor_MAP_1(scalar,-1,1)
             this.ctx_BRAIN_VIZ.beginPath();
             this.ctx_BRAIN_VIZ.fillStyle = colorVal;
-            // console.log('point',startX,startY)
             this.ctx_BRAIN_VIZ.arc(startX, startY,SIZE_SML, 0, Math.PI * 2);
             this.ctx_BRAIN_VIZ.fill();
         }
-
-        // debugger;
-        // CURSOR_POS = {x:PAD_LEFT+100,y:120}; //NEXT POSITION.
-        // this.ctx_BRAIN_VIZ.fillStyle = 'steelblue';
-        // this.ctx_BRAIN_VIZ.font = "0.8em Arial italic bold "; //TITLE
-        // this.ctx_BRAIN_VIZ.fillText("Output", PAD_LEFT, CURSOR_POS.y);
-
-        // CURSOR_POS = {x:PAD_LEFT,y:110}; //NEXT POSITION.
-        // // CURSOR_POS = {x:0,y:CURSOR_POS.y + 40}
-        // rows = 1;
-        // for (let vectorIDX = 0; vectorIDX < this.neuralNet.outputLayer.length; vectorIDX++) {
-        //     scalar = this.neuralNet.outputLayer[vectorIDX];
-        //     startX = CURSOR_POS.x + (vectorIDX * 40);
-        //     startY = CURSOR_POS.y;
-        //     colorVal = this.getColor_MAP_1(scalar,-1,1)
-        //     this.ctx_BRAIN_VIZ.fillStyle = colorVal;
-        //     this.ctx_BRAIN_VIZ.font = "0.6em Arial italic bold "; //TITLE
-        //     this.ctx_BRAIN_VIZ.fillText(scalar.toFixed(2), startX, startY);
-        // }
     }
 
     getColor_MAP_1 (value, min, max){ // Map value to color intensity
-        // if(value<min){console.log('warning: color less than min',min,value)}
-        // if(value>max){console.log('warning: color more than max',max,value)}
         const normalized = (value - min) / (max - min);
         let r = Math.floor(255 * (1 - normalized));
         let b = Math.floor(255 * normalized);
-        //TODO: cannot be negative?
         r = (r<0)?0:r;
         b = (b<0)?0:b;
         return (value===0)?'black':(b>r)?'blue':'red';
@@ -661,19 +484,8 @@ export class AI_BRAIN_VIZ_2 {
       
           return `rgb(${r}, ${g}, ${b})`;
         });
-      }
-      
-    //   const nums = [12.342534312229315, 1.087728272237465, 14.985526176426571, -2.4804113983464986, 2.387049642242639, 4.428781744287364, -2.5248205347993378, 0.36101453816043116, -5.703892105724913, -3.1426391072026107];
-    //   const colors = numbersToColorsNormalized(nums);
-    //   console.log(colors);
-      
-    //   const sameNums = [5,5,5,5,5,5]
-    //   const sameColors = numbersToColorsNormalized(sameNums);
-    //   console.log(sameColors)
-      
-    //   const emptyNums = [];
-    //   const emptyColors = numbersToColorsNormalized(emptyNums);
-    //   console.log(emptyColors);
+    }
+
 
     matrixToColorsNormalized(matrix) {
         if (!matrix || matrix.length === 0 || !matrix.some(row => row.length > 0)) {
@@ -701,37 +513,24 @@ export class AI_BRAIN_VIZ_2 {
       }
 
     numberToColor(num) {
-        debugger;
-        // num = num * 1000000;
         let min = -1, max = 1;
         const normalized = (num - min) / (max - min);
         let r = Math.floor(255 * (1 - normalized));
         let b = Math.floor(255 * normalized);
+        let g = 0;
 
-        // return nums.map(num => {
-        //   let r = 0;
-          let g = 0;
-        //   let b = 0;
-
-          if (num >= 0 && num <= 1) {
-            // Blue shades (0 to 1)
-            b = Math.round(255 * num);
-          } else if (num >= -1 && num < 0) {
-            // Red shades (-1 to 0)
-            r = Math.round(255 * Math.abs(num)); // Use absolute value for positive red
-          } else if (num > 1) {
-            // Green
-            g = 255;
-          } else if (num < -1) {
-            // Purple (mix of red and blue)
-            r = 128; // Half red
-            b = 128; // Half blue
-          }
-      
-          return `rgb(${r}, ${g}, ${b})`;
-        // });
+        if (num >= 0 && num <= 1) {  // Blue shades (0 to 1)
+        b = Math.round(255 * num);
+        } else if (num >= -1 && num < 0) { // Red shades (-1 to 0)
+        r = Math.round(255 * Math.abs(num)); // Use absolute value for positive red
+        } else if (num > 1) {         // Green
+        g = 255;
+        } else if (num < -1) { // Purple (mix of red and blue)
+        r = 128; // Half red
+        b = 128; // Half blue
+        }
+        return `rgb(${r}, ${g}, ${b})`;
     }
-
 
     // DRAW_GRID(grid = {rows : 14, cols : 14, startX : 30, startY : 30, spacing : 4} ) {
     //     // console.log('grid', rows, cols, startX, startY, spacing);
@@ -770,21 +569,10 @@ export class AI_BRAIN_VIZ_2 {
     // }
     // render_TIMELINE_SLICE(canvas, txt){
     render_TIMELINE_SLICE(canvas, idx){ //MOVIE PLAYBACK
-        // debugger;
         let ctx_PLAYBACK = canvas.getContext('2d');
         ctx_PLAYBACK.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
-        // ctx_PLAYBACK.font = '12px Arial';
-        // ctx_PLAYBACK.fillStyle = 'white'; // Ensure visibility on black background
-        // // ctx_PLAYBACK.textAlign = 'center';
-        // ctx_PLAYBACK.fillText(idx, 44, 44);
-        // // ctx_PLAYBACK.fillText(txt, 44, 44);
-        // let dataframe = AI_BRAIN_VIZ.IH_SLICE[idx];
         let dataframe = AI_BRAIN_VIZ.neuralNet.IH_SLICE[idx];
         if(!dataframe){console.log('ERROR: no dataframe');return;}
-        // if(!nn.IH_SLICE){console.log('ERROR: cannot find slice!');return;}
-        // this.ctx_TIMELINE.clearRect(0, 0, this.CANVAS_TIMELINE_1.width, this.CANVAS_TIMELINE_1.height);  // Clear the canvas
-        // this.CANVAS_TIMELINE_1.width = (nn.IH_SLICE.length)?nn.IH_SLICE.length*100:this.CANVAS_TIMELINE_1.width;
-        // let frame=[],vector=[],
         let colorTGT=0;
         let row=0;//,cols=0;
         let SIZE_SML=2,SIZE_MED=3,SIZE_BIG=4,SPACING_SML=6,SPACING_MED=7,SPACING_BIG=8;
@@ -792,60 +580,40 @@ export class AI_BRAIN_VIZ_2 {
 
         let PAD_TOP = 25;
         let PAD_LEFT = 20;
-        // let PAD_COL = 100;
 
         let CURSOR_POS = {x:PAD_LEFT,y:PAD_TOP}; //USE like a ink printer.
         ctx_PLAYBACK.fillStyle = 'steelblue';
         ctx_PLAYBACK.font = "0.8em Arial italic bold "; //TITLE
         ctx_PLAYBACK.fillText("TRAIN NEURONS:", CURSOR_POS.x, CURSOR_POS.y);
 
-        // CURSOR_POS = {x:PAD_LEFT,y:40}; //NEXT POSITION.
-        // let slice, colorGrid;
-        // for(let i=0;i<nn.IH_SLICE.length;i++){
-        //     slice = nn.IH_SLICE[i];
-            // colorGrid = this.matrixToColorsNormalized(slice);
         let colorGrid = this.matrixToColorsNormalized(dataframe);
 
         CURSOR_POS = {x:PAD_LEFT+44, y:44}; //NEXT POSITION.
         for (let rowIDX = 0; rowIDX < colorGrid.length; rowIDX++) {
             row = colorGrid[rowIDX];
-            // frame = this.neuralNet.weightsIH[rowIDX];
-            // cols = row.length;
             startX = CURSOR_POS.x + (rowIDX*SPACING_BIG); 
             for (let colIDX = 0; colIDX < row.length; colIDX++) {
                 colorTGT = row[colIDX];
                 startY = CURSOR_POS.y + (colIDX * SPACING_BIG);
-                // colorVal = this.numbersToColorsNormalized(vector)
-                // colorVal = this.numberToColor(vector);
-                // colorVal = this.getColor_MAP_1(vector,-1,1)
                 ctx_PLAYBACK.beginPath();
                 ctx_PLAYBACK.fillStyle = colorTGT;
-                // this.ctx_TIMELINE.fillStyle = colorVal;
                 ctx_PLAYBACK.arc(startX,startY,SIZE_BIG, 0, Math.PI * 2);
                 ctx_PLAYBACK.fill();
             }
         }//end loop
     }//end playback
-
 } //END AI_BRAIN_VIZ class
 //-----------------------------LOCAL MODULE: 
-//- add vis features here, then export to module.
-let AI_BRAIN_VIZ;
-function RENDER_BRAIN_VIZ(){ //VIZ MODULE-RUNNER
-    // if(!nn || !CANVAS_BRAIN_VIZ_1){ console.log('ERROR: no neural net for viz');return}
+let AI_BRAIN_VIZ; //- add vis features here, then export to module.
+function RENDER_BRAIN_VIZ(){ //VIZ MODULE---------RUNNER--------------
     AI_BRAIN_VIZ = new AI_BRAIN_VIZ_2(nn);
-    // new AI_BRAIN_VIZ_2(nn,CANVAS_BRAIN_VIZ_1);
-    
     // 1. Initial Weight Visualization (Before Training)
     AI_VIZ_LOG(">  🔬 VIZ_LOG: of AI_BRAINZ 🔬");
     AI_BRAIN_VIZ.render_NEURON_WEIGHTS(); //visualizeWeights
-    // AI_BRAIN_VIZ.render_BASELINE([{title:'a',title:'b'}])
     AI_BRAIN_VIZ.render_NEURON_TIMELINE();
-
-
 }; RENDER_BRAIN_VIZ();
 //-----------END AI VIZ-----------------------------
-//-----------------------DYNAMIC-UI--------(zero footprint in html)
+//---------------DYNAMIC-PLAYBACK - UI--------(zero footprint in html)
 const playback_BTN_1_ = document.getElementById('playback_BTN_1_');
 const playback_idx_1_ = document.getElementById('playback_idx_1_');
 const playback_total_1_ = document.getElementById('playback_total_1_');
@@ -859,23 +627,16 @@ playback_BTN_1_.onclick = (e) => { //toggle button
         stop_CANVAS_PLAYBACK(CANVAS_PLAYBACK_1);
     } 
 }
-
 //-----------------------PLAYBACK-LOGIC------------------------
 let intervalId;
 let currentIndex = 0;
 function start_CANVAS_PLAYBACK(canvas){
-    // debugger;
     if(!AI_BRAIN_VIZ.neuralNet){console.log('ERROR: no neural net'); return;}
     if(!AI_BRAIN_VIZ.neuralNet.IH_SLICE.length){console.log('ERROR: no neural net'); return;}
-    // let letters = ['a', 'b', 'c', 'd'];
     let loopCount = 0;
     const maxLoops = 10; // Number of loops before stopping
     intervalId = setInterval(() => {
-        // console.log(currentIndex);
         AI_BRAIN_VIZ.render_TIMELINE_SLICE(canvas, currentIndex);
-        // console.log(letters[currentIndex]);
-        // AI_BRAIN_VIZ.render_TIMELINE_SLICE(canvas, letters[currentIndex]);
-        // currentIndex = (currentIndex + 1) % letters.length; // Cycle through the array
         currentIndex = (currentIndex + 1) % AI_BRAIN_VIZ.neuralNet.IH_SLICE.length; // Cycle through the array
         playback_idx_1_.innerText = currentIndex;
         playback_total_1_.innerText = AI_BRAIN_VIZ.neuralNet.IH_SLICE.length;
@@ -892,133 +653,3 @@ function stop_CANVAS_PLAYBACK(canvas){
     clearInterval(intervalId); // Stop the interval
 }
 //-----------END VIZ UI-----------------------------
-
-
-
-// let nn_1;
-// // TOKENS STRONGER UP FRONT with MORE EPOCH, less with less epoch.
-// // let tokens = ["aa", "ab", "abc", "aaa", "bb", "ba", "ab", "abb", "bbb"];
-// let tokens = ["aa", "ab", "abc", "aaa", "bb", "ff", "xxx", "abb", "bbb"];
-// // let tokens = ["ape", "tree", "abc", "aaa", "bb", "ba", "ab", "abb", "bbb"];
-// function START_BRAIN(){
-//     AI_VIZ_LOG("----🧠 NN:INIT 🧠");
-//     nn_1 = new NeuralNetwork_aZ_1(52, 10, 2); // 52 inputs (26 letters * 2 positions), 10 hidden neurons, 2 outputs
-
-//     NNTXT_1_ELEM.innerHTML = tokens; //set tokens in UI.
-//     // INPUT_1_ELEM.innerHTML = tokens; //set tokens in UI.
-
-//     AI_VIZ_LOG("----🦾 NN:TRAIN_FRAME 🦾");
-//     function trainExample() {
-//         AI_VIZ_LOG("\n---💫 NN:TOKEN_LOOP 💫");
-//         // Example: Train to recognize if a token contains double letters
-//         tokens.forEach(token => {
-//             AI_VIZ_LOG("---🗃️ INPUT_VECTORS 🗃️");
-//             const input = nn_1.tokenToInput(token);//contains: VECTOR_DETECTOR.
-//             AI_VIZ_LOG("---🎯 TARGET_CASE 🎯");
-//             const target = [
-//                 token[0] === token[1] ? 1 : 0,  // First NUM: has double letters
-//                 token.includes('b') ? 1 : 0      // Second NUM: contains 'a'
-//             ];
-//             AI_VIZ_LOG("---🌪️ TRAIN_Fn 🌪️");
-//             nn_1.train(input, target);
-//             AI_VIZ_LOG("---🚧 END_TRAIN 🚧",token);
-//         });
-//     }
-
-//     // Train the network
-//     // debugger;
-//     let epoch_num = 1000;
-//     console.log('-----🌌 EPOCH_LOOP 🌌',epoch_num)
-//     for (let i = 0; i < epoch_num; i++) {
-//         trainExample();
-//         if(i%(epoch_num*0.1)===0){ //ten epoch counters
-//             AI_VIZ_LOG('-----🧭 EPOCH 🧭',i)
-//         }
-//     }
-
-//     OUTPUT_1_ELEM.innerHTML = ''; //clear out put
-//     // Test the network //optimize this TODO: move vars out to runFN() pattern.
-//     console.log('TOKEN_INTELLIGENCE:[','double letter,','contains(b)')
-//     tokens.forEach(token => {
-//         const input = nn_1.tokenToInput(token);
-//         const output = nn_1.forward(input);
-//         console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
-//         OUTPUT_1_ELEM.innerHTML = `Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`
-//         // debugger;
-//         // const txtPCTS = output.map( (v) => { 
-//         //     // return v.toFixed(3); 
-//         //     return v.toFixed(2)*100;
-//         //     // let decimal = v.toFixed(2)*100;
-//         //     // return decimal.toFixed(0)+'%'; //human readable %
-//         // });
-//         // // const txtPCTS = txtTOKENS.split(',')
-//         // if(txtPCTS[0]<txtPCTS[1]){//YES
-//         //     OUTPUT_1_ELEM.innerHTML += `${token} || YES: ${txtPCTS[1]} || No: ${txtPCTS[0]}<br>`;
-//         // } else { //NO
-//         //     OUTPUT_1_ELEM.innerHTML += `${token} || no: ${txtPCTS[0]} || Yes: ${txtPCTS[1]}<br>`;
-//         // }
-//         // // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
-//     });
-//     console.log('TOKEN_TEST:','EVAL: double letter and','contains(b)')
-// }; START_BRAIN();
-
-
-// Demonstration Function
-// function demonstrateNeuralNetVisualization() {
-//     // Tokens for demonstration
-//     const tokens = ["hello", "help", "world", "code", "coding","aaa"];
-
-//     const maxLength = 6;
-
-//     // Create neural network
-//     const nn = new NeuralNetwork(
-//         maxLength,    // input size
-//         6,            // hidden layer size
-//         tokens.length // output layer size
-//     );
-
-//     // Create visualizerAI_BRAIN_VIZ
-//     const AI_BRAIN_VIZ = new NeuralNetVisualizer(nn);
-
-//     // 1. Initial Weight Visualization (Before Training)
-//     //console.log("---🔬 VIZ: Neural Network State 🔬");
-//     AI_BRAIN_VIZ.visualizeWeights();
-
-//     // 2. Training and Visualization
-//     tokens.forEach((token, index) => {
-//         const input = nn.stringToOneHot(token, maxLength);
-//         const target = new Array(tokens.length).fill(0);
-//         target[index] = 1;
-
-//         // Train network
-//         for (let epoch = 0; epoch < 200; epoch++) {
-//             nn.train(input, target, 0.05);
-//         }
-//     });
-
-//     // 3. Visualization after Training
-//     //console.log("\n---🦾 VIZ:WEIGHTS 🦾");
-//     AI_BRAIN_VIZ.visualizeWeights();
-
-//     // 4. Activation Visualization
-//     //console.log("\n⚡ VIZ:ACTIVIATION ⚡");
-//     const sampleInput = nn.stringToOneHot("hello", maxLength);
-//     AI_BRAIN_VIZ.visualizeActivations(sampleInput);
-
-//     // 5. Learning Trajectory
-//     //console.log("\n---🚀 VIZ:TRAJECTORY 🚀");
-//     AI_BRAIN_VIZ.visualizeLearningTrajectory(tokens, maxLength);
-// }
-// debugger;
-// Run the visualization demonstration
-// demonstrateNeuralNetVisualization();
-
-// Token: aa, Output: 0.955,0.030
-// Token: ab, Output: 0.027,0.982
-// Token: abc, Output: 0.027,0.982
-// Token: aaa, Output: 0.955,0.030
-// Token: bb, Output: 0.936,0.999
-// Token: ba, Output: 0.101,0.951
-// Token: ab, Output: 0.027,0.982
-// Token: abb, Output: 0.027,0.982
-// Token: bbb, Output: 0.936,0.999

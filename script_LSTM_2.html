@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{ background:black;color:aqua;}
+        input{background:black;color:lime;}
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(to right, #3a4052, #011237);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .controls label {
+            margin-right: 10px;
+            font-weight: bold;
+            color: #109a55;
+        }
+        .controls input, .controls select {
+            padding: 8px;
+            margin-right: 20px;
+            border: 1px solid #599cb0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .controls select {
+            background-color: rgb(15, 0, 12);
+            color:lime;
+        }
+        .heatmap {
+            overflow-x: auto;
+            padding: 20px;
+            background: rgb(1, 0, 8);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .row:hover {
+            background-color: #4ef8bf;
+        }
+        .cell {
+            width: 60px;
+            height: 40px;
+            margin: 2px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        .cell:hover {
+            transform: scale(1.1);
+            z-index: 1;
+        }
+        .neuron-label {
+            width: 50px;
+            text-align: right;
+            padding-right: 10px;
+            color: #3b824f;
+            font-size: 12px;
+            font-family: monospace;
+        }
+        .char-label {
+            font-weight: bold;
+            background: linear-gradient(to bottom, #25334e, #1a3366);
+            color: rgb(12, 10, 10);
+            border-radius: 4px;
+        }
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(to right, #021e34, #000a33);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(35, 1, 46, 0.1);
+            color:aqua;
+        }
+        .legend h3 {
+            color: #2a4b8d;
+            margin-top: 0;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: rgb(53, 73, 117);
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 100;
+            width: 200px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .gradient-preview {
+            height: 20px;
+            margin: 10px 0;
+            background: linear-gradient(to right, rgb(66, 17, 79), #0000ff);
+            border-radius: 4px;
+        }
+        .gate-info {
+            background: rgb(0, 17, 19);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #2a4b8d;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .highlight {
+            animation: pulse 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="color: #2a4b8d; text-align: center;">LSTM Gate Activations Visualization</h2>
+        
+        <div class="controls">
+            <label>Word:</label>
+            <input type="text" id="wordInput" value="Apple" maxlength="10" placeholder="Enter a word...">
+            
+            <label>Gate Type:</label>
+            <select id="gateSelect">
+                <option value="input">Input Gate</option>
+                <option value="forget">Forget Gate</option>
+                <option value="output">Output Gate</option>
+                <option value="cell">Cell State</option>
+                <option value="hidden">Hidden State</option>
+            </select>
+        </div>
+
+        <div id="gateInfo" class="gate-info"></div>
+        
+        <div id="heatmap" class="heatmap"></div>
+        
+        <div class="legend">
+            <h3>Activation Strength</h3>
+            <div class="gradient-preview"></div>
+            <small>Low → High activation</small>
+            
+            <h3>How to interpret:</h3>
+            <ul>
+                <li>Hover over cells to see detailed information</li>
+                <li>Each row represents a neuron in the selected gate/state</li>
+                <li>Each column represents a character in the input word</li>
+                <li>Darker blue indicates stronger activation (closer to 1)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // LSTM Implementation
+        class LSTM {
+            constructor(inputSize, hiddenSize) {
+                this.inputSize = inputSize;
+                this.hiddenSize = hiddenSize;
+                this.outputSize = 2;
+                
+                // Initialize gates
+                this.initializeGateWeights();
+                this.learningRate = 0.01;
+            }
+
+            initializeGateWeights() {
+                const initMatrix = (rows, cols) => {
+                    const matrix = [];
+                    for (let i = 0; i < rows; i++) {
+                        matrix[i] = [];
+                        for (let j = 0; j < cols; j++) {
+                            matrix[i][j] = (Math.random() * 2 - 1) * Math.sqrt(2.0 / (rows + cols));
+                        }
+                    }
+                    return matrix;
+                };
+
+                // Initialize all gates
+                this.Wi = initMatrix(this.hiddenSize, this.inputSize);
+                this.Ui = initMatrix(this.hiddenSize, this.hiddenSize);
+                this.bi = new Array(this.hiddenSize).fill(0);
+
+                this.Wf = initMatrix(this.hiddenSize, this.inputSize);
+                this.Uf = initMatrix(this.hiddenSize, this.hiddenSize);
+                this.bf = new Array(this.hiddenSize).fill(1);
+
+                this.Wo = initMatrix(this.hiddenSize, this.inputSize);
+                this.Uo = initMatrix(this.hiddenSize, this.hiddenSize);
+                this.bo = new Array(this.hiddenSize).fill(0);
+
+                this.Wc = initMatrix(this.hiddenSize, this.inputSize);
+                this.Uc = initMatrix(this.hiddenSize, this.hiddenSize);
+                this.bc = new Array(this.hiddenSize).fill(0);
+
+                this.Wy = initMatrix(this.outputSize, this.hiddenSize);
+                this.by = new Array(this.outputSize).fill(0);
+            }
+
+            sigmoid(x) {
+                return 1 / (1 + Math.exp(-x));
+            }
+
+            tanh(x) {
+                return Math.tanh(x);
+            }
+
+            forward(sequence) {
+                const T = sequence.length;
+                const states = {
+                    h: [new Array(this.hiddenSize).fill(0)],
+                    c: [new Array(this.hiddenSize).fill(0)],
+                    i: [], f: [], o: [], g: [],
+                    y: []
+                };
+
+                for (let t = 0; t < T; t++) {
+                    const xt = sequence[t];
+                    const ht_1 = states.h[t];
+                    const ct_1 = states.c[t];
+
+                    // Input gate
+                    const it = new Array(this.hiddenSize).fill(0);
+                    for (let j = 0; j < this.hiddenSize; j++) {
+                        let sum = this.bi[j];
+                        for (let k = 0; k < this.inputSize; k++) {
+                            sum += this.Wi[j][k] * xt[k];
+                        }
+                        for (let k = 0; k < this.hiddenSize; k++) {
+                            sum += this.Ui[j][k] * ht_1[k];
+                        }
+                        it[j] = this.sigmoid(sum);
+                    }
+
+                    // Forget gate
+                    const ft = new Array(this.hiddenSize).fill(0);
+                    for (let j = 0; j < this.hiddenSize; j++) {
+                        let sum = this.bf[j];
+                        for (let k = 0; k < this.inputSize; k++) {
+                            sum += this.Wf[j][k] * xt[k];
+                        }
+                        for (let k = 0; k < this.hiddenSize; k++) {
+                            sum += this.Uf[j][k] * ht_1[k];
+                        }
+                        ft[j] = this.sigmoid(sum);
+                    }
+
+                    // Output gate
+                    const ot = new Array(this.hiddenSize).fill(0);
+                    for (let j = 0; j < this.hiddenSize; j++) {
+                        let sum = this.bo[j];
+                        for (let k = 0; k < this.inputSize; k++) {
+                            sum += this.Wo[j][k] * xt[k];
+                        }
+                        for (let k = 0; k < this.hiddenSize; k++) {
+                            sum += this.Uo[j][k] * ht_1[k];
+                        }
+                        ot[j] = this.sigmoid(sum);
+                    }
+
+                    // Cell state candidate
+                    const gt = new Array(this.hiddenSize).fill(0);
+                    for (let j = 0; j < this.hiddenSize; j++) {
+                        let sum = this.bc[j];
+                        for (let k = 0; k < this.inputSize; k++) {
+                            sum += this.Wc[j][k] * xt[k];
+                        }
+                        for (let k = 0; k < this.hiddenSize; k++) {
+                            sum += this.Uc[j][k] * ht_1[k];
+                        }
+                        gt[j] = this.tanh(sum);
+                    }
+
+                    // New cell state
+                    const ct = new Array(this.hiddenSize).fill(0);
+                    for (let j = 0; j < this.hiddenSize; j++) {
+                        ct[j] = ft[j] * ct_1[j] + it[j] * gt[j];
+                    }
+
+                    // New hidden state
+                    const ht = new Array(this.hiddenSize).fill(0);
+                    for (let j = 0; j < this.hiddenSize; j++) {
+                        ht[j] = ot[j] * this.tanh(ct[j]);
+                    }
+
+                    states.i.push(it);
+                    states.f.push(ft);
+                    states.o.push(ot);
+                    states.g.push(gt);
+                    states.c.push(ct);
+                    states.h.push(ht);
+                }
+
+                return states;
+            }
+
+            getGateActivations(word) {
+                const sequence = Array.from(word).map(char => {
+                    const vector = new Array(this.inputSize).fill(0);
+                    vector[char.charCodeAt(0) % this.inputSize] = 1;
+                    return vector;
+                });
+
+                return this.forward(sequence);
+            }
+        }
+
+        class GateVisualizer {
+            constructor() {
+                this.lstm = new LSTM(26, 8);
+                this.word = "Apple";
+                this.selectedGate = "input";
+                this.tooltip = document.getElementById('tooltip');
+                
+                this.gateDescriptions = {
+                    input: {
+                        title: "Input Gate",
+                        description: "Controls what new information to add to the cell state. High values (darker blue) indicate the network is storing new information at this position.",
+                        pattern: "Look for high activations at important characters like uppercase letters or the start of words."
+                    },
+                    forget: {
+                        title: "Forget Gate",
+                        description: "Controls what information to remove from the cell state. High values indicate the network is keeping information, low values mean it's forgetting.",
+                        pattern: "Usually high at important features and low when previous information becomes irrelevant."
+                    },
+                    output: {
+                        title: "Output Gate",
+                        description: "Controls what parts of the cell state to output. High values show what information is being used for predictions.",
+                        pattern: "Activates when the network needs to use stored information for predictions."
+                    },
+                    cell: {
+                        title: "Cell State",
+                        description: "The long-term memory of the network. Values show what information is being stored at each position.",
+                        pattern: "Maintains important information across multiple timesteps."
+                    },
+                    hidden: {
+                        title: "Hidden State",
+                        description: "The working memory of the network. Combines output gate with cell state to produce final output.",
+                        pattern: "Shows what information is actively being used by the network."
+                    }
+                };
+                
+                this.setupEventListeners();
+                this.updateVisualization();
+            }
+
+            getColor(value) {
+                // Enhanced color gradient
+                // const intensity = Math.min(Math.max(value, 0), 1);
+                const intensity = Math.min(Math.max(value, 0), 2);
+                let r = Math.round(255 - (intensity * 255));
+                let g = Math.round(255 - (intensity * 255));
+                let b = 255;
+                if(r>200 && g > 200 && b > 200){ //white adjustment.
+                    r = 22; g = 44; b = 144; 
+                }
+                // const alpha = 0.2 + (intensity * 0.8); // More transparent for low values
+                const alpha = 0.88; // More transparent for low values
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+
+            showTooltip(e, content) {
+                const tooltip = this.tooltip;
+                tooltip.innerHTML = content;
+                tooltip.style.left = `${e.pageX + 10}px`;
+                tooltip.style.top = `${e.pageY + 10}px`;
+                tooltip.style.opacity = '1';
+            }
+
+            hideTooltip() {
+                this.tooltip.style.opacity = '0';
+            }
+
+            updateGateInfo() {
+                const info = this.gateDescriptions[this.selectedGate];
+                const gateInfo = document.getElementById('gateInfo');
+                gateInfo.innerHTML = `
+                    <h3 style="color: #2a4b8d; margin-top: 0;">${info.title}</h3>
+                    <p>${info.description}</p>
+                    <p><strong>What to look for:</strong> ${info.pattern}</p>
+                `;
+                gateInfo.classList.add('highlight');
+                setTimeout(() => gateInfo.classList.remove('highlight'), 1000);
+            }
+
+            updateVisualization() {
+                const activations = this.lstm.getGateActivations(this.word);
+                // debugger;
+                const heatmapDiv = document.getElementById('heatmap');
+                heatmapDiv.innerHTML = '';
+
+                // Update gate info
+                this.updateGateInfo();
+
+                // Add character labels
+                const charRow = document.createElement('div');
+                charRow.className = 'row';
+                charRow.appendChild(document.createElement('div')).className = 'neuron-label';
+                Array.from(this.word).forEach((char, idx) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell char-label';
+                    cell.textContent = char;
+                    cell.style.animationDelay = `${idx * 100}ms`;
+                    charRow.appendChild(cell);
+                });
+                heatmapDiv.appendChild(charRow);
+// debugger;
+                //MAP this.selectedGate to single letter lookup;
+                let lookupIDX = '';
+                if(!this.selectedGate || this.selectedGate==='input'){lookupIDX='i'} //default for input.
+                else if (this.selectedGate === 'forget'){ lookupIDX = 'f'} // forget gate
+                else if (this.selectedGate === 'output'){ lookupIDX = 'o'} // output gate
+                else if (this.selectedGate === 'cell'){ lookupIDX = 'c'} // cell gate
+                else if (this.selectedGate === 'hidden'){ lookupIDX = 'h'} // hidden gate
+                // Add activation rows
+                // const gateData = activations[this.selectedGate];
+                // const gateData = activations['i'];
+                const gateData = activations[lookupIDX];
+                for (let i = 0; i < this.lstm.hiddenSize; i++) {
+                    const row = document.createElement('div');
+                    row.className = 'row';
+
+                    const label = document.createElement('div');
+                    label.className = 'neuron-label';
+                    label.textContent = `N${i + 1}`;
+                    row.appendChild(label);
+
+                    for (let j = 0; j < this.word.length; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        // debugger;
+                        const value = gateData[j][i] || 0;
+                        // const value = gateData[j]?.[i] || 0; //TODO: what is this and why did ai write it?
+                        // cell.style.backgroundColor = '#603f9c';//this.getColor(value);
+                        cell.style.backgroundColor = this.getColor(value);
+                        cell.style.boxShadow = `0 2px 4px rgba(0,0,0,${value * 0.2})`;
+                        cell.style.color = value > 0.5 ? 'white' : 'black';
+                        cell.textContent = value.toFixed(2);
+                        cell.style.animationDelay = `${(i * this.word.length + j) * 50}ms`;
+
+                        // Add tooltip information
+                        cell.addEventListener('mouseover', (e) => {
+                            const info = this.gateDescriptions[this.selectedGate];
+                            const tooltipContent = `
+                                <strong>Position:</strong> ${this.word[j]}<br>
+                                <strong>Neuron:</strong> ${i + 1}<br>
+                                <strong>Activation:</strong> ${value.toFixed(3)}<br>
+                                <strong>Gate:</strong> ${info.title}<br>
+                                <small>${value > 0.7 ? 'Strong activation' : value > 0.3 ? 'Moderate activation' : 'Weak activation'}</small>
+                            `;
+                            this.showTooltip(e, tooltipContent);
+                        });
+
+                        cell.addEventListener('mouseout', () => {
+                            this.hideTooltip();
+                        });
+
+                        cell.addEventListener('mousemove', (e) => {
+                            this.tooltip.style.left = `${e.pageX + 10}px`;
+                            this.tooltip.style.top = `${e.pageY + 10}px`;
+                        });
+
+                        row.appendChild(cell);
+                    }
+
+                    heatmapDiv.appendChild(row);
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('wordInput').addEventListener('input', (e) => {
+                    this.word = e.target.value;
+                    this.updateVisualization();
+                });
+
+                document.getElementById('gateSelect').addEventListener('change', (e) => {
+                    //ifoch
+                    // debugger;
+                    this.selectedGate = e.target.value;
+                    this.updateVisualization();
+                });
+            }
+        }
+
+        // Initialize visualization
+        document.addEventListener('DOMContentLoaded', () => {
+            // debugger;
+            new GateVisualizer();
+        });
+    </script>
+</body>
+</html>
