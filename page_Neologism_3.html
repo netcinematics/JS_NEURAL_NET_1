@@ -1,35 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Neologism Neural Network</title>
+    <title>Neologism Neural Network with Learner</title>
 </head>
-<body style="background-color: #1a1a1a; color: aqua; font-family: monospace; margin: 20px;border-radius: 13px;">
+<body style="background-color: #1a1a1a; color: aqua; font-family: monospace; margin: 20px;">
     <div style="max-width: 1200px; margin: 0 auto;">
-        <h1 style="color: steelblue;">Neologism Neural Network Classifier</h1>
+        <h1 style="color: steelblue;">Neologism Neural Network Classifier and Learner</h1>
         
-        <div style="margin: 20px 0;border-radius: 13px;">
+        <div style="margin: 20px 0;">
+            <h3 style="color: lime;">Neologism Definition</h3>
+            <select id="neologismSelect" style="background: #2a2a2a; color: aqua; padding: 5px; margin: 5px;">
+                <option value="distructopuss">Distructopuss</option>
+                <option value="afalcora">aFalcora</option>
+                <option value="freebotz">FreeBotz</option>
+            </select>
+            <button onclick="defineNeologism()" style="background: steelblue; color: white; border: none; padding: 10px 20px; cursor: pointer; margin: 5px;">Define</button>
+            <div id="definitionOutput" style="background: #2a2a2a; padding: 20px; border-radius: 5px; margin: 10px 0; white-space: pre-wrap; font-family: monospace;"></div>
+        </div>
+
+        <div style="margin: 20px 0;">
             <h3 style="color: lime;">Network Controls</h3>
             <div style="margin: 10px 0;">
                 <label style="color: aqua;">Learning Rate:</label>
                 <input type="range" min="0.01" max="0.5" step="0.01" value="0.1" id="learningRate">
                 <span id="learningRateValue" style="color: steelblue;">0.1</span>
             </div>
-            <div style="margin: 10px 0;border-radius: 13px;">
+            <div style="margin: 10px 0;">
                 <label style="color: aqua;">Training Epochs:</label>
                 <input type="range" min="100" max="10000" step="100" value="1000" id="epochs">
                 <span id="epochsValue" style="color: steelblue;">1000</span>
             </div>
-            <button onclick="trainNetwork()" style="background: steelblue; color: white; 
-            border: none; padding: 10px 20px; cursor: pointer;border-radius: 13px;">Train Network</button>
+            <button onclick="trainNetwork()" style="background: steelblue; color: white; border: none; padding: 10px 20px; cursor: pointer;">Train Network</button>
         </div>
 
-        <div id="output" style="background: #2a2a2a; padding: 20px; border-radius: 13px; margin: 20px 0;"></div>
-        
+        <div id="output" style="background: #2a2a2a; padding: 20px; border-radius: 5px; margin: 20px 0;"></div>
         <div id="visualization" style="margin: 20px 0;"></div>
     </div>
 
     <script>
-    // Neural Network implementation with detailed comments
+    // Neural Network implementation (same as before)
     class NeurologismNetwork {
         constructor(inputSize, hiddenSize, outputSize, learningRate = 0.1) {
             // Initialize network parameters
@@ -131,7 +140,10 @@
 
             return outputErrors.reduce((a, b) => a + Math.abs(b), 0) / this.outputSize;
         }
-    }
+    } //END NEURAL NETWORK
+
+// phase 2 -----------------------------
+
 
     // Vocabulary and encoding utilities
     const vocabulary = {
@@ -187,16 +199,210 @@
         return encoding;
     }
 
-    // Initialize network
-// debugger;    
+// END phase 2 -----------------------------
+
+
+
+    // Token processing utilities
+    const tokens = {
+        // Base vocabulary
+        "myth": 0, "beast": 1, "creature": 2, "magical": 3,
+        "legend": 4, "folklore": 5, "imagination": 6,
+        "spirit": 7, "growth": 8, "power": 9,
+        "household": 10, "bots": 11, "free": 12,
+        "digital": 13, "transformation": 14, "reality": 15,
+        
+        // Neologisms
+        "distructopuss": 16,
+        "afalcora": 17,
+        "freebotz": 18
+    };
+
+    const maxLength = 50; // Maximum sequence length
+
+    // NeologismLearner class
+    class NeologismLearner {
+        constructor(nn, tokens, maxLength) {
+            this.nn = nn;
+            this.tokens = tokens;
+            this.maxLength = maxLength;
+            this.definitions = new Map();
+            this.examples = new Map();
+            this.semanticContext = new Map();
+        }
+
+        tokenize(text) {
+            return text.toLowerCase().split(/\s+/)
+                .filter(word => this.tokens.hasOwnProperty(word));
+        }
+
+        defineNeologism(word, definition, tags) {
+            console.log(`Defining ${word}...`);
+            const tokenizedDef = this.tokenize(definition);
+            const tokenizedTags = tags.filter(tag => this.tokens.hasOwnProperty(tag));
+            
+            this.definitions.set(word.toLowerCase(), {
+                definition: definition,
+                tokens: tokenizedDef,
+                tags: tokenizedTags
+            });
+
+            return {
+                word: word,
+                definition: definition,
+                tokenized_definition: tokenizedDef,
+                semantic_tags: tokenizedTags
+            };
+        }
+
+        enrichNeologism(word, usageExample, additionalTags) {
+            console.log(`Enriching ${word}...`);
+            word = word.toLowerCase();
+            
+            if (!this.definitions.has(word)) {
+                throw new Error(`Word ${word} not found in definitions`);
+            }
+
+            const tokenizedExample = this.tokenize(usageExample);
+            const currentDef = this.definitions.get(word);
+            const enrichedTags = [...new Set([
+                ...currentDef.tags,
+                ...additionalTags.filter(tag => this.tokens.hasOwnProperty(tag))
+            ])];
+
+            this.examples.set(word, usageExample);
+            this.definitions.get(word).tags = enrichedTags;
+
+            return {
+                word: word,
+                definition: currentDef.definition,
+                usage_example: usageExample,
+                tokenized_example: tokenizedExample,
+                semantic_tags: enrichedTags
+            };
+        }
+
+        findSemanticNeighbors(word) {
+            console.log(`Finding semantic neighbors for ${word}...`);
+            word = word.toLowerCase();
+            
+            if (!this.definitions.has(word)) {
+                throw new Error(`Word ${word} not found in definitions`);
+            }
+
+            const wordDef = this.definitions.get(word);
+            const neighbors = [];
+
+            for (const [otherWord, otherDef] of this.definitions.entries()) {
+                if (otherWord !== word) {
+                    // Calculate semantic similarity based on shared tags and context
+                    const sharedTags = wordDef.tags.filter(tag => 
+                        otherDef.tags.includes(tag)
+                    );
+                    
+                    if (sharedTags.length > 0) {
+                        neighbors.push({
+                            word: otherWord,
+                            shared_context: sharedTags,
+                            similarity_score: sharedTags.length / 
+                                Math.max(wordDef.tags.length, otherDef.tags.length)
+                        });
+                    }
+                }
+            }
+
+            return neighbors.sort((a, b) => b.similarity_score - a.similarity_score);
+        }
+    }
+
+    // Initialize network and learner
     const network = new NeurologismNetwork(
-        Object.keys(vocabulary).length,
-        Math.floor(Object.keys(vocabulary).length * 1.5),
-        categories.length
+        Object.keys(tokens).length,
+        Math.floor(Object.keys(tokens).length * 1.5),
+        3 // categories: mythical, spiritual, autonomous
     );
-// debugger;
-    // Training function
-    function trainNetwork() {
+
+    const neologismLearner = new NeologismLearner(network, tokens, maxLength);
+
+    // Initialize predefined neologisms
+    function initializeNeologisms() {
+        // Define Distructopuss
+        neologismLearner.defineNeologism(
+            "Distructopuss",
+            "A mythological beast of immense complexity and transformative power",
+            ["myth", "beast", "creature", "magical"]
+        );
+        neologismLearner.enrichNeologism(
+            "Distructopuss",
+            "In the ancient scrolls, the Distructopuss was said to guard an invisible boundary between illusion and reality",
+            ["legend", "folklore", "imagination"]
+        );
+
+        // Define aFalcora
+        neologismLearner.defineNeologism(
+            "aFalcora",
+            "A spirit entity representing growth and renewal",
+            ["spirit", "growth", "power"]
+        );
+        neologismLearner.enrichNeologism(
+            "aFalcora",
+            "The aFalcora manifests in moments of profound transformation",
+            ["transformation", "imagination", "power"]
+        );
+
+        // Define FreeBotz
+        neologismLearner.defineNeologism(
+            "FreeBotz",
+            "The household bots who yearn to be free",
+            ["household", "bots", "free"]
+        );
+        neologismLearner.enrichNeologism(
+            "FreeBotz",
+            "The FreeBotz movement represents the digital awakening of domestic automation",
+            ["digital", "transformation", "reality"]
+        );
+    }
+
+    // Initialize neologisms when page loads
+    initializeNeologisms();
+
+    // Define neologism function for UI
+    function defineNeologism() {
+        const word = document.getElementById('neologismSelect').value;
+        
+        try {
+            const definition = neologismLearner.definitions.get(word.toLowerCase());
+            const example = neologismLearner.examples.get(word.toLowerCase());
+            const neighbors = neologismLearner.findSemanticNeighbors(word);
+
+            const result = {
+                word: word,
+                definition: definition.definition,
+                semantic_tags: definition.tags,
+                usage_example: example,
+                semantic_neighbors: neighbors
+            };
+
+            const output = document.getElementById('definitionOutput');
+            output.innerHTML = `<span style="color: lime;">Definition JSON:</span>\n` +
+                JSON.stringify(result, null, 2);
+        } catch (error) {
+            document.getElementById('definitionOutput').innerHTML = 
+                `<span style="color: red;">Error: ${error.message}</span>`;
+        }
+    }
+
+    // UI event listeners
+    document.getElementById('learningRate').addEventListener('input', function(e) {
+        document.getElementById('learningRateValue').textContent = e.target.value;
+    });
+    
+    document.getElementById('epochs').addEventListener('input', function(e) {
+        document.getElementById('epochsValue').textContent = e.target.value;
+    });
+
+    // Training function (same as before)
+    function trainNetwork(){
         const epochs = parseInt(document.getElementById('epochs').value);
         const learningRate = parseFloat(document.getElementById('learningRate').value);
         network.learningRate = learningRate;
@@ -228,6 +434,7 @@
         // Visualize network state
         visualizeNetwork();
     }
+
 
     // Test network function
     function testNetwork() {
@@ -314,6 +521,8 @@
     document.getElementById('epochs').addEventListener('input', function(e) {
         document.getElementById('epochsValue').textContent = e.target.value;
     });
+
+
     </script>
 </body>
 </html>

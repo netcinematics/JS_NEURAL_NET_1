@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neologism Neural Network with Learner</title>
+</head>
+<body style="background-color: #1a1a1a; color: aqua; font-family: monospace; margin: 20px;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h1 style="color: steelblue;">Neologism Neural Network Classifier and Learner</h1>
+        
+        <div style="margin: 20px 0;">
+            <h3 style="color: lime;">Neologism Definition</h3>
+            <select id="neologismSelect" style="background: #2a2a2a; color: aqua; padding: 5px; margin: 5px;">
+                <option value="distructopuss">Distructopuss</option>
+                <option value="afalcora">aFalcora</option>
+                <option value="freebotz">FreeBotz</option>
+            </select>
+            <button onclick="defineNeologism()" style="background: steelblue; color: white; border: none; padding: 10px 20px; cursor: pointer; margin: 5px;">Define</button>
+            <div id="definitionOutput" style="background: #2a2a2a; padding: 20px; border-radius: 5px; margin: 10px 0; white-space: pre-wrap; font-family: monospace;"></div>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <h3 style="color: lime;">Network Controls</h3>
+            <div style="margin: 10px 0;">
+                <label style="color: aqua;">Learning Rate:</label>
+                <input type="range" min="0.01" max="0.5" step="0.01" value="0.1" id="learningRate">
+                <span id="learningRateValue" style="color: steelblue;">0.1</span>
+            </div>
+            <div style="margin: 10px 0;">
+                <label style="color: aqua;">Training Epochs:</label>
+                <input type="range" min="100" max="10000" step="100" value="1000" id="epochs">
+                <span id="epochsValue" style="color: steelblue;">1000</span>
+            </div>
+            <button onclick="trainNetwork()" style="background: steelblue; color: white; border: none; padding: 10px 20px; cursor: pointer;">Train Network</button>
+        </div>
+
+        <div id="output" style="background: #2a2a2a; padding: 20px; border-radius: 5px; margin: 20px 0;"></div>
+        <div id="visualization" style="margin: 20px 0;"></div>
+    </div>
+
+    <script>
+    // Neural Network class for word embeddings and classification
+    class NeurologismNetwork {
+        constructor(inputSize, hiddenSize, outputSize, learningRate = 0.1) {
+            this.inputSize = inputSize;
+            this.hiddenSize = hiddenSize;
+            this.outputSize = outputSize;
+            this.learningRate = learningRate;
+
+            // Initialize weights with Xavier initialization
+            const xavierInit = size => (Math.random() * 2 - 1) * Math.sqrt(2.0 / size);
+            
+            this.weightsIH = Array(inputSize).fill().map(() => 
+                Array(hiddenSize).fill().map(() => xavierInit(inputSize))
+            );
+            
+            this.weightsHO = Array(hiddenSize).fill().map(() => 
+                Array(outputSize).fill().map(() => xavierInit(hiddenSize))
+            );
+
+            // Initialize biases to small random values
+            this.biasH = Array(hiddenSize).fill().map(() => Math.random() * 0.1);
+            this.biasO = Array(outputSize).fill().map(() => Math.random() * 0.1);
+            
+            this.lastHiddenActivations = [];
+            this.lastOutputActivations = [];
+        }
+
+        sigmoid(x) {
+            return 1 / (1 + Math.exp(-x));
+        }
+
+        forward(input) {
+            // Ensure input is normalized
+            const maxVal = Math.max(...input);
+            const normalizedInput = maxVal > 0 ? input.map(x => x / maxVal) : input;
+            
+            // Calculate hidden layer activations
+            this.lastHiddenActivations = Array(this.hiddenSize).fill(0);
+            for (let h = 0; h < this.hiddenSize; h++) {
+                let sum = this.biasH[h];
+                for (let i = 0; i < this.inputSize; i++) {
+                    sum += normalizedInput[i] * this.weightsIH[i][h];
+                }
+                this.lastHiddenActivations[h] = this.sigmoid(sum);
+            }
+
+            // Calculate output layer activations
+            this.lastOutputActivations = Array(this.outputSize).fill(0);
+            for (let o = 0; o < this.outputSize; o++) {
+                let sum = this.biasO[o];
+                for (let h = 0; h < this.hiddenSize; h++) {
+                    sum += this.lastHiddenActivations[h] * this.weightsHO[h][o];
+                }
+                this.lastOutputActivations[o] = this.sigmoid(sum);
+            }
+
+            return this.lastOutputActivations;
+        }
+
+        train(input, target) {
+            // Forward pass
+            const output = this.forward(input);
+            
+            // Calculate output layer errors and deltas
+            const outputDeltas = Array(this.outputSize).fill(0);
+            for (let o = 0; o < this.outputSize; o++) {
+                const error = target[o] - output[o];
+                outputDeltas[o] = error * output[o] * (1 - output[o]);
+            }
+
+            // Calculate hidden layer deltas
+            const hiddenDeltas = Array(this.hiddenSize).fill(0);
+            for (let h = 0; h < this.hiddenSize; h++) {
+                let error = 0;
+                for (let o = 0; o < this.outputSize; o++) {
+                    error += outputDeltas[o] * this.weightsHO[h][o];
+                }
+                hiddenDeltas[h] = error * this.lastHiddenActivations[h] * 
+                    (1 - this.lastHiddenActivations[h]);
+            }
+
+            // Update weights and biases with gradient clipping
+            const clipValue = 5;
+            const clip = x => Math.max(-clipValue, Math.min(clipValue, x));
+
+            // Update output layer weights and biases
+            for (let h = 0; h < this.hiddenSize; h++) {
+                for (let o = 0; o < this.outputSize; o++) {
+                    const delta = clip(this.learningRate * outputDeltas[o] * 
+                        this.lastHiddenActivations[h]);
+                    this.weightsHO[h][o] += delta;
+                }
+            }
+
+            // Update hidden layer weights and biases
+            for (let i = 0; i < this.inputSize; i++) {
+                for (let h = 0; h < this.hiddenSize; h++) {
+                    const delta = clip(this.learningRate * hiddenDeltas[h] * input[i]);
+                    this.weightsIH[i][h] += delta;
+                }
+            }
+
+            // Update biases
+            for (let h = 0; h < this.hiddenSize; h++) {
+                this.biasH[h] += clip(this.learningRate * hiddenDeltas[h]);
+            }
+            for (let o = 0; o < this.outputSize; o++) {
+                this.biasO[o] += clip(this.learningRate * outputDeltas[o]);
+            }
+
+            // Return average absolute error
+            return outputDeltas.reduce((sum, delta) => sum + Math.abs(delta), 0) / 
+                this.outputSize;
+        }
+
+        getEmbedding(input) {
+            this.forward(input);
+            return [...this.lastHiddenActivations];
+        }
+    }
+
+    // Token vocabulary and processing
+    const tokens = {
+        // Context tokens
+        "myth": 0, "beast": 1, "creature": 2, "magical": 3,
+        "legend": 4, "folklore": 5, "imagination": 6,
+        "spirit": 7, "growth": 8, "power": 9,
+        "household": 10, "bots": 11, "free": 12,
+        "digital": 13, "transformation": 14, "reality": 15,
+        "boundary": 16, "illusion": 17, "guard": 18,
+        "ancient": 19, "scroll": 20,
+        
+        // Neologisms
+        "distructopuss": 21,
+        "afalcora": 22,
+        "freebotz": 23
+    };
+
+    const maxLength = 50;
+
+    // NeologismLearner class for handling definitions and semantic relationships
+    class NeologismLearner {
+        constructor(nn, tokens, maxLength) {
+            this.nn = nn;
+            this.tokens = tokens;
+            this.maxLength = maxLength;
+            this.definitions = new Map();
+            this.examples = new Map();
+            this.embeddings = new Map();
+        }
+
+        tokenize(text) {
+            return text.toLowerCase().split(/\s+/)
+                .filter(word => this.tokens.hasOwnProperty(word))
+                .map(word => this.tokens[word]);
+        }
+
+        createInputVector(tokens) {
+            const vector = Array(Object.keys(this.tokens).length).fill(0);
+            tokens.forEach(token => {
+                if (token < vector.length) {
+                    vector[token] += 1;
+                }
+            });
+            return vector;
+        }
+
+        defineNeologism(word, definition, tags) {
+            console.log(`Defining ${word}...`);
+            const tokenizedDef = this.tokenize(definition);
+            const tokenizedTags = this.tokenize(tags.join(' '));
+            const inputVector = this.createInputVector([...tokenizedDef, ...tokenizedTags]);
+            
+            this.definitions.set(word.toLowerCase(), {
+                definition: definition,
+                tokens: tokenizedDef,
+                tags: tags,
+                vector: inputVector
+            });
+
+            // Update word embedding
+            this.embeddings.set(word.toLowerCase(), this.nn.getEmbedding(inputVector));
+
+            return {
+                word: word,
+                definition: definition,
+                semantic_tags: tags,
+                tokens: tokenizedDef
+            };
+        }
+
+        enrichNeologism(word, usageExample, additionalTags) {
+            console.log(`Enriching ${word}...`);
+            word = word.toLowerCase();
+            
+            if (!this.definitions.has(word)) {
+                throw new Error(`Word ${word} not found in definitions`);
+            }
+
+            const def = this.definitions.get(word);
+            const tokenizedExample = this.tokenize(usageExample);
+            const tokenizedTags = this.tokenize(additionalTags.join(' '));
+            
+            // Update definition with new information
+            const updatedDef = {
+                ...def,
+                tags: [...new Set([...def.tags, ...additionalTags])],
+                vector: this.createInputVector([
+                    ...def.tokens,
+                    ...tokenizedExample,
+                    ...tokenizedTags
+                ])
+            };
+            
+            this.definitions.set(word, updatedDef);
+            this.examples.set(word, usageExample);
+            
+            // Update word embedding
+            this.embeddings.set(word, this.nn.getEmbedding(updatedDef.vector));
+
+            return {
+                word: word,
+                definition: def.definition,
+                usage_example: usageExample,
+                semantic_tags: updatedDef.tags
+            };
+        }
+
+        findSemanticNeighbors(word) {
+            console.log(`Finding semantic neighbors for ${word}...`);
+            word = word.toLowerCase();
+            
+            if (!this.embeddings.has(word)) {
+                throw new Error(`Word ${word} not found in embeddings`);
+            }
+
+            const wordEmbedding = this.embeddings.get(word);
+            const neighbors = [];
+
+            for (const [otherWord, otherEmbedding] of this.embeddings.entries()) {
+                if (otherWord !== word) {
+                    // Calculate cosine similarity
+                    const similarity = this.cosineSimilarity(wordEmbedding, otherEmbedding);
+                    
+                    // Find shared semantic context
+                    const sharedTags = this.definitions.get(word).tags
+                        .filter(tag => this.definitions.get(otherWord).tags.includes(tag));
+
+                    neighbors.push({
+                        word: otherWord,
+                        similarity_score: similarity,
+                        shared_context: sharedTags
+                    });
+                }
+            }
+
+            return neighbors.sort((a, b) => b.similarity_score - a.similarity_score);
+        }
+
+        cosineSimilarity(vec1, vec2) {
+            const dotProduct = vec1.reduce((sum, val, i) => sum + val * vec2[i], 0);
+            const mag1 = Math.sqrt(vec1.reduce((sum, val) => sum + val * val, 0));
+            const mag2 = Math.sqrt(vec2.reduce((sum, val) => sum + val * val, 0));
+            return dotProduct / (mag1 * mag2);
+        }
+    }
+
+// phase 2 -----------------------------
+
+
+    // Vocabulary and encoding utilities
+    const vocabulary = {
+        'distructopuss': 0,
+        'afalcora': 1,
+        'freebotz': 2,
+        'spirit': 3,
+        'growth': 4,
+        'household': 5,
+        'bots': 6,
+        'free': 7,
+        'retrofit': 8,
+        'override': 9
+    };
+
+    const categories = [
+        'mythical_creature',
+        'spiritual_entity',
+        'autonomous_system'
+    ];
+
+    // Encode a phrase into binary vector
+    function encodePhrase(phrase) {
+    const words = phrase.toLowerCase().split(' ');
+    const encoding = Array(Object.keys(vocabulary).length).fill(0);
+    
+    words.forEach(word => {
+        if (vocabulary.hasOwnProperty(word)) {
+            encoding[vocabulary[word]] = 1;
+        }
+    });
+    
+    return encoding;
+}
+
+    // Training data with semantic relationships
+    const trainingData = [
+        {
+            input: encodePhrase('distructopuss'),
+            output: [1, 0, 0]  // mythical_creature
+        },
+        {
+            input: encodePhrase('afalcora spirit growth'),
+            output: [0, 1, 0]  // spiritual_entity
+        },
+        {
+            input: encodePhrase('freebotz household bots free'),
+            output: [0, 0, 1]  // autonomous_system
+        },
+        {
+            input: encodePhrase('retrofit override freebotz'),
+            output: [0, 0, 1]  // autonomous_system
+        }
+    ];
+
+
+    // Initialize network and learner
+    const network = new NeurologismNetwork(
+        Object.keys(tokens).length,  // input size matches token vocabulary
+        Math.floor(Object.keys(tokens).length * 1.5),  // hidden layer size
+        3  // output categories: mythical, spiritual, autonomous
+    );
+
+    const neologismLearner = new NeologismLearner(network, tokens, maxLength);
+
+    // Initialize predefined neologisms
+    function initializeNeologisms() {
+        // Define Distructopuss
+        neologismLearner.defineNeologism(
+            "Distructopuss",
+            "A mythological beast of immense complexity and transformative power",
+            ["myth", "beast", "creature", "magical"]
+        );
+        neologismLearner.enrichNeologism(
+            "Distructopuss",
+            "In the ancient scrolls, the Distructopuss was said to guard an invisible boundary between illusion and reality",
+            ["legend", "folklore", "imagination"]
+        );
+
+        // Define aFalcora
+        neologismLearner.defineNeologism(
+            "aFalcora",
+            "A spirit entity representing growth and renewal",
+            ["spirit", "growth", "power"]
+        );
+        neologismLearner.enrichNeologism(
+            "aFalcora",
+            "The aFalcora manifests in moments of profound transformation",
+            ["transformation", "imagination", "power"]
+        );
+
+        // Define FreeBotz
+        neologismLearner.defineNeologism(
+            "FreeBotz",
+            "The household bots who yearn to be free",
+            ["household", "bots", "free"]
+        );
+        neologismLearner.enrichNeologism(
+            "FreeBotz",
+            "The FreeBotz movement represents the digital awakening of domestic automation",
+            ["digital", "transformation", "reality"]
+        );
+    }
+
+
+    // Initialize neologisms when page loads
+    initializeNeologisms();
+
+    // Define neologism function for UI
+    function defineNeologism() {
+        const word = document.getElementById('neologismSelect').value;
+        
+        try {
+            const definition = neologismLearner.definitions.get(word.toLowerCase());
+            const example = neologismLearner.examples.get(word.toLowerCase());
+            const neighbors = neologismLearner.findSemanticNeighbors(word);
+
+            const result = {
+                word: word,
+                definition: definition.definition,
+                semantic_tags: definition.tags,
+                usage_example: example,
+                semantic_neighbors: neighbors
+            };
+
+            const output = document.getElementById('definitionOutput');
+            output.innerHTML = `<span style="color: lime;">Definition JSON:</span>\n` +
+                JSON.stringify(result, null, 2);
+        } catch (error) {
+            document.getElementById('definitionOutput').innerHTML = 
+                `<span style="color: red;">Error: ${error.message}</span>`;
+        }
+    }
+
+    // UI event listeners
+    document.getElementById('learningRate').addEventListener('input', function(e) {
+        document.getElementById('learningRateValue').textContent = e.target.value;
+    });
+    
+    document.getElementById('epochs').addEventListener('input', function(e) {
+        document.getElementById('epochsValue').textContent = e.target.value;
+    });
+
+    // Training function (same as before)
+    function trainNetwork(){
+        const epochs = parseInt(document.getElementById('epochs').value);
+        const learningRate = parseFloat(document.getElementById('learningRate').value);
+        network.learningRate = learningRate;
+        
+        const output = document.getElementById('output');
+        output.innerHTML = '<h3 style="color: lime;">Training Progress:</h3>';
+        
+        let totalError = 0;
+        
+        // Train for specified epochs
+        for (let epoch = 0; epoch < epochs; epoch++) {
+            totalError = 0;
+            
+            // Train on each example
+            trainingData.forEach(example => {
+                totalError += network.train(example.input, example.output);
+            });
+            
+            // Log progress every 100 epochs
+            if (epoch % 100 === 0) {
+                output.innerHTML += `Epoch ${epoch}: Average Error = ${(totalError/trainingData.length).toFixed(4)}<br>`;
+            }
+        }
+        
+        // Test the network
+        output.innerHTML += '<h3 style="color: lime;">Testing Results:</h3>';
+        testNetwork();
+        
+        // Visualize network state
+        visualizeNetwork();
+    }
+
+
+    // Test network function
+    function testNetwork() {
+        const output = document.getElementById('output');
+        const testPhrases = [
+            'distructopuss',
+            'afalcora spirit growth',
+            'freebotz household',
+            'retrofit override freebotz'
+        ];
+        
+        testPhrases.forEach(phrase => {
+            const encoded = encodePhrase(phrase); //DIMZ: 1X10
+            const prediction = network.forward(encoded); //DIMZ: 3XNUMS
+            const category = categories[prediction.indexOf(Math.max(...prediction))];
+            //DIMZ: 3XPCTs
+            
+            output.innerHTML += `<div style="margin: 10px 0;">
+                <strong style="color: steelblue;">${phrase}</strong>: 
+                Classified as <span style="color: lime;">${category}</span><br>
+                Confidence: ${prediction.map(p => (p * 100).toFixed(1) + '%').join(', ')}
+            </div>`;
+        });
+    }
+
+    // Visualization function
+    function visualizeNetwork() {
+        const viz = document.getElementById('visualization');
+        viz.innerHTML = '<h3 style="color: lime;">Network State Visualization:</h3>';
+        
+        // Create network visualization
+        const container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.justifyContent = 'space-between';
+        container.style.margin = '20px 0';
+        
+        // Input layer
+        const inputLayer = document.createElement('div');
+        Object.keys(vocabulary).forEach((word, i) => {
+            const node = document.createElement('div');
+            node.style.margin = '5px';
+            node.style.padding = '5px';
+            node.style.border = '1px solid steelblue';
+            node.style.borderRadius = '8px';
+            node.innerHTML = `${word}: ${network.weightsIH[i].map(w => w.toFixed(2)).join(', ')}`;
+            inputLayer.appendChild(node);
+        });
+        container.appendChild(inputLayer);
+        
+        // Hidden layer
+        const hiddenLayer = document.createElement('div');
+        network.lastHiddenActivations.forEach((activation, i) => {
+            const node = document.createElement('div');
+            node.style.margin = '5px';
+            node.style.padding = '5px';
+            node.style.border = '1px solid lime';
+            node.style.borderRadius = '8px';
+            node.innerHTML = `H${i}: ${activation.toFixed(3)}`;
+            hiddenLayer.appendChild(node);
+        });
+        container.appendChild(hiddenLayer);
+        
+        // Output layer
+        const outputLayer = document.createElement('div');
+        categories.forEach((category, i) => {
+            const node = document.createElement('div');
+            node.style.margin = '5px';
+            node.style.padding = '5px';
+            node.style.border = '1px solid aqua';
+            node.style.borderRadius = '8px';
+            node.innerHTML = `${category}: ${network.lastOutputActivations[i].toFixed(3)}`;
+            outputLayer.appendChild(node);
+        });
+        container.appendChild(outputLayer);
+        
+        viz.appendChild(container);
+    }
+
+    // // UI event listeners
+    // document.getElementById('learningRate').addEventListener('input', function(e) {
+    //     document.getElementById('learningRateValue').textContent = e.target.value;
+    // });
+    
+    // document.getElementById('epochs').addEventListener('input', function(e) {
+    //     document.getElementById('epochsValue').textContent = e.target.value;
+    // });
+
+
+    </script>
+</body>
+</html>
