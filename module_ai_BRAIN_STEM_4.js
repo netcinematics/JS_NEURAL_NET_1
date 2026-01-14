@@ -26,7 +26,7 @@ import { AI_VIZ_LOG } from './module_AI_VIZ_LOG_1.js'; //todo
 
 //-----------------------------------------------
 class NeuralNetwork_aZ_1 {
-    constructor(inputSize,learnRate,epochLIMIT) {
+    constructor(inputSize, learnRate, epochLIMIT) {
         // Making square matrices (equal dimensions)
         this.inputSize = inputSize;
         this.hiddenSize = inputSize;
@@ -35,14 +35,14 @@ class NeuralNetwork_aZ_1 {
         // Initialize weights with improved initial values for better convergence
         this.weightsIH = this.initializeWeights(this.inputSize, this.hiddenSize, 0.3);
         this.weightsHO = this.initializeWeights(this.hiddenSize, this.outputSize, 0.3);
-        
+
         // Initialize biases with small positive values
         this.biasH = new Array(this.hiddenSize).fill(0.1);
         this.biasO = new Array(this.outputSize).fill(0.1);
-        
-        console.log('LEARN RATE',learnRate)
+
+        console.log('LEARN RATE', learnRate)
         // Learning parameters
-        this.learningRate = (learnRate)?learnRate:0.15;  // Tuned for better convergence
+        this.learningRate = (learnRate) ? learnRate : 0.15;  // Tuned for better convergence
         this.epochLIMIT = epochLIMIT; //pass through to VIZ.
         this.epochIDX = 0; //for timeline
         this.IH_SLICE = []; //for timeline
@@ -82,7 +82,7 @@ class NeuralNetwork_aZ_1 {
     // Convert letter sequence to input vector
     // Each position represents presence (1) or absence (0) of a letter
     // tokenToInput(token) {
-        
+
     //     const input = Array(26 * 2).fill(0); // Space for 2 letters
     //     for (let i = 0; i < Math.min(token.length, 2); i++) {
     //         const charCode = token.charCodeAt(i) - 97; // 'a' starts at 97
@@ -179,7 +179,7 @@ class NeuralNetwork_aZ_1 {
     // Training function, inputs: 15X10 - targets: 15X2 - 
     train(inputs, targets, epochs) {
         const errors = [];
-        AI_VIZ_LOG('>   🌌 EPOCH_LOOP 🌌',epochs);
+        AI_VIZ_LOG('>   🌌 EPOCH_LOOP 🌌', epochs);
         for (let epoch = 0; epoch < epochs; epoch++) {
             this.epochIDX = epoch; //used for epoch_rate timeline
             let epochError = 0;
@@ -196,39 +196,39 @@ class NeuralNetwork_aZ_1 {
                 //     } //END INPUT SNAPSHOT
                 // } //END EPOCH SNAPSHOT
 
-                
+
                 // Calculate mean squared error
                 for (let j = 0; j < this.outputSize; j++) {
                     epochError += Math.pow(targets[i][j] - output[j], 2);
                 }
             }
 
-        //------------- EPOCH_SNAPSHOT!------------------------------
-        // if( this.epochIDX % (this.epochLIMIT * 0.1) === 0){ //ten EPOCH_SLICES.
-        //     console.log('snapshot: ', this.epochIDX);
-        //     //             AI_VIZ_LOG('-----🧭 EPOCH 🧭',i)
-        //     this.IH_SLICE.push(this.weightsIH); //for timeline
-        // }
-        // if(this.epochIDX===0 || this.epochIDX === this.epochLIMIT-1){
-        if( this.epochIDX % (this.epochLIMIT * 0.1) === 0){ //ten EPOCH_SLICES.
+            //------------- EPOCH_SNAPSHOT!------------------------------
+            // if( this.epochIDX % (this.epochLIMIT * 0.1) === 0){ //ten EPOCH_SLICES.
+            //     console.log('snapshot: ', this.epochIDX);
+            //     //             AI_VIZ_LOG('-----🧭 EPOCH 🧭',i)
+            //     this.IH_SLICE.push(this.weightsIH); //for timeline
+            // }
+            // if(this.epochIDX===0 || this.epochIDX === this.epochLIMIT-1){
+            if (this.epochIDX % (this.epochLIMIT * 0.1) === 0) { //ten EPOCH_SLICES.
 
-            // let originalArray = [[1, 2], [3, 4]];
-            // let copiedArray = JSON.parse(JSON.stringify(originalArray));
-            
-            // copiedArray[0][0] = 99; // Modifying the copy
-            
-            // console.log(originalArray); // Output: [[1, 2], [3, 4]] (original unchanged)
-            // console.log(copiedArray);  // Output: [[99, 2], [3, 4]] (copy modified)
-            // debugger;
-            let copySlice = JSON.parse(JSON.stringify(this.weightsIH)); //same
-            this.IH_SLICE.push(copySlice); //for timeline
-            // this.IH_SLICE.push(new Array(this.weightsIH)); //for timeline
-            // console.log('epoch',this.epochIDX)
-        }
+                // let originalArray = [[1, 2], [3, 4]];
+                // let copiedArray = JSON.parse(JSON.stringify(originalArray));
+
+                // copiedArray[0][0] = 99; // Modifying the copy
+
+                // console.log(originalArray); // Output: [[1, 2], [3, 4]] (original unchanged)
+                // console.log(copiedArray);  // Output: [[99, 2], [3, 4]] (copy modified)
+                // debugger;
+                let copySlice = JSON.parse(JSON.stringify(this.weightsIH)); //same
+                this.IH_SLICE.push(copySlice); //for timeline
+                // this.IH_SLICE.push(new Array(this.weightsIH)); //for timeline
+                // console.log('epoch',this.epochIDX)
+            }
 
             epochError /= inputs.length;
             errors.push(epochError);
-            
+
             // Early stopping if error is small enough
             if (epochError < 0.001) break;
         } //END EPOCH_LOOP
@@ -256,7 +256,7 @@ class NeuralNetwork_aZ_1 {
     //     const outputErrors = target.map((t, i) => (t - this.output[i]));
     //     AI_VIZ_LOG('--HL: OUTPUT ERROR')
     //     AI_VIZ_LOG('--OL: ERROR')
-        
+
     //     // Hidden layer error
     //     const hiddenErrors = this.hidden.map((_, i) => {
     //         let error = 0;
@@ -297,30 +297,30 @@ class NeuralNetwork_aZ_1 {
 } //END NEURAL NETWORK class
 
 // function queryNeuralNetwork_1_(e){
-    // if(!TXT_INPUT_1_ELEM){console.log('err: missing input'); return}
-    // const val = TXT_INPUT_1_ELEM.value;
-    // if(!val){console.log('needs input'); return;}
-    // tokens = val.split(' '); // MULTIPLE INPUT (token test) BY SPACE
-    // OUTPUT_1_ELEM.innerHTML = ''; //clear out put
-    // tokens.forEach(token => {
-    //     const input = nn_1.tokenToInput(token);
-    //     const output = nn_1.forward(input);
-    //     console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
-    //     // debugger;
-    //     const txtPCTS = output.map( (v) => { 
-    //         // return v.toFixed(3); 
-    //         return v.toFixed(2)*100;
-    //         // let decimal = v.toFixed(2)*100;
-    //         // return decimal.toFixed(0)+'%'; //human readable %
-    //     });
-    //     // const txtPCTS = txtTOKENS.split(',')
-    //     if(txtPCTS[0]<txtPCTS[1]){//YES
-    //         OUTPUT_1_ELEM.innerHTML += `${token} || NO: ${txtPCTS[1]} || yes: ${txtPCTS[0]}<br>`;
-    //     } else { //NO
-    //         OUTPUT_1_ELEM.innerHTML += `${token} || YES: ${txtPCTS[0]} || no: ${txtPCTS[1]}<br>`;
-    //     }
-    //     // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
-    // });
+// if(!TXT_INPUT_1_ELEM){console.log('err: missing input'); return}
+// const val = TXT_INPUT_1_ELEM.value;
+// if(!val){console.log('needs input'); return;}
+// tokens = val.split(' '); // MULTIPLE INPUT (token test) BY SPACE
+// OUTPUT_1_ELEM.innerHTML = ''; //clear out put
+// tokens.forEach(token => {
+//     const input = nn_1.tokenToInput(token);
+//     const output = nn_1.forward(input);
+//     console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
+//     // debugger;
+//     const txtPCTS = output.map( (v) => { 
+//         // return v.toFixed(3); 
+//         return v.toFixed(2)*100;
+//         // let decimal = v.toFixed(2)*100;
+//         // return decimal.toFixed(0)+'%'; //human readable %
+//     });
+//     // const txtPCTS = txtTOKENS.split(',')
+//     if(txtPCTS[0]<txtPCTS[1]){//YES
+//         OUTPUT_1_ELEM.innerHTML += `${token} || NO: ${txtPCTS[1]} || yes: ${txtPCTS[0]}<br>`;
+//     } else { //NO
+//         OUTPUT_1_ELEM.innerHTML += `${token} || YES: ${txtPCTS[0]} || no: ${txtPCTS[1]}<br>`;
+//     }
+//     // OUTPUT_1_ELEM.innerHTML = `${token}||${txtROW}||${1234}`;
+// });
 // }
 // TEST_BTN_1_ELEM.onclick = queryNeuralNetwork_1_;
 //-----------END UI-----------------------------
@@ -347,17 +347,17 @@ function testNetwork() {
 
     //----TUNABLE---HYPER_PARAMS:-----------------
     const learnRate = 0.1544;
-    const epoch_NUM = 10000; 
+    const epoch_NUM = 10000;
     const inputSize = 10;  // Fixed input size
-    nn = new  NeuralNetwork_aZ_1(inputSize, learnRate, epoch_NUM);
+    nn = new NeuralNetwork_aZ_1(inputSize, learnRate, epoch_NUM);
 
-    AI_VIZ_LOG("> _🧩 TOKEN_SET 🧩:",trainingWords);
+    AI_VIZ_LOG("> _🧩 TOKEN_SET 🧩:", trainingWords);
     const inputs = trainingWords.map(token => nn.wordToInput(token, inputSize));
     const targets = trainingWords.map(token => [
         token.startsWith('a') ? 1 : 0,
         /[A-Z]/.test(token) ? 1 : 0
     ]); //TODO extend with count>3 and ends with little a.
-    AI_VIZ_LOG(">   🎯 SET 2 TARGETS 🎯:",'start_a','anyUpper');
+    AI_VIZ_LOG(">   🎯 SET 2 TARGETS 🎯:", 'start_a', 'anyUpper');
     AI_VIZ_LOG(">   🦾 NN:TRAIN_FRAME 🦾");
     const errors = nn.train(inputs, targets, epoch_NUM);
     AI_VIZ_LOG(">   🚧 END_TRAIN 🚧");
@@ -366,12 +366,12 @@ function testNetwork() {
     // Test the network
     const testWords = ["amazing", "and", "zebra", "Apple", "test"];
     let msg = '';
-    AI_VIZ_LOG("> _🧩 TEST_TOKENS 🧩:",testWords);
+    AI_VIZ_LOG("> _🧩 TEST_TOKENS 🧩:", testWords);
     for (const word of testWords) {
         const input = nn.wordToInput(word, inputSize);
         //TODO: backtrack...correct answer.
         const output = nn.forward(input);
-        AI_VIZ_LOG("Word: ",word);
+        AI_VIZ_LOG("Word: ", word);
         msg = `Starts with 'a': ${output[0].toFixed(3)} (Expected: ${word.startsWith('a') ? 1 : 0})`;
         AI_VIZ_LOG(msg);
         msg = `Contains uppercase: ${output[1].toFixed(3)} (Expected: ${/[A-Z]/.test(word) ? 1 : 0})`;
@@ -391,7 +391,7 @@ export class AI_BRAIN_VIZ_2 {
     constructor(neuralNet) {
         AI_VIZ_LOG(">  🧠 NN:INIT 🧠");
         // Select the canvas and get its 2D rendering context
-        if(!neuralNet){console.log('err: no network')}
+        if (!neuralNet) { console.log('err: no network') }
         this.neuralNet = neuralNet;
 
         this.CANVAS_BRAIN_VIZ_1 = document.getElementById('CANVAS_BRAIN_VIZ_1');
@@ -401,11 +401,11 @@ export class AI_BRAIN_VIZ_2 {
         this.TXT_AI_VIZ_LOG_1 = document.getElementById('TXT_AI_VIZ_LOG_1');
 
 
-        if(!CANVAS_BRAIN_VIZ_1){console.log('err: no CANVAS_BRAIN_VIZ_1')}
+        if (!CANVAS_BRAIN_VIZ_1) { console.log('err: no CANVAS_BRAIN_VIZ_1') }
         this.CANVAS_BRAIN_VIZ_1 = CANVAS_BRAIN_VIZ_1;//document.getElementById(canvasId);
         this.ctx_BRAIN_VIZ = this.CANVAS_BRAIN_VIZ_1.getContext('2d');
 
-        if(!CANVAS_TIMELINE_1){console.log('err: no CANVAS_TIMELINE_1')}
+        if (!CANVAS_TIMELINE_1) { console.log('err: no CANVAS_TIMELINE_1') }
         this.CANVAS_TIMELINE_1 = CANVAS_TIMELINE_1;//document.getElementById(canvasId);
         this.ctx_TIMELINE = this.CANVAS_TIMELINE_1.getContext('2d');
 
@@ -416,14 +416,14 @@ export class AI_BRAIN_VIZ_2 {
         // debugger;
         // this.canvas.width = 500; //default width
         // debugger;
-    //epoch this.neuralNet.epoch_NUM
+        //epoch this.neuralNet.epoch_NUM
         // this.canvas.width = canvasElem.width
         // this.canvas.height = canvasElem.height
         // this.canvas.width = canvasElem.parentElement.clientWidth * 0.8;
         // this.canvas.height = 200; //default height
 
     }
-    
+
     // render_BASELINE(epochz = []) { //TODO: timeline
     //     // Clear the canvas
     //     // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -443,7 +443,7 @@ export class AI_BRAIN_VIZ_2 {
     //         this.DRAW_VERTICAL_LINE(((i+1)*100)+14);
     //         // this.DRAW_VERTICAL_LINE(epoch.x);
     //         // this.DRAW_POINT(epoch.x, epoch.y, epoch.emoji);
-            
+
     //     }
 
     // }
@@ -465,45 +465,45 @@ export class AI_BRAIN_VIZ_2 {
     //     });
     // }
 
-    render_NEURON_TIMELINE(){ //AI_TIMELINE VIZ.
+    render_NEURON_TIMELINE() { //AI_TIMELINE VIZ.
         // if(nn.IH_SLICE[0][0][0]===nn.IH_SLICE[1][0][0]){ //similar check
         //     // debugger;
         //     console.log('same',nn.IH_SLICE[0][0][0])
         //     console.log('same',nn.IH_SLICE[1][0][0])
         // }else{
-            //     console.log('not same')
-            // }
-            // }
-            
-        if(!nn.IH_SLICE){console.log('ERROR: cannot find slice!');return;}
+        //     console.log('not same')
+        // }
+        // }
+
+        if (!nn.IH_SLICE) { console.log('ERROR: cannot find slice!'); return; }
         this.ctx_TIMELINE.clearRect(0, 0, this.CANVAS_TIMELINE_1.width, this.CANVAS_TIMELINE_1.height);  // Clear the canvas
-        this.CANVAS_TIMELINE_1.width = (nn.IH_SLICE.length)?nn.IH_SLICE.length*100:this.CANVAS_TIMELINE_1.width;
-        let frame=[],vector=[],colorTGT=0;
-        let row=0,cols=0;
-        let SIZE_SML=2,SIZE_MED=3,SIZE_BIG=4,SPACING_SML=6,SPACING_MED=7,SPACING_BIG=8;
-        let startX=0,startY=0,colorVal='';;
+        this.CANVAS_TIMELINE_1.width = (nn.IH_SLICE.length) ? nn.IH_SLICE.length * 100 : this.CANVAS_TIMELINE_1.width;
+        let frame = [], vector = [], colorTGT = 0;
+        let row = 0, cols = 0;
+        let SIZE_SML = 2, SIZE_MED = 3, SIZE_BIG = 4, SPACING_SML = 6, SPACING_MED = 7, SPACING_BIG = 8;
+        let startX = 0, startY = 0, colorVal = '';;
 
         let PAD_TOP = 25;
         let PAD_LEFT = 20;
         let PAD_COL = 100;
 
-        let CURSOR_POS = {x:PAD_LEFT,y:PAD_TOP}; //USE like a ink printer.
+        let CURSOR_POS = { x: PAD_LEFT, y: PAD_TOP }; //USE like a ink printer.
         this.ctx_TIMELINE.fillStyle = 'steelblue';
         this.ctx_TIMELINE.font = "0.8em Arial italic bold "; //TITLE
         this.ctx_TIMELINE.fillText("HIDDEN NEURONS:", CURSOR_POS.x, CURSOR_POS.y);
 
-        CURSOR_POS = {x:PAD_LEFT,y:40}; //NEXT POSITION.
+        CURSOR_POS = { x: PAD_LEFT, y: 40 }; //NEXT POSITION.
         let slice, colorGrid;
-        for(let i=0;i<nn.IH_SLICE.length;i++){
+        for (let i = 0; i < nn.IH_SLICE.length; i++) {
             slice = nn.IH_SLICE[i];
             colorGrid = this.matrixToColorsNormalized(slice);
 
-            CURSOR_POS = {x:(PAD_COL*i)+PAD_LEFT, y:CURSOR_POS.y}; //NEXT POSITION.
+            CURSOR_POS = { x: (PAD_COL * i) + PAD_LEFT, y: CURSOR_POS.y }; //NEXT POSITION.
             for (let rowIDX = 0; rowIDX < colorGrid.length; rowIDX++) {
                 row = colorGrid[rowIDX];
                 // frame = this.neuralNet.weightsIH[rowIDX];
                 cols = row.length;
-                startX = CURSOR_POS.x + (rowIDX*SPACING_MED); 
+                startX = CURSOR_POS.x + (rowIDX * SPACING_MED);
                 for (let colIDX = 0; colIDX < row.length; colIDX++) {
                     colorTGT = row[colIDX];
                     startY = CURSOR_POS.y + (colIDX * SPACING_MED);
@@ -513,91 +513,91 @@ export class AI_BRAIN_VIZ_2 {
                     this.ctx_TIMELINE.beginPath();
                     this.ctx_TIMELINE.fillStyle = colorTGT;
                     // this.ctx_TIMELINE.fillStyle = colorVal;
-                    this.ctx_TIMELINE.arc(startX,startY,SIZE_MED, 0, Math.PI * 2);
+                    this.ctx_TIMELINE.arc(startX, startY, SIZE_MED, 0, Math.PI * 2);
                     this.ctx_TIMELINE.fill();
                 }
             }
         }
     }
-    render_NEURON_WEIGHTS(){ //NEURON_WEIGHT VIZ.
+    render_NEURON_WEIGHTS() { //NEURON_WEIGHT VIZ.
         // debugger;
         // this.neuralNet;
         // NN_MIN1:biasH, biasO, hidden, learningRate, output, weightsHO, weightsIH
 
-        let frame=[],vector=[],scalar=0;
-        let rows=0,cols=0;
-        let SIZE_SML=2,SIZE_BIG=4,SPACING_SML=6,SPACING_BIG=8;
-        let startX=0,startY=0,colorVal='';;
+        let frame = [], vector = [], scalar = 0;
+        let rows = 0, cols = 0;
+        let SIZE_SML = 2, SIZE_BIG = 4, SPACING_SML = 6, SPACING_BIG = 8;
+        let startX = 0, startY = 0, colorVal = '';;
 
         let PAD_TOP = 25;
         let PAD_LEFT = 20;
-        let CURSOR_POS = {x:PAD_LEFT,y:PAD_TOP}; //USE like a ink printer.
+        let CURSOR_POS = { x: PAD_LEFT, y: PAD_TOP }; //USE like a ink printer.
 
         this.ctx_BRAIN_VIZ.fillStyle = 'steelblue';
         this.ctx_BRAIN_VIZ.font = "0.8em Arial italic bold "; //TITLE
         this.ctx_BRAIN_VIZ.fillText("NEURON IH:", CURSOR_POS.x, CURSOR_POS.y);
 
-        CURSOR_POS = {x:166,y:18}; //NEXT POSITION.
+        CURSOR_POS = { x: 166, y: 18 }; //NEXT POSITION.
 
         rows = this.neuralNet.weightsIH.length;
         for (let frameIDX = 0; frameIDX < this.neuralNet.weightsIH.length; frameIDX++) {
             frame = this.neuralNet.weightsIH[frameIDX];
             cols = frame.length;
-            startX = CURSOR_POS.x + (frameIDX*SPACING_BIG); 
+            startX = CURSOR_POS.x + (frameIDX * SPACING_BIG);
             for (let vectorIDX = 0; vectorIDX < frame.length; vectorIDX++) {
                 vector = frame[vectorIDX];
                 startY = CURSOR_POS.y + (vectorIDX * SPACING_BIG);
                 // colorVal = this.numberToColor(vector);
-                colorVal = this.getColor_MAP_1(vector,-1,1)
+                colorVal = this.getColor_MAP_1(vector, -1, 1)
                 this.ctx_BRAIN_VIZ.beginPath();
 
                 this.ctx_BRAIN_VIZ.fillStyle = colorVal;
-                this.ctx_BRAIN_VIZ.arc(startX, startY,SIZE_BIG, 0, Math.PI * 2);
+                this.ctx_BRAIN_VIZ.arc(startX, startY, SIZE_BIG, 0, Math.PI * 2);
                 this.ctx_BRAIN_VIZ.fill();
             }
         }
-        CURSOR_POS = {x:PAD_LEFT,y:66}; //NEXT POSITION.
+        CURSOR_POS = { x: PAD_LEFT, y: 66 }; //NEXT POSITION.
         this.ctx_BRAIN_VIZ.fillStyle = 'steelblue';
         this.ctx_BRAIN_VIZ.font = "0.8em Arial italic bold "; //TITLE
-        this.ctx_BRAIN_VIZ.fillText("NEURON HO:",CURSOR_POS.x,CURSOR_POS.y);
-        CURSOR_POS = {x:PAD_LEFT+20,y:60}; //NEXT POSITION.
+        this.ctx_BRAIN_VIZ.fillText("NEURON HO:", CURSOR_POS.x, CURSOR_POS.y);
+        CURSOR_POS = { x: PAD_LEFT + 20, y: 60 }; //NEXT POSITION.
         rows = this.neuralNet.weightsHO.length;
         for (let frameIDX = 0; frameIDX < this.neuralNet.weightsHO.length; frameIDX++) {
             frame = this.neuralNet.weightsHO[frameIDX];
             cols = frame.length;
-            startX = CURSOR_POS.x + (frameIDX*SPACING_SML);// + CURSOR_POS.x; 
+            startX = CURSOR_POS.x + (frameIDX * SPACING_SML);// + CURSOR_POS.x; 
             for (let vectorIDX = 0; vectorIDX < frame.length; vectorIDX++) {
                 vector = frame[vectorIDX];
                 // startX += vectorIDX * spacing;
-                startY = PAD_TOP + (vectorIDX * SPACING_SML) +CURSOR_POS.y;
-                colorVal = this.getColor_MAP_1(vector,-1,1)
-                 // this.DRAW_POINT( startX + i * spacing, startY   );
+                startY = PAD_TOP + (vectorIDX * SPACING_SML) + CURSOR_POS.y;
+                colorVal = this.getColor_MAP_1(vector, -1, 1)
+                // this.DRAW_POINT( startX + i * spacing, startY   );
                 // console.log('point',startX,startY)
                 this.ctx_BRAIN_VIZ.beginPath();
 
                 this.ctx_BRAIN_VIZ.fillStyle = colorVal;
                 // this.ctx_BRAIN_VIZ.fillStyle = 'blue';
-                this.ctx_BRAIN_VIZ.arc(startX, startY,SIZE_SML, 0, Math.PI * 2);
+                this.ctx_BRAIN_VIZ.arc(startX, startY, SIZE_SML, 0, Math.PI * 2);
                 this.ctx_BRAIN_VIZ.fill();
             }
-        }        
+        }
         // debugger;
         this.ctx_BRAIN_VIZ.fillStyle = 'steelblue';
         this.ctx_BRAIN_VIZ.font = "0.8em Arial italic bold "; //TITLE
         this.ctx_BRAIN_VIZ.fillText("BIAS(hidden):", PAD_LEFT, 120);
 
-        CURSOR_POS = {x:166,y:120}; //NEXT POSITION.
+        CURSOR_POS = { x: 166, y: 120 }; //NEXT POSITION.
         // CURSOR_POS = {x:0,y:CURSOR_POS.y + 40}
         rows = 1;
         for (let vectorIDX = 0; vectorIDX < this.neuralNet.biasH.length; vectorIDX++) {
             scalar = this.neuralNet.biasH[vectorIDX];
             startX = CURSOR_POS.x + vectorIDX * SPACING_SML;
             startY = CURSOR_POS.y;
-            colorVal = this.getColor_MAP_1(scalar,-1,1)
+            colorVal = this.getColor_MAP_1(scalar, -1, 1)
             this.ctx_BRAIN_VIZ.beginPath();
             this.ctx_BRAIN_VIZ.fillStyle = colorVal;
             // console.log('point',startX,startY)
-            this.ctx_BRAIN_VIZ.arc(startX, startY,SIZE_SML, 0, Math.PI * 2);
+            this.ctx_BRAIN_VIZ.arc(startX, startY, SIZE_SML, 0, Math.PI * 2);
             this.ctx_BRAIN_VIZ.fill();
         }
 
@@ -621,87 +621,87 @@ export class AI_BRAIN_VIZ_2 {
         // }
     }
 
-    getColor_MAP_1 (value, min, max){ // Map value to color intensity
+    getColor_MAP_1(value, min, max) { // Map value to color intensity
         // if(value<min){console.log('warning: color less than min',min,value)}
         // if(value>max){console.log('warning: color more than max',max,value)}
         const normalized = (value - min) / (max - min);
         let r = Math.floor(255 * (1 - normalized));
         let b = Math.floor(255 * normalized);
         //TODO: cannot be negative?
-        r = (r<0)?0:r;
-        b = (b<0)?0:b;
-        return (value===0)?'black':(b>r)?'blue':'red';
+        r = (r < 0) ? 0 : r;
+        b = (b < 0) ? 0 : b;
+        return (value === 0) ? 'black' : (b > r) ? 'blue' : 'red';
     }
 
     numbersToColorsNormalized(nums) {
         if (!nums || nums.length === 0) {
-          return []; // Handle empty or null input
+            return []; // Handle empty or null input
         }
-      
+
         // Find min and max values for normalization
         let minVal = Math.min(...nums);
         let maxVal = Math.max(...nums);
-      
+
         // Handle the edge case where all numbers are the same.
         if (minVal === maxVal) {
-          return nums.map(() => 'rgb(128, 0, 128)'); // Return a default color (purple)
+            return nums.map(() => 'rgb(128, 0, 128)'); // Return a default color (purple)
         }
-      
+
         return nums.map(num => {
-          // Normalize the number to the range 0-1
-          let normalized = (num - minVal) / (maxVal - minVal);
-      
-          let r = 0;
-          let g = 0;
-          let b = 0;
-      
-          // Interpolate between red and blue based on the normalized value
-          r = Math.round(255 * (1 - normalized)); // Red decreases as normalized increases
-          b = Math.round(255 * normalized);      // Blue increases as normalized increases
-      
-          return `rgb(${r}, ${g}, ${b})`;
+            // Normalize the number to the range 0-1
+            let normalized = (num - minVal) / (maxVal - minVal);
+
+            let r = 0;
+            let g = 0;
+            let b = 0;
+
+            // Interpolate between red and blue based on the normalized value
+            r = Math.round(255 * (1 - normalized)); // Red decreases as normalized increases
+            b = Math.round(255 * normalized);      // Blue increases as normalized increases
+
+            return `rgb(${r}, ${g}, ${b})`;
         });
-      }
-      
+    }
+
     //   const nums = [12.342534312229315, 1.087728272237465, 14.985526176426571, -2.4804113983464986, 2.387049642242639, 4.428781744287364, -2.5248205347993378, 0.36101453816043116, -5.703892105724913, -3.1426391072026107];
     //   const colors = numbersToColorsNormalized(nums);
     //   console.log(colors);
-      
+
     //   const sameNums = [5,5,5,5,5,5]
     //   const sameColors = numbersToColorsNormalized(sameNums);
     //   console.log(sameColors)
-      
+
     //   const emptyNums = [];
     //   const emptyColors = numbersToColorsNormalized(emptyNums);
     //   console.log(emptyColors);
 
     matrixToColorsNormalized(matrix) {
         if (!matrix || matrix.length === 0 || !matrix.some(row => row.length > 0)) {
-          return []; // Handle empty or invalid input, including empty rows
+            return []; // Handle empty or invalid input, including empty rows
         }
-      
+
         // Flatten the matrix to find min and max values efficiently
         const flattened = matrix.flat();
         const minVal = Math.min(...flattened);
         const maxVal = Math.max(...flattened);
-      
+
         // Handle the edge case where all numbers are the same
         if (minVal === maxVal) {
-          return matrix.map(row => row.map(() => 'rgb(128, 0, 128)')); // Default to purple
+            return matrix.map(row => row.map(() => 'rgb(128, 0, 128)')); // Default to purple
         }
-      
+
         return matrix.map(row =>
-          row.map(num => {
-            const normalized = (num - minVal) / (maxVal - minVal);
-            const r = Math.round(255 * (1 - normalized));
-            const b = Math.round(255 * normalized);
-            return `rgb(${r}, 0, ${b})`;
-          })
+            row.map(num => {
+                const normalized = (num - minVal) / (maxVal - minVal);
+                const r = Math.round(255 * (1 - normalized));
+                const b = Math.round(255 * normalized);
+                return `rgb(${r}, 0, ${b})`;
+            })
         );
-      }
+    }
 
     numberToColor(num) {
-        debugger;
+        // debugger;
         // num = num * 1000000;
         let min = -1, max = 1;
         const normalized = (num - min) / (max - min);
@@ -710,25 +710,25 @@ export class AI_BRAIN_VIZ_2 {
 
         // return nums.map(num => {
         //   let r = 0;
-          let g = 0;
+        let g = 0;
         //   let b = 0;
 
-          if (num >= 0 && num <= 1) {
+        if (num >= 0 && num <= 1) {
             // Blue shades (0 to 1)
             b = Math.round(255 * num);
-          } else if (num >= -1 && num < 0) {
+        } else if (num >= -1 && num < 0) {
             // Red shades (-1 to 0)
             r = Math.round(255 * Math.abs(num)); // Use absolute value for positive red
-          } else if (num > 1) {
+        } else if (num > 1) {
             // Green
             g = 255;
-          } else if (num < -1) {
+        } else if (num < -1) {
             // Purple (mix of red and blue)
             r = 128; // Half red
             b = 128; // Half blue
-          }
-      
-          return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        return `rgb(${r}, ${g}, ${b})`;
         // });
     }
 
@@ -759,7 +759,7 @@ export class AI_BRAIN_VIZ_2 {
     //     this.ctx.arc(x, y, 1, 0, Math.PI * 2);
     //     this.ctx.fill();
     // }
-    
+
     // DRAW_EMOJI(x, y, emoji) {
     //     console.log('emoji',x,y)
     //     // Draw emoji
@@ -769,7 +769,7 @@ export class AI_BRAIN_VIZ_2 {
     //     this.ctx.fillText(emoji, x, y);
     // }
     // render_TIMELINE_SLICE(canvas, txt){
-    render_TIMELINE_SLICE(canvas, idx){ //MOVIE PLAYBACK
+    render_TIMELINE_SLICE(canvas, idx) { //MOVIE PLAYBACK
         // debugger;
         let ctx_PLAYBACK = canvas.getContext('2d');
         ctx_PLAYBACK.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
@@ -780,21 +780,21 @@ export class AI_BRAIN_VIZ_2 {
         // // ctx_PLAYBACK.fillText(txt, 44, 44);
         // let dataframe = AI_BRAIN_VIZ.IH_SLICE[idx];
         let dataframe = AI_BRAIN_VIZ.neuralNet.IH_SLICE[idx];
-        if(!dataframe){console.log('ERROR: no dataframe');return;}
+        if (!dataframe) { console.log('ERROR: no dataframe'); return; }
         // if(!nn.IH_SLICE){console.log('ERROR: cannot find slice!');return;}
         // this.ctx_TIMELINE.clearRect(0, 0, this.CANVAS_TIMELINE_1.width, this.CANVAS_TIMELINE_1.height);  // Clear the canvas
         // this.CANVAS_TIMELINE_1.width = (nn.IH_SLICE.length)?nn.IH_SLICE.length*100:this.CANVAS_TIMELINE_1.width;
         // let frame=[],vector=[],
-        let colorTGT=0;
-        let row=0;//,cols=0;
-        let SIZE_SML=2,SIZE_MED=3,SIZE_BIG=4,SPACING_SML=6,SPACING_MED=7,SPACING_BIG=8;
-        let startX=0,startY=0,colorVal='';;
+        let colorTGT = 0;
+        let row = 0;//,cols=0;
+        let SIZE_SML = 2, SIZE_MED = 3, SIZE_BIG = 4, SPACING_SML = 6, SPACING_MED = 7, SPACING_BIG = 8;
+        let startX = 0, startY = 0, colorVal = '';;
 
         let PAD_TOP = 25;
         let PAD_LEFT = 20;
         // let PAD_COL = 100;
 
-        let CURSOR_POS = {x:PAD_LEFT,y:PAD_TOP}; //USE like a ink printer.
+        let CURSOR_POS = { x: PAD_LEFT, y: PAD_TOP }; //USE like a ink printer.
         ctx_PLAYBACK.fillStyle = 'steelblue';
         ctx_PLAYBACK.font = "0.8em Arial italic bold "; //TITLE
         ctx_PLAYBACK.fillText("TRAIN NEURONS:", CURSOR_POS.x, CURSOR_POS.y);
@@ -803,15 +803,15 @@ export class AI_BRAIN_VIZ_2 {
         // let slice, colorGrid;
         // for(let i=0;i<nn.IH_SLICE.length;i++){
         //     slice = nn.IH_SLICE[i];
-            // colorGrid = this.matrixToColorsNormalized(slice);
+        // colorGrid = this.matrixToColorsNormalized(slice);
         let colorGrid = this.matrixToColorsNormalized(dataframe);
 
-        CURSOR_POS = {x:PAD_LEFT+44, y:44}; //NEXT POSITION.
+        CURSOR_POS = { x: PAD_LEFT + 44, y: 44 }; //NEXT POSITION.
         for (let rowIDX = 0; rowIDX < colorGrid.length; rowIDX++) {
             row = colorGrid[rowIDX];
             // frame = this.neuralNet.weightsIH[rowIDX];
             // cols = row.length;
-            startX = CURSOR_POS.x + (rowIDX*SPACING_BIG); 
+            startX = CURSOR_POS.x + (rowIDX * SPACING_BIG);
             for (let colIDX = 0; colIDX < row.length; colIDX++) {
                 colorTGT = row[colIDX];
                 startY = CURSOR_POS.y + (colIDX * SPACING_BIG);
@@ -821,7 +821,7 @@ export class AI_BRAIN_VIZ_2 {
                 ctx_PLAYBACK.beginPath();
                 ctx_PLAYBACK.fillStyle = colorTGT;
                 // this.ctx_TIMELINE.fillStyle = colorVal;
-                ctx_PLAYBACK.arc(startX,startY,SIZE_BIG, 0, Math.PI * 2);
+                ctx_PLAYBACK.arc(startX, startY, SIZE_BIG, 0, Math.PI * 2);
                 ctx_PLAYBACK.fill();
             }
         }//end loop
@@ -831,11 +831,11 @@ export class AI_BRAIN_VIZ_2 {
 //-----------------------------LOCAL MODULE: 
 //- add vis features here, then export to module.
 let AI_BRAIN_VIZ;
-function RENDER_BRAIN_VIZ(){ //VIZ MODULE-RUNNER
+function RENDER_BRAIN_VIZ() { //VIZ MODULE-RUNNER
     // if(!nn || !CANVAS_BRAIN_VIZ_1){ console.log('ERROR: no neural net for viz');return}
     AI_BRAIN_VIZ = new AI_BRAIN_VIZ_2(nn);
     // new AI_BRAIN_VIZ_2(nn,CANVAS_BRAIN_VIZ_1);
-    
+
     // 1. Initial Weight Visualization (Before Training)
     AI_VIZ_LOG(">  🔬 VIZ_LOG: of AI_BRAINZ 🔬");
     AI_BRAIN_VIZ.render_NEURON_WEIGHTS(); //visualizeWeights
@@ -851,22 +851,22 @@ const playback_idx_1_ = document.getElementById('playback_idx_1_');
 const playback_total_1_ = document.getElementById('playback_total_1_');
 playback_BTN_1_.onclick = (e) => { //toggle button
     const CANVAS_PLAYBACK_1 = document.getElementById('CANVAS_PLAYBACK_1');
-    if(playback_BTN_1_.innerText.indexOf('PLAY')>-1){
+    if (playback_BTN_1_.innerText.indexOf('PLAY') > -1) {
         playback_BTN_1_.innerText = '⏸ PAUSE';
         start_CANVAS_PLAYBACK(CANVAS_PLAYBACK_1);
     } else {
         playback_BTN_1_.innerText = '▶️ PLAY';
         stop_CANVAS_PLAYBACK(CANVAS_PLAYBACK_1);
-    } 
+    }
 }
 
 //-----------------------PLAYBACK-LOGIC------------------------
 let intervalId;
 let currentIndex = 0;
-function start_CANVAS_PLAYBACK(canvas){
+function start_CANVAS_PLAYBACK(canvas) {
     // debugger;
-    if(!AI_BRAIN_VIZ.neuralNet){console.log('ERROR: no neural net'); return;}
-    if(!AI_BRAIN_VIZ.neuralNet.IH_SLICE.length){console.log('ERROR: no neural net'); return;}
+    if (!AI_BRAIN_VIZ.neuralNet) { console.log('ERROR: no neural net'); return; }
+    if (!AI_BRAIN_VIZ.neuralNet.IH_SLICE.length) { console.log('ERROR: no neural net'); return; }
     // let letters = ['a', 'b', 'c', 'd'];
     let loopCount = 0;
     const maxLoops = 10; // Number of loops before stopping
@@ -880,14 +880,14 @@ function start_CANVAS_PLAYBACK(canvas){
         playback_idx_1_.innerText = currentIndex;
         playback_total_1_.innerText = AI_BRAIN_VIZ.neuralNet.IH_SLICE.length;
         loopCount++;
-        if (loopCount >= maxLoops+1) {
+        if (loopCount >= maxLoops + 1) {
             playback_BTN_1_.innerText = '▶️ PLAY';
             clearInterval(intervalId); // Stop the interval
             console.log("Playback stopped at limit.");
         }
     }, 1000); // 1000 milliseconds = 1 second
 }
-function stop_CANVAS_PLAYBACK(canvas){
+function stop_CANVAS_PLAYBACK(canvas) {
     console.log("Stopped Playback.");
     clearInterval(intervalId); // Stop the interval
 }
@@ -945,8 +945,8 @@ function stop_CANVAS_PLAYBACK(canvas){
 //         console.log(`Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`);
 //         OUTPUT_1_ELEM.innerHTML = `Token: ${token}, Output: ${output.map(v => v.toFixed(3))}`
 //         // debugger;
-//         // const txtPCTS = output.map( (v) => { 
-//         //     // return v.toFixed(3); 
+//         // const txtPCTS = output.map( (v) => {
+//         //     // return v.toFixed(3);
 //         //     return v.toFixed(2)*100;
 //         //     // let decimal = v.toFixed(2)*100;
 //         //     // return decimal.toFixed(0)+'%'; //human readable %
