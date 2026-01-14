@@ -770,7 +770,7 @@ export class AI_BRAIN_VIZ_2 {
     // }
     // render_TIMELINE_SLICE(canvas, txt){
     render_TIMELINE_SLICE(canvas, idx) { //MOVIE PLAYBACK
-        // debugger;
+        //  debugger;
         let ctx_PLAYBACK = canvas.getContext('2d');
         ctx_PLAYBACK.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
         // ctx_PLAYBACK.font = '12px Arial';
